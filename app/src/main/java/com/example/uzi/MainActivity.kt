@@ -4,25 +4,20 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.uzi.ui.screens.AuthorizationScreen
-import com.example.uzi.ui.screens.CanvasSectorTest
-import com.example.uzi.ui.screens.RegistrationScreen
 import com.example.uzi.ui.theme.UziTheme
+import com.example.uzi.ui.viewModel.authorisation.AuthorisationViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val authorisationViewModel = AuthorisationViewModel()
+
         enableEdgeToEdge()
         setContent {
             UziTheme {
-                RegistrationScreen()
+                AuthorizationScreen(authorisationViewModel)
             }
         }
     }

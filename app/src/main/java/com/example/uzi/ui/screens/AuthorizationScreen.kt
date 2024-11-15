@@ -1,8 +1,6 @@
 package com.example.uzi.ui.screens
 
-import android.content.res.Resources.Theme
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,25 +9,24 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.uzi.ui.components.RequiredFormField
-import com.example.uzi.ui.theme.primaryColor
+import com.example.uzi.ui.viewModel.authorisation.AuthorisationViewModel
 
 @Composable
-fun AuthorizationScreen() {
+fun AuthorizationScreen(
+    authorisationViewModel: AuthorisationViewModel = AuthorisationViewModel()
+) {
+    val authorisationUiState = authorisationViewModel.uiState.collectAsState().value
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -55,9 +52,19 @@ fun AuthorizationScreen() {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            RequiredFormField("Электронная почта")
+            RequiredFormField(
+                value = authorisationUiState.authorizationEmail,
+                label = "Электронная почта",
+            ) {
+                authorisationViewModel.onAuthorizationEmailChange(it)
+            }
 
-            RequiredFormField("Пароль")
+            RequiredFormField(
+                value = authorisationUiState.authorizationPassword,
+                label = "Пароль",
+            ) {
+                authorisationViewModel.onAuthorizationPasswordChange(it)
+            }
 
             Button(
                 onClick = {  },

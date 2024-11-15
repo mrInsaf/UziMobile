@@ -17,14 +17,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.uzi.R
-import com.example.uzi.ui.components.RequiredFormField
 
 @Composable
 fun RegistrationScreen() {
@@ -57,17 +53,17 @@ fun RegistrationScreen() {
             verticalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
         ) {
-            RequiredFormField("Фамилия")
-            RequiredFormField("Имя")
-            RequiredFormField("Отчество")
-            RequiredFormField("Электронная почта")
-            RequiredFormField("Пароль") {
-                Text(
-                    text = passwordRestrictions,
-                    color = Color.LightGray
-                )
-            }
-            RequiredFormField("Повторите пароль")
+//            RequiredFormField("Фамилия")
+//            RequiredFormField("Имя")
+//            RequiredFormField("Отчество")
+//            RequiredFormField("Электронная почта")
+//            RequiredFormField("Пароль") {
+//                Text(
+//                    text = passwordRestrictions,
+//                    color = Color.LightGray
+//                )
+//            }
+//            RequiredFormField("Повторите пароль")
 
             Button(
                 onClick = {  },
