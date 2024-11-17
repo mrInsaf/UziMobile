@@ -35,21 +35,13 @@ fun RequiredFormField(
         }
         append(label)
     }
-
-    Column(
-        modifier = Modifier
-            .padding(bottom = 12.dp)
-    ) {
-        Text(
-            text = annotatedLabel,
-        )
         BasicFormField(
             value = value,
             AdditionalContent = AdditionalContent,
+            label = annotatedLabel.toString(),
         ) {
             onValueChange(it)
         }
-    }
 }
 
 @Preview

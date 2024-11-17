@@ -18,11 +18,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.uzi.ui.screens.passwordRestrictions
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BasicFormField(
     value: String,
+    label: String,
     AdditionalContent: (@Composable () -> Unit)? = null,
+    isReadOnly: Boolean = false,
+    trailingIcon: @Composable (() -> Unit)? = null,
     onValueChange: (String) -> Unit,
 ) {
     Column(
@@ -30,13 +34,18 @@ fun BasicFormField(
             .fillMaxWidth(0.8f)
             .padding(bottom = 12.dp)
     ) {
+        Text(
+            text = label,
+        )
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
+            readOnly = isReadOnly,  // Используем readOnly, если необходимо
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 unfocusedBorderColor = Color.LightGray
             ),
             shape = RoundedCornerShape(8.dp),
+            trailingIcon = trailingIcon,  // Добавляем кастомную иконку
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp)
@@ -58,7 +67,8 @@ fun BasicFormFieldPreview() {
                 text = passwordRestrictions,
                 modifier = Modifier
             )
-        }
+        },
+        label = "Электронная почта",
     ) {
 
     }

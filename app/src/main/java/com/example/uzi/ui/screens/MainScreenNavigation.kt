@@ -10,11 +10,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -23,17 +21,29 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.uzi.ui.screens.newDiagnosticScreens.NewDiagnosticNavigation
-import com.example.uzi.ui.screens.newDiagnosticScreens.UploadImage
+import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
 
 @Composable
-fun DiagnosticScreensNavigation() {
+fun MainScreen(
+    newDiagnosticViewModel: NewDiagnosticViewModel
+) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController = navController)
         }
     ) { padding ->
-        NavHostContainer(navController = navController, modifier = Modifier.padding(padding))
+        NavHost(
+            navController = navController, 
+            startDestination = Screen.Load.route,
+            modifier = Modifier.padding(padding)
+        ) {
+            composable(Screen.Load.route) {
+                NewDiagnosticNavigation(newDiagnosticViewModel)
+            }
+            composable(Screen.Uploaded.route) { TODO() }
+            composable(Screen.Account.route) { TODO() }
+        }
     }
 }
 
@@ -70,11 +80,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 
 @Composable
 fun NavHostContainer(navController: NavHostController, modifier: Modifier = Modifier) {
-    NavHost(navController = navController, startDestination = Screen.Load.route, modifier = modifier) {
-        composable(Screen.Load.route) { NewDiagnosticNavigation() }
-        composable(Screen.Uploaded.route) { TODO() }
-        composable(Screen.Account.route) { TODO() }
-    }
+
 }
 
 sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
@@ -86,5 +92,7 @@ sealed class Screen(val route: String, val label: String, val icon: ImageVector)
 @Preview
 @Composable
 fun DiagnosticScreensNavigationPreview() {
-    DiagnosticScreensNavigation()
+    MainScreen(
+        newDiagnosticViewModel = NewDiagnosticViewModel()
+    )
 }

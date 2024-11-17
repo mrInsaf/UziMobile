@@ -43,7 +43,7 @@ fun UploadImage(
         MainButton(
             text = "Начать диагностику"
         ) {
-            TODO()
+            onStartDiagnosticClick()
         }
     }
 }

@@ -1,39 +1,29 @@
 package com.example.uzi.ui.screens.newDiagnosticScreens
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.uzi.ui.components.CircleNumber
 import com.example.uzi.ui.components.NewDiagnosticProgressBar
+import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
 
 @Composable
-fun NewDiagnosticNavigation() {
+fun NewDiagnosticNavigation(
+    newDiagnosticViewModel: NewDiagnosticViewModel,
+) {
+    val newDiagnosticUiState = newDiagnosticViewModel.uiState.collectAsState().value
     val navController = rememberNavController()
     Scaffold(
 
@@ -48,7 +38,11 @@ fun NewDiagnosticNavigation() {
                 modifier = Modifier.fillMaxWidth(0.85f)
             ){
                 TextButton(
-                    onClick = { },
+                    onClick = {
+                        navController.popBackStack()
+                        newDiagnosticViewModel.onPreviousButtonClick()
+                    },
+                    enabled = newDiagnosticUiState.currentScreenIndex > 0
                 ) {
                     Text(
                         text = "Назад",
@@ -56,26 +50,32 @@ fun NewDiagnosticNavigation() {
                     )
                 }
 
-                NewDiagnosticProgressBar(currentScreenIndex = 0)
-
+//                NewDiagnosticProgressBar(newDiagnosticUiState.currentScreenIndex)
+                NewDiagnosticProgressBar(currentScreenIndex = newDiagnosticUiState.currentScreenIndex)
                 NavHost(
                     navController = navController,
-                    startDestination = NewDiagnosticScreen.ImageLoad.route
+                    startDestination = NewDiagnosticScreen.ImageLoadRoute.route
                 ) {
-                    composable(NewDiagnosticScreen.ImageLoad.route) {
+                    composable(NewDiagnosticScreen.ImageLoadRoute.route) {
                         UploadImage(
                             onStartDiagnosticClick = {
-                                TODO()
+                                navController.navigate(
+                                    NewDiagnosticScreen.AdditionalInformationRoute.route
+                                )
+                                newDiagnosticViewModel.onNextScreenButtonClick()
                             },
                             modifier = Modifier.padding(padding)
                         )
                     }
 
-                    composable(NewDiagnosticScreen.AdditionalInformation.route) {
-                        AdditionalInformation(modifier = Modifier.padding(padding))
+                    composable(NewDiagnosticScreen.AdditionalInformationRoute.route) {
+                        AdditionalInformation(
+                            newDiagnosticViewModel,
+                            modifier = Modifier.padding(padding)
+                        )
                     }
 
-                    composable(NewDiagnosticScreen.DiagnosticLoading.route) {
+                    composable(NewDiagnosticScreen.DiagnosticLoadingRoute.route) {
                         DiagnosticLoading(modifier = Modifier.padding(padding))
                     }
                 }
@@ -86,13 +86,15 @@ fun NewDiagnosticNavigation() {
 }
 
 sealed class NewDiagnosticScreen(val route: String) {
-    object ImageLoad : NewDiagnosticScreen("image_load")
-    object AdditionalInformation : NewDiagnosticScreen("additional_information")
-    object DiagnosticLoading : NewDiagnosticScreen("diagnostic_loading")
+    object ImageLoadRoute : NewDiagnosticScreen("image_load")
+    object AdditionalInformationRoute : NewDiagnosticScreen("additional_information")
+    object DiagnosticLoadingRoute : NewDiagnosticScreen("diagnostic_loading")
 }
 
 @Preview
 @Composable
 fun NewDiagnosticNavigationPreview() {
-    NewDiagnosticNavigation()
+    NewDiagnosticNavigation(
+        newDiagnosticViewModel = NewDiagnosticViewModel()
+    )
 }
