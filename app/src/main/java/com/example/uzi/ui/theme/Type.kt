@@ -8,18 +8,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.uzi.R
 
+val RobotoFontFamily = FontFamily(
+    Font(R.font.roboto, FontWeight.Normal),
+    Font(R.font.roboto_bold, FontWeight.Bold)
+)
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
-        fontFamily = FontFamily(
-            Font(R.font.roboto),
-            Font(R.font.roboto_bold, FontWeight.Bold)
-        ),
+        fontFamily = RobotoFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
+//        letterSpacing = 0.5.sp
+    ),
+    titleLarge = TextStyle(
+        fontFamily = RobotoFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 36.sp,
+        lineHeight = 44.sp
+    ),
     /* Other default text styles to override
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,

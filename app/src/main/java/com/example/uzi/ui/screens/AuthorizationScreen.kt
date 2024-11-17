@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.uzi.ui.components.MainButton
 import com.example.uzi.ui.components.RequiredFormField
 import com.example.uzi.ui.viewModel.authorisation.AuthorisationViewModel
 
@@ -66,14 +67,8 @@ fun AuthorizationScreen(
                 authorisationViewModel.onAuthorizationPasswordChange(it)
             }
 
-            Button(
-                onClick = {  },
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .height(60.dp)
-            ) {
-                Text(text = "Войти")
+            MainButton(text = "Войти") {
+                TODO()
             }
 
         }
