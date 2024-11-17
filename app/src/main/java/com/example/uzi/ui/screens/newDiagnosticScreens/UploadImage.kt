@@ -1,5 +1,6 @@
 package com.example.uzi.ui.screens.newDiagnosticScreens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,8 +19,13 @@ import com.example.uzi.ui.components.UploadImageComponent
 @Composable
 fun UploadImage(
     onStartDiagnosticClick: () -> Unit,
+    onAndroidBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    BackHandler {
+        println("back")
+        onAndroidBackClick()
+    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -56,6 +62,7 @@ val helpingText = "Для начала диагностики загрузите
 @Composable
 fun UploadImagePreview() {
     UploadImage(
-        onStartDiagnosticClick = {  }
+        onStartDiagnosticClick = { },
+        onAndroidBackClick = {},
     )
 }

@@ -1,5 +1,6 @@
 package com.example.uzi.ui.screens.newDiagnosticScreens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -25,6 +27,11 @@ fun NewDiagnosticNavigation(
 ) {
     val newDiagnosticUiState = newDiagnosticViewModel.uiState.collectAsState().value
     val navController = rememberNavController()
+
+    BackHandler(enabled = newDiagnosticUiState.currentScreenIndex > 0) {
+        onAndroidBackClick(navController, newDiagnosticViewModel)
+    }
+
     Scaffold(
 
     ) { padding ->
@@ -34,13 +41,16 @@ fun NewDiagnosticNavigation(
                 .fillMaxSize()
         ) {
 //            Spacer(modifier = Modifier.size(20.dp))
+
             Column (
                 modifier = Modifier.fillMaxWidth(0.85f)
             ){
                 TextButton(
                     onClick = {
-                        navController.popBackStack()
-                        newDiagnosticViewModel.onPreviousButtonClick()
+                        onAndroidBackClick(
+                            navController = navController,
+                            viewModel = newDiagnosticViewModel
+                        )
                     },
                     enabled = newDiagnosticUiState.currentScreenIndex > 0
                 ) {
@@ -49,7 +59,6 @@ fun NewDiagnosticNavigation(
                         color = MaterialTheme.colorScheme.tertiary
                     )
                 }
-
 //                NewDiagnosticProgressBar(newDiagnosticUiState.currentScreenIndex)
                 NewDiagnosticProgressBar(currentScreenIndex = newDiagnosticUiState.currentScreenIndex)
                 NavHost(
@@ -64,25 +73,55 @@ fun NewDiagnosticNavigation(
                                 )
                                 newDiagnosticViewModel.onNextScreenButtonClick()
                             },
-                            modifier = Modifier.padding(padding)
+                            modifier = Modifier.padding(padding),
+                            onAndroidBackClick = { onAndroidBackClick(
+                                navController = navController,
+                                viewModel = newDiagnosticViewModel
+                            ) }
                         )
                     }
 
                     composable(NewDiagnosticScreen.AdditionalInformationRoute.route) {
                         AdditionalInformation(
                             newDiagnosticViewModel,
-                            modifier = Modifier.padding(padding)
+                            modifier = Modifier.padding(padding),
+                            onAndroidBackClick = { onAndroidBackClick(
+                                navController, newDiagnosticViewModel
+                            ) },
+                            onNextButtonClick = {
+                                newDiagnosticViewModel.onNextScreenButtonClick()
+                                navController.navigate(
+                                    NewDiagnosticScreen.DiagnosticLoadingRoute.route
+                                )
+                            }
                         )
                     }
 
                     composable(NewDiagnosticScreen.DiagnosticLoadingRoute.route) {
-                        DiagnosticLoading(modifier = Modifier.padding(padding))
+                        DiagnosticLoading(
+                            modifier = Modifier.padding(padding),
+                            onAndroidBackClick = {
+                                onAndroidBackClick(
+                                    navController,
+                                    newDiagnosticViewModel
+                                )
+                            }
+                        )
                     }
                 }
             }
         }
     }
+}
 
+private fun onAndroidBackClick(
+    navController: NavController,
+    viewModel: NewDiagnosticViewModel
+) {
+    if (navController.popBackStack()) {
+        viewModel.onPreviousButtonClick()
+    }
+    println(viewModel.uiState.value.currentScreenIndex)
 }
 
 sealed class NewDiagnosticScreen(val route: String) {

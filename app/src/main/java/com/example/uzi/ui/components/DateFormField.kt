@@ -43,42 +43,38 @@ fun DateFormField(
         convertMillisToDate(it)
     } ?: ""
 
-    Box(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        BasicFormField (
-            value = selectedDate,
-            onValueChange = onValueChange,
-            label = label,
-            isReadOnly = true,
-            trailingIcon = {
-                IconButton(onClick = { showDatePicker = !showDatePicker }) {
-                    Icon(
-                        imageVector = Icons.Default.DateRange,
-                        contentDescription = "Select date"
-                    )
-                }
-            },
-        )
+    BasicFormField (
+        value = selectedDate,
+        onValueChange = onValueChange,
+        label = label,
+        isReadOnly = true,
+        trailingIcon = {
+            IconButton(onClick = { showDatePicker = !showDatePicker }) {
+                Icon(
+                    imageVector = Icons.Default.DateRange,
+                    contentDescription = "Select date"
+                )
+            }
+        },
+    )
 
-        if (showDatePicker) {
-            Popup(
-                onDismissRequest = { showDatePicker = false },
-                alignment = Alignment.TopStart
+    if (showDatePicker) {
+        Popup(
+            onDismissRequest = { showDatePicker = false },
+            alignment = Alignment.TopStart
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .offset(y = 64.dp)
+                    .shadow(elevation = 4.dp)
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(16.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .offset(y = 64.dp)
-                        .shadow(elevation = 4.dp)
-                        .background(MaterialTheme.colorScheme.surface)
-                        .padding(16.dp)
-                ) {
-                    DatePicker(
-                        state = datePickerState,
-                        showModeToggle = false
-                    )
-                }
+                DatePicker(
+                    state = datePickerState,
+                    showModeToggle = false
+                )
             }
         }
     }

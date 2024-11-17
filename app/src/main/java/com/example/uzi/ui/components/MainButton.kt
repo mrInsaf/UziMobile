@@ -14,12 +14,14 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun MainButton(
     text: String,
+    enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     Button(
         onClick = onClick,
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+        enabled = enabled,
         modifier = Modifier
             .fillMaxWidth(0.8f)
             .height(60.dp)

@@ -18,10 +18,20 @@ class NewDiagnosticViewModel : ViewModel() {
     fun onNextScreenButtonClick() {
         val currentScreenIndex = uiState.value.currentScreenIndex
         _uiState.update { it.copy(currentScreenIndex = currentScreenIndex + 1) }
+        println(uiState.value.currentScreenIndex)
     }
 
     fun onPreviousButtonClick() {
         val currentScreenIndex = uiState.value.currentScreenIndex
         _uiState.update { it.copy(currentScreenIndex = currentScreenIndex - 1) }
+    }
+
+    fun onClinicNameInput(newClinicName: String) {
+        _uiState.update { it.copy(clinicName = newClinicName) }
+    }
+
+    fun onSaveResultsCheck() {
+        val saveResultsChecked = uiState.value.saveResultsChecked
+        _uiState.update { it.copy(saveResultsChecked = !saveResultsChecked) }
     }
 }

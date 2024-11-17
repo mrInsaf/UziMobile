@@ -1,9 +1,11 @@
 package com.example.uzi.ui.viewModel.newDiagnostic
 
 data class NewDiagnosticUiState(
-    val currentScreenIndex: Int = 0,
+    var currentScreenIndex: Int = 0,
 
-    val dateOfAdmission: String = "",
-    val clinicName: String = "",
+    var dateOfAdmission: String = "",
+    var clinicName: String = "",
+
+    var saveResultsChecked: Boolean = false,
 
     )
