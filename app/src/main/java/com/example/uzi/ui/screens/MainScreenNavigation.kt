@@ -78,11 +78,6 @@ fun BottomNavigationBar(navController: NavHostController) {
     }
 }
 
-@Composable
-fun NavHostContainer(navController: NavHostController, modifier: Modifier = Modifier) {
-
-}
-
 sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
     object Load : Screen("load", "Загрузить", Icons.Default.Add)
     object Uploaded : Screen("uploaded", "Загруженные", Icons.Default.List)

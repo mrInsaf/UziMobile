@@ -14,6 +14,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.uzi.ui.screens.passwordRestrictions
@@ -46,6 +47,44 @@ fun BasicFormField(
             ),
             shape = RoundedCornerShape(8.dp),
             trailingIcon = trailingIcon,  // Добавляем кастомную иконку
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp)
+        )
+        if (AdditionalContent != null) {
+            Spacer(modifier = Modifier.size(16.dp))
+            AdditionalContent()
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BasicFormField(
+    value: String,
+    label: AnnotatedString,
+    AdditionalContent: (@Composable () -> Unit)? = null,
+    isReadOnly: Boolean = false,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    onValueChange: (String) -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(0.8f)
+            .padding(bottom = 12.dp)
+    ) {
+        Text(
+            text = label,
+        )
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            readOnly = isReadOnly,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                unfocusedBorderColor = Color.LightGray
+            ),
+            shape = RoundedCornerShape(8.dp),
+            trailingIcon = trailingIcon,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp)

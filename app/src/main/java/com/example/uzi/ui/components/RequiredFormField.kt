@@ -38,7 +38,7 @@ fun RequiredFormField(
         BasicFormField(
             value = value,
             AdditionalContent = AdditionalContent,
-            label = annotatedLabel.toString(),
+            label = annotatedLabel,
         ) {
             onValueChange(it)
         }
