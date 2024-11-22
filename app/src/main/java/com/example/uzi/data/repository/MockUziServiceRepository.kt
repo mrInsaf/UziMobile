@@ -1,6 +1,7 @@
 package com.example.uzi.data.repository
 
 import com.example.uzi.data.mock.MockAuthData
+import com.example.uzi.data.models.User
 import kotlinx.coroutines.delay
 
 class MockUziServiceRepository : UziServiceRepository {
@@ -23,5 +24,12 @@ class MockUziServiceRepository : UziServiceRepository {
         delay(100)
         authData.isAuthorised = false
         return true
+    }
+
+    override suspend fun getUser(): User {
+        return User(
+            userName = "${authData.surname} ${authData.name} ${authData.patronymic}",
+            userEmail = authData.email
+        )
     }
 }

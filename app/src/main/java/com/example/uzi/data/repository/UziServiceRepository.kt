@@ -1,5 +1,7 @@
 package com.example.uzi.data.repository
 
+import com.example.uzi.data.models.User
+
 interface UziServiceRepository {
     suspend fun checkAuthorisation(): Boolean
 
@@ -9,4 +11,6 @@ interface UziServiceRepository {
     ): Boolean
 
     suspend fun submitLogout(): Boolean
+
+    suspend fun getUser(): User
 }

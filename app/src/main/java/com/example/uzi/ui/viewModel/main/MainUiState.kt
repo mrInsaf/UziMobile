@@ -1,6 +1,7 @@
 package com.example.uzi.ui.viewModel.main
 
+import com.example.uzi.data.models.User
+
 data class MainUiState(
-    var isAuthorised: Boolean = false,
-    var isRegistered: Boolean = false,
+    var user: User = User()
 )

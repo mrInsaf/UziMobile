@@ -1,6 +1,5 @@
 package com.example.uzi.ui.screens
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,11 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.uzi.data.repository.MockUziServiceRepository
-import com.example.uzi.data.repository.UziServiceRepository
 import com.example.uzi.ui.components.MainButton
 import com.example.uzi.ui.components.RequiredFormField
 import com.example.uzi.ui.viewModel.authorisation.AuthorisationViewModel
@@ -28,6 +24,7 @@ import com.example.uzi.ui.viewModel.authorisation.AuthorisationViewModel
 fun AuthorizationScreen(
     authorisationViewModel: AuthorisationViewModel,
     onSubmitLoginButtonClick: () -> Unit,
+    onRegistrationButtonClick: () -> Unit,
 ) {
     val authorisationUiState = authorisationViewModel.uiState.collectAsState().value
     Column(
@@ -90,7 +87,7 @@ fun AuthorizationScreen(
             )
             TextButton(
                 onClick = {
-//                    onRegistrationButtonClick()
+                    onRegistrationButtonClick()
                 }
             ) {
                 Text(text = "Зарегистрироваться")

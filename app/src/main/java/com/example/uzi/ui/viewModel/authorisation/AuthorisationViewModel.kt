@@ -38,7 +38,15 @@ class AuthorisationViewModel(
             }
             val isAuthorised = isAuthorisedResponse.await()
             if (isAuthorised) {
-                _uiState.update { it.copy(isAuthorised = isAuthorised) }
+
+                val userData = async {
+                    repository.getUser()
+                }.await() // TODO(Это скорее всего будет по другому)
+
+                _uiState.update { it.copy(
+                    isAuthorised = isAuthorised,
+                    userData = userData
+                ) }
             }
             else {
                 Toast.makeText(context, "Неверные почта или пароль", Toast.LENGTH_LONG).show()

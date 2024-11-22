@@ -20,12 +20,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.uzi.data.models.User
 import com.example.uzi.ui.screens.newDiagnosticScreens.NewDiagnosticNavigation
 import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
 
 @Composable
 fun MainScreen(
-    newDiagnosticViewModel: NewDiagnosticViewModel
+    newDiagnosticViewModel: NewDiagnosticViewModel,
+    userData: User,
 ) {
     val navController = rememberNavController()
     Scaffold(
@@ -42,7 +44,12 @@ fun MainScreen(
                 NewDiagnosticNavigation(newDiagnosticViewModel)
             }
             composable(Screen.Uploaded.route) { TODO() }
-            composable(Screen.Account.route) { TODO() }
+            composable(Screen.Account.route) {
+                ProfileScreen(
+                    userName = userData.userName,
+                    userEmail = userData.userEmail,
+                )
+            }
         }
     }
 }
@@ -88,6 +95,7 @@ sealed class Screen(val route: String, val label: String, val icon: ImageVector)
 @Composable
 fun DiagnosticScreensNavigationPreview() {
     MainScreen(
-        newDiagnosticViewModel = NewDiagnosticViewModel()
+        newDiagnosticViewModel = NewDiagnosticViewModel(),
+        userData = User()
     )
 }
