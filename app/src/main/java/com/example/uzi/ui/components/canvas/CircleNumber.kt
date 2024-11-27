@@ -1,4 +1,4 @@
-package com.example.uzi.ui.components
+package com.example.uzi.ui.components.canvas
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*

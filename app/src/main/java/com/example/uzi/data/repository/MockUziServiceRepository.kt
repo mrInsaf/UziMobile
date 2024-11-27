@@ -1,6 +1,8 @@
 package com.example.uzi.data.repository
 
 import com.example.uzi.data.mock.MockAuthData
+import com.example.uzi.data.mock.mockReportResponse
+import com.example.uzi.data.models.ReportResponse
 import com.example.uzi.data.models.User
 import kotlinx.coroutines.delay
 
@@ -31,5 +33,9 @@ class MockUziServiceRepository : UziServiceRepository {
             userName = "${authData.surname} ${authData.name} ${authData.patronymic}",
             userEmail = authData.email
         )
+    }
+
+    override suspend fun getReportByUziId(uziId: String): ReportResponse {
+        return mockReportResponse
     }
 }

@@ -1,5 +1,6 @@
 package com.example.uzi.data.repository
 
+import com.example.uzi.data.models.ReportResponse
 import com.example.uzi.data.models.User
 
 interface UziServiceRepository {
@@ -13,4 +14,6 @@ interface UziServiceRepository {
     suspend fun submitLogout(): Boolean
 
     suspend fun getUser(): User
+
+    suspend fun getReportByUziId(uziId: String): ReportResponse
 }

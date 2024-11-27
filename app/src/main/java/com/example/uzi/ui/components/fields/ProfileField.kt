@@ -1,4 +1,4 @@
-package com.example.uzi.ui.components
+package com.example.uzi.ui.components.fields
 
 
 import androidx.compose.foundation.layout.Column

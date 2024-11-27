@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.uzi.ui.components.MainButton
-import com.example.uzi.ui.components.RequiredFormField
+import com.example.uzi.ui.components.fields.RequiredFormField
 import com.example.uzi.ui.viewModel.authorisation.AuthorisationViewModel
 
 @Composable

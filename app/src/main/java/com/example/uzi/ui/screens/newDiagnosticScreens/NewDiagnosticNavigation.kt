@@ -3,7 +3,6 @@ package com.example.uzi.ui.screens.newDiagnosticScreens
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -18,7 +17,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.uzi.ui.components.NewDiagnosticProgressBar
+import com.example.uzi.ui.components.canvas.NewDiagnosticProgressBar
 import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
 
 @Composable
@@ -43,7 +42,7 @@ fun NewDiagnosticNavigation(
 //            Spacer(modifier = Modifier.size(20.dp))
 
             Column (
-                modifier = Modifier.fillMaxWidth(0.85f)
+//                modifier = Modifier.fillMaxWidth(0.85f)
             ){
                 TextButton(
                     onClick = {

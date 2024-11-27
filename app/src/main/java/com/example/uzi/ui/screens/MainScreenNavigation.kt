@@ -1,5 +1,8 @@
 package com.example.uzi.ui.screens
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -22,6 +25,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.uzi.data.models.User
 import com.example.uzi.ui.screens.newDiagnosticScreens.NewDiagnosticNavigation
+import com.example.uzi.ui.theme.Paddings
 import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
 
 @Composable
@@ -29,26 +33,38 @@ fun MainScreen(
     newDiagnosticViewModel: NewDiagnosticViewModel,
     userData: User,
 ) {
-    val navController = rememberNavController()
-    Scaffold(
-        bottomBar = {
-            BottomNavigationBar(navController = navController)
-        }
-    ) { padding ->
-        NavHost(
-            navController = navController, 
-            startDestination = Screen.Load.route,
-            modifier = Modifier.padding(padding)
-        ) {
-            composable(Screen.Load.route) {
-                NewDiagnosticNavigation(newDiagnosticViewModel)
-            }
-            composable(Screen.Uploaded.route) { TODO() }
-            composable(Screen.Account.route) {
-                ProfileScreen(
-                    userName = userData.userName,
-                    userEmail = userData.userEmail,
-                )
+    Column(
+        modifier = Modifier
+            .padding(horizontal = Paddings.Large)
+            .background(color = MaterialTheme.colorScheme.background)
+    ) {
+        val navController = rememberNavController()
+        Scaffold(
+            bottomBar = {
+                BottomNavigationBar(navController = navController)
+            },
+        ) { padding ->
+            NavHost(
+                navController = navController,
+                startDestination = Screen.Load.route,
+                modifier = Modifier
+                    .padding(padding)
+            ) {
+                composable(Screen.Load.route) {
+                    NewDiagnosticNavigation(newDiagnosticViewModel)
+                }
+                composable(Screen.Uploaded.route) {
+                    DiagnosticScreen(
+                        diagnosticDate = "24.11.2024",
+                        clinicName = "Клиника"
+                    )
+                }
+                composable(Screen.Account.route) {
+                    ProfileScreen(
+                        userName = userData.userName,
+                        userEmail = userData.userEmail,
+                    )
+                }
             }
         }
     }

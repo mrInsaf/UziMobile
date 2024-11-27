@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,8 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.uzi.ui.components.BasicFormField
-import com.example.uzi.ui.components.DateFormField
+import com.example.uzi.ui.components.fields.BasicFormField
+import com.example.uzi.ui.components.fields.DateFormField
 import com.example.uzi.ui.components.MainButton
 import com.example.uzi.ui.components.SaveResultsCheckbox
 import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
