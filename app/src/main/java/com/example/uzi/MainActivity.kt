@@ -19,6 +19,7 @@ import com.example.uzi.ui.screens.MainScreen
 import com.example.uzi.ui.screens.RegistrationScreen
 import com.example.uzi.ui.theme.UziTheme
 import com.example.uzi.ui.viewModel.authorisation.AuthorisationViewModel
+import com.example.uzi.ui.viewModel.diagnosticHistory.DiagnosticHistoryViewModel
 import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
 import com.example.uzi.ui.viewModel.registraion.RegistraionViewModel
 
@@ -34,7 +35,12 @@ class MainActivity : ComponentActivity() {
             context = context
         )
         val registrationViewModel = RegistraionViewModel()
-        val newDiagnosticViewModel = NewDiagnosticViewModel()
+        val newDiagnosticViewModel = NewDiagnosticViewModel(
+            repository = repository
+        )
+        val diagnosticHistoryViewModel = DiagnosticHistoryViewModel(
+            repository = repository
+        )
 
         enableEdgeToEdge()
         setContent {
@@ -67,7 +73,8 @@ class MainActivity : ComponentActivity() {
                     composable(route = AuthScreens.MainScreenRoute.route) {
                         MainScreen(
                             newDiagnosticViewModel = newDiagnosticViewModel,
-                            userData = authorisationUiState.userData
+                            userData = authorisationUiState.userData,
+                            diagnosticHistoryViewModel = diagnosticHistoryViewModel
                         )
                     }
                 }

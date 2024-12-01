@@ -20,11 +20,13 @@ import androidx.compose.ui.unit.dp
 import com.example.uzi.R
 
 @Composable
-fun UploadImageComponent() {
+fun UploadImageComponent(
+    modifier: Modifier = Modifier
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .border(width = 1.dp, color = Color.LightGray)
     ) {

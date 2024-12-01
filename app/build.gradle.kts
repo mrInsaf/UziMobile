@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+    implementation (libs.beyka.android.tiffbitmapfactory)
     implementation (libs.androidx.datastore.preferences)
 
     implementation(libs.coil.compose)

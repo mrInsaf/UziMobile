@@ -1,45 +1,51 @@
 package com.example.uzi.ui.screens
 
+import android.R.attr.data
+import android.graphics.Bitmap
+import android.net.Uri
+import android.provider.MediaStore
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
+import androidx.core.graphics.drawable.toBitmap
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.example.uzi.R
-import com.example.uzi.data.mock.mockReportResponse
 import com.example.uzi.data.models.SectorPoint
+import com.example.uzi.data.repository.MockUziServiceRepository
 import com.example.uzi.ui.components.canvas.ZoomableCanvasSectorWithConstraints
 import com.example.uzi.ui.components.containers.FormationInfoContainer
 import com.example.uzi.ui.theme.Paddings
+import com.example.uzi.ui.viewModel.diagnosticHistory.DiagnosticHistoryViewModel
+import org.beyka.tiffbitmapfactory.TiffBitmapFactory
 
 
 @Composable
 fun DiagnosticScreen(
     diagnosticDate: String,
     clinicName: String,
+    diagnosticHistoryViewModel: DiagnosticHistoryViewModel,
 ) {
     Column(
         modifier = Modifier
@@ -47,6 +53,11 @@ fun DiagnosticScreen(
 //            .padding(horizontal = Paddings.Medium)
     ) {
         var isFullScreenOpen by remember { mutableStateOf(false) }
+        val uiState = diagnosticHistoryViewModel.uiState.collectAsState().value
+
+        println(uiState.currentResponse.uzi?.dateOfAdmission)
+        println(uiState.currentResponse.uzi?.clinicName)
+        println(uiState.currentResponse.uzi)
         TextButton(
             onClick = {
 //                onAndroidBackClick(
@@ -62,14 +73,16 @@ fun DiagnosticScreen(
             )
         }
         Text(
-            text = "Диагностика от $diagnosticDate",
-            style = MaterialTheme.typography.titleMedium
+            text = "Диагностика от ${uiState.currentResponse.uzi?.dateOfAdmission}",
+            style = MaterialTheme.typography.titleMedium,
+            color = Color.Black
         )
         Text(
-            text = clinicName,
+            text = uiState.currentResponse.uzi?.clinicName ?: "Нет названия клиники",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Normal,
-            fontSize = 20.sp
+            fontSize = 20.sp,
+            color = Color.Black
         )
 
         Column(
@@ -97,15 +110,36 @@ fun DiagnosticScreen(
                 SectorPoint(100, 300)
             )
 
+            val context = LocalContext.current
+            val imageUri: Uri? = uiState.currentResponse.images?.get(0)?.url
+            val tiffBitmap = TiffBitmapFactory.decodePath(imageUri?.path ?: "")
+
+            println("imageUri: $imageUri")
+            val bitmap: Bitmap? = imageUri?.let { uri ->
+                val mimeType = context.contentResolver.getType(uri)
+                if (mimeType == "image/tiff") {
+                    try {
+                        val parcelFileDescriptor = context.contentResolver.openFileDescriptor(uri, "r")
+                        parcelFileDescriptor?.use { descriptor ->
+                            TiffBitmapFactory.decodeFileDescriptor(descriptor.fd) // Используем descriptor.fd
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        null
+                    }
+                } else {
+                    MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+                }
+            }
 
             ZoomableCanvasSectorWithConstraints(
-                imageBitmap = ImageBitmap.imageResource(R.drawable.paint),
-                pointsList = if (selectedTabIndex == 1) emptyList() else points,
+                imageBitmap = bitmap?.asImageBitmap() ?: ImageBitmap.imageResource(R.drawable.paint),
+                pointsList = if (selectedTabIndex == 1) emptyList() else uiState.currentResponse.segments?.get(0)?.contor ?: points,
                 onFullScreen = { isFullScreenOpen = true },
             )
 
 //          TODO(Здесь надо пользоваться viewModel с репозиторием)
-            mockReportResponse.formations.forEachIndexed { i, formation ->
+            uiState.currentResponse.formations?.forEachIndexed { i, formation ->
                 val maxTirads = maxOf(
                     formation.tirads.tirads_23,
                     formation.tirads.tirads_4,
@@ -146,11 +180,6 @@ fun DiagnosticScreen(
 
     }
 }
-//
-//sealed class DiagnosticScreen(val route: String) {
-//    object MainScreen : DiagnosticScreen("main_screen")
-//    object ImageFullScreen : DiagnosticScreen("image_full_screen")
-//}
 
 
 @Preview
@@ -158,6 +187,9 @@ fun DiagnosticScreen(
 fun DiagnosticScreenPreview() {
     DiagnosticScreen(
         diagnosticDate = "24.11.2024",
-        clinicName = "Клиника"
+        clinicName = "Клиника",
+        diagnosticHistoryViewModel = DiagnosticHistoryViewModel(
+            MockUziServiceRepository()
+        )
     )
 }

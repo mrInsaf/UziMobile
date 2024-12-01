@@ -1,5 +1,6 @@
 package com.example.uzi.data.repository
 
+import android.net.Uri
 import com.example.uzi.data.models.ReportResponse
 import com.example.uzi.data.models.User
 
@@ -15,5 +16,12 @@ interface UziServiceRepository {
 
     suspend fun getUser(): User
 
-    suspend fun getReportByUziId(uziId: String): ReportResponse
+    suspend fun createUzi(
+        patientId: String,
+        imageUris: List<Uri>,
+        dateOfAdmission: String,
+        clinicName: String,
+    ): String
+
+    suspend fun getUziById(uziId: String): ReportResponse
 }

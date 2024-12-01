@@ -1,10 +1,12 @@
 package com.example.uzi.data.models
 
+import android.net.Uri
+
 data class ReportResponse(
-    val formations: List<Formation>,
-    val images: List<Image>,
-    val segments: List<Segment>,
-    val uzi: Uzi
+    val formations: List<Formation>?,
+    val images: List<Image>?,
+    val segments: List<Segment>?,
+    val uzi: Uzi?
 )
 
 data class Formation(
@@ -22,7 +24,7 @@ data class Tirads(
 data class Image(
     val id: String,
     val page: Int,
-    val url: String
+    val url: Uri
 )
 
 data class Segment(
@@ -39,5 +41,7 @@ data class Uzi(
     val id: String,
     val patient_id: String,
     val projection: String,
-    val url: String
+    val url: String,
+    val dateOfAdmission: String,
+    val clinicName: String,
 )

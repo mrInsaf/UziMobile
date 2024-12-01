@@ -14,6 +14,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,13 +37,15 @@ fun DateFormField(
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
+
+    // Вычисляем выбранную дату из миллисекунд
     val selectedDate = datePickerState.selectedDateMillis?.let {
         convertMillisToDate(it)
     } ?: ""
 
-    BasicFormField (
+    BasicFormField(
         value = selectedDate,
-        onValueChange = onValueChange,
+        onValueChange = onValueChange,  // передаем onValueChange напрямую
         label = label,
         isReadOnly = true,
         trailingIcon = {
@@ -55,6 +58,7 @@ fun DateFormField(
         },
     )
 
+    // Отображаем DatePicker, если showDatePicker = true
     if (showDatePicker) {
         Popup(
             onDismissRequest = { showDatePicker = false },
@@ -73,6 +77,14 @@ fun DateFormField(
                     showModeToggle = false
                 )
             }
+        }
+    }
+
+    // Когда пользователь выбирает дату, обновляем выбранную дату
+    LaunchedEffect(datePickerState.selectedDateMillis) {
+        // Если дата изменилась, вызываем onValueChange
+        datePickerState.selectedDateMillis?.let {
+            onValueChange(convertMillisToDate(it))
         }
     }
 }

@@ -14,6 +14,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -24,13 +25,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.uzi.data.models.User
+import com.example.uzi.data.repository.MockUziServiceRepository
 import com.example.uzi.ui.screens.newDiagnosticScreens.NewDiagnosticNavigation
 import com.example.uzi.ui.theme.Paddings
+import com.example.uzi.ui.viewModel.diagnosticHistory.DiagnosticHistoryViewModel
 import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
 
 @Composable
 fun MainScreen(
     newDiagnosticViewModel: NewDiagnosticViewModel,
+    diagnosticHistoryViewModel: DiagnosticHistoryViewModel,
     userData: User,
 ) {
     Column(
@@ -38,6 +42,8 @@ fun MainScreen(
             .padding(horizontal = Paddings.Large)
             .background(color = MaterialTheme.colorScheme.background)
     ) {
+        val newDiagnosticUiState = newDiagnosticViewModel.uiState.collectAsState().value
+        val diagnosticHistoryUiState = diagnosticHistoryViewModel.uiState.collectAsState().value
         val navController = rememberNavController()
         Scaffold(
             bottomBar = {
@@ -51,12 +57,22 @@ fun MainScreen(
                     .padding(padding)
             ) {
                 composable(Screen.Load.route) {
-                    NewDiagnosticNavigation(newDiagnosticViewModel)
+                    NewDiagnosticNavigation(
+                        newDiagnosticViewModel,
+                        onDiagnosticCompleted = {
+                            navController.navigate(Screen.Uploaded.route)
+                            diagnosticHistoryViewModel.addUziId(newDiagnosticUiState.completedDiagnosticId)
+                            diagnosticHistoryViewModel.onSelectUzi(newDiagnosticUiState.completedDiagnosticId)
+                        }
+                    )
                 }
                 composable(Screen.Uploaded.route) {
                     DiagnosticScreen(
-                        diagnosticDate = "24.11.2024",
-                        clinicName = "Клиника"
+                        diagnosticDate = diagnosticHistoryUiState.currentResponse.uzi?.dateOfAdmission
+                            ?: "Дата",
+                        clinicName = diagnosticHistoryUiState.currentResponse.uzi?.clinicName
+                            ?: "Клиника",
+                        diagnosticHistoryViewModel = diagnosticHistoryViewModel
                     )
                 }
                 composable(Screen.Account.route) {
@@ -111,7 +127,12 @@ sealed class Screen(val route: String, val label: String, val icon: ImageVector)
 @Composable
 fun DiagnosticScreensNavigationPreview() {
     MainScreen(
-        newDiagnosticViewModel = NewDiagnosticViewModel(),
-        userData = User()
+        newDiagnosticViewModel = NewDiagnosticViewModel(
+            repository = MockUziServiceRepository()
+        ),
+        userData = User(),
+        diagnosticHistoryViewModel = DiagnosticHistoryViewModel(
+            MockUziServiceRepository()
+        )
     )
 }

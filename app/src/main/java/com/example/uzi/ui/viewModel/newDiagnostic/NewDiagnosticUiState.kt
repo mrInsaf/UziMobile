@@ -1,5 +1,7 @@
 package com.example.uzi.ui.viewModel.newDiagnostic
 
+import android.net.Uri
+
 data class NewDiagnosticUiState(
     var currentScreenIndex: Int = 0,
 
@@ -8,4 +10,9 @@ data class NewDiagnosticUiState(
 
     var saveResultsChecked: Boolean = false,
 
-    )
+    var selectedImageUris: List<Uri> = emptyList(),
+
+    var isDiagnosticSent: Boolean = false,
+
+    var completedDiagnosticId: String = "",
+)

@@ -17,12 +17,14 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.uzi.data.repository.MockUziServiceRepository
 import com.example.uzi.ui.components.canvas.NewDiagnosticProgressBar
 import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
 
 @Composable
 fun NewDiagnosticNavigation(
     newDiagnosticViewModel: NewDiagnosticViewModel,
+    onDiagnosticCompleted: () -> Unit,
 ) {
     val newDiagnosticUiState = newDiagnosticViewModel.uiState.collectAsState().value
     val navController = rememberNavController()
@@ -51,13 +53,14 @@ fun NewDiagnosticNavigation(
                             viewModel = newDiagnosticViewModel
                         )
                     },
-                    enabled = newDiagnosticUiState.currentScreenIndex > 0
+                    enabled = (newDiagnosticUiState.currentScreenIndex > 0) && (!newDiagnosticUiState.isDiagnosticSent)
                 ) {
                     Text(
                         text = "Назад",
                         color = MaterialTheme.colorScheme.tertiary
                     )
                 }
+                println(newDiagnosticViewModel.uiState.value.completedDiagnosticId)
 //                NewDiagnosticProgressBar(newDiagnosticUiState.currentScreenIndex)
                 NewDiagnosticProgressBar(currentScreenIndex = newDiagnosticUiState.currentScreenIndex)
                 NavHost(
@@ -71,12 +74,16 @@ fun NewDiagnosticNavigation(
                                     NewDiagnosticScreen.AdditionalInformationRoute.route
                                 )
                                 newDiagnosticViewModel.onNextScreenButtonClick()
+//                                newDiagnosticViewModel.onDiagnosticStart()
                             },
+                            newDiagnosticViewModel = newDiagnosticViewModel,
                             modifier = Modifier.padding(padding),
-                            onAndroidBackClick = { onAndroidBackClick(
-                                navController = navController,
-                                viewModel = newDiagnosticViewModel
-                            ) }
+                            onAndroidBackClick = {
+                                onAndroidBackClick(
+                                    navController = navController,
+                                    viewModel = newDiagnosticViewModel
+                                )
+                            },
                         )
                     }
 
@@ -91,7 +98,10 @@ fun NewDiagnosticNavigation(
                                 newDiagnosticViewModel.onNextScreenButtonClick()
                                 navController.navigate(
                                     NewDiagnosticScreen.DiagnosticLoadingRoute.route
-                                )
+                                ) {
+                                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                                }
+                                newDiagnosticViewModel.onDiagnosticStart()
                             }
                         )
                     }
@@ -99,12 +109,8 @@ fun NewDiagnosticNavigation(
                     composable(NewDiagnosticScreen.DiagnosticLoadingRoute.route) {
                         DiagnosticLoading(
                             modifier = Modifier.padding(padding),
-                            onAndroidBackClick = {
-                                onAndroidBackClick(
-                                    navController,
-                                    newDiagnosticViewModel
-                                )
-                            }
+                            viewModel = newDiagnosticViewModel,
+                            onDiagnosticCompleted = onDiagnosticCompleted,
                         )
                     }
                 }
@@ -133,6 +139,9 @@ sealed class NewDiagnosticScreen(val route: String) {
 @Composable
 fun NewDiagnosticNavigationPreview() {
     NewDiagnosticNavigation(
-        newDiagnosticViewModel = NewDiagnosticViewModel()
+        newDiagnosticViewModel = NewDiagnosticViewModel(
+            repository = MockUziServiceRepository()
+        ),
+        onDiagnosticCompleted = {  }
     )
 }
