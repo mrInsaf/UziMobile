@@ -115,7 +115,7 @@ class MockUziServiceRepository : UziServiceRepository {
 
         // Добавление в хранилище
         mockUziReportResponses.add(reportResponse)
-        delay(4000)
+        delay(1000)
 
         // Возвращаем ID созданного Uzi
         return uziId

@@ -1,19 +1,18 @@
 package com.example.uzi.ui.screens
 
-import android.R.attr.data
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Tab
@@ -29,12 +28,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
@@ -42,9 +38,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.core.graphics.drawable.toBitmap
-import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.example.uzi.R
 import com.example.uzi.data.models.SectorPoint
 import com.example.uzi.data.repository.MockUziServiceRepository
@@ -55,6 +48,7 @@ import com.example.uzi.ui.viewModel.diagnosticHistory.DiagnosticHistoryViewModel
 import org.beyka.tiffbitmapfactory.TiffBitmapFactory
 
 
+@SuppressLint("NewApi")
 @Composable
 fun DiagnosticScreen(
     diagnosticDate: String,
@@ -141,13 +135,16 @@ fun DiagnosticScreen(
             val imageUri: Uri? = uiState.currentResponse.images?.get(0)?.url
 
             println("imageUri: $imageUri")
+            println("lol")
 
 // Переменная для отслеживания текущей страницы
             val currentPage = remember { mutableStateOf(0) }
-            val numberOfDirectories = remember { mutableStateOf(0f) }
+            val numberOfDirectories = remember { mutableStateOf(1f) }
+            val mimeType = remember { mutableStateOf("") }
             val bitmap: Bitmap? = imageUri?.let { uri ->
-                val mimeType = context.contentResolver.getType(uri)
-                if (mimeType == "image/tiff") {
+                mimeType.value = context.contentResolver.getType(uri) ?: ""
+                println("mimeType: $mimeType")
+                if (mimeType.value == "image/tiff") {
                     try {
                         // Сначала читаем метаинформацию
                         val initialDescriptor = context.contentResolver.openFileDescriptor(uri, "r")
@@ -168,35 +165,43 @@ fun DiagnosticScreen(
                             TiffBitmapFactory.decodeFileDescriptor(descriptor.fd, options)
                         }
                     } catch (e: Exception) {
-                        e.printStackTrace()
+                        println(e)
                         null
                     }
                 } else {
-                    MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        val source = ImageDecoder.createSource(context.contentResolver, uri)
+                        ImageDecoder.decodeBitmap(source)
+                    } else {
+                        MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+                    }
                 }
             }
 
 
-            Column(
-                modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-            ) {
-                var sliderPosition by remember { mutableFloatStateOf(0f) }
-                Slider(
-                    value = sliderPosition,
-                    onValueChange = {
-                        sliderPosition = it
-                        currentPage.value = it.toInt()
-                    },
-                    valueRange = 0f..numberOfDirectories.value - 1
-                )
+            if (mimeType.value == "image/tiff") {
+                Column(
+                    modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                ) {
+                    var sliderPosition by remember { mutableFloatStateOf(0f) }
 
-                // Отображаем текущую страницу
-                Text(
-                    text = "Страница: ${currentPage.value + 1}",
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
+                    Slider(
+                        value = sliderPosition,
+                        onValueChange = {
+                            sliderPosition = it
+                            currentPage.value = it.toInt()
+                        },
+                        valueRange = 0f..numberOfDirectories.value - 1
+                    )
+
+                    // Отображаем текущую страницу
+                    Text(
+                        text = "Страница: ${currentPage.value + 1}",
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                }
             }
 
 
