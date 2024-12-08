@@ -65,7 +65,7 @@ class NewDiagnosticViewModel(
                 patientId = userId,
                 imageUris = imageUris,
                 dateOfAdmission = dateOfAdmission,
-                clinicName = clinicName
+                clinicName = clinicName,
             )
             _uiState.update { it.copy(completedDiagnosticId = diagnosticId) }
         }

@@ -50,7 +50,7 @@ class MockUziServiceRepository : UziServiceRepository {
         patientId: String,
         imageUris: List<Uri>,
         dateOfAdmission: String,
-        clinicName: String
+        clinicName: String,
     ): String {
         // Генерация уникального ID для нового отчета
         val uziId = "uzi_${System.currentTimeMillis()}"
@@ -79,16 +79,16 @@ class MockUziServiceRepository : UziServiceRepository {
 
         // Генерация сегментов (сопоставление с изображениями)
         val segments = images.flatMap { image ->
-            List(2) { segmentIndex ->
+            List(98) { segmentIndex ->
                 Segment(
                     contor = List(5) { SectorPoint((100..200).random(), (0..100).random()) },
                     formation_id = formations.random().id,
                     id = "segment_${image.id}_$segmentIndex",
                     image_id = image.id,
                     tirads = Tirads(
-                        tirads_23 = (10..20).random(),
-                        tirads_4 = (5..10).random(),
-                        tirads_5 = (2..5).random()
+                        tirads_23 = (0..20).random(),
+                        tirads_4 = (0..10).random(),
+                        tirads_5 = (0..5).random()
                     )
                 )
             }

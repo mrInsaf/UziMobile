@@ -1,6 +1,7 @@
 package com.example.uzi.ui.components.canvas
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.example.uzi.data.models.SectorPoint
@@ -39,6 +41,17 @@ fun ZoomableCanvasSector(
         modifier = modifier
             .fillMaxWidth()
             .aspectRatio(aspectRatio)
+//            .pointerInput(Unit) {
+//                detectTransformGestures(
+//                    onGesture = { _, _, zoom, _ ->
+//                        if (!isZooming && zoom != 1f) {
+//                            isZooming = true
+//                            onGestureStart() // Сообщаем о начале жеста
+//                        }
+//                        scale *= zoom
+//                    },
+//                )
+//            }
     ) {
         val state = rememberTransformableState { zoomChange, panChange, _ ->
             scale = (scale * zoomChange).coerceIn(1f, 5f)
@@ -64,21 +77,17 @@ fun ZoomableCanvasSector(
                     translationX = offset.x,
                     translationY = offset.y
                 )
-//                .border(3.dp, color = Color.Yellow)
                 .transformable(state)
         ) {
-            // Обрезаем содержимое до рамок канвы
             clipRect {
                 val canvasWidth = size.width.toInt()
                 val canvasHeight = size.height.toInt()
 
-                // Рисуем изображение, обрезанное по рамкам
                 drawImage(
                     image = imageBitmap,
                     dstSize = IntSize(canvasWidth, canvasHeight),
                 )
 
-                // Рисуем сектора
                 pointsList.forEachIndexed { i, point ->
                     drawCircle(
                         color = Color.Red,

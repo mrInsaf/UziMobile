@@ -4,10 +4,18 @@ import android.R.attr.data
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -15,17 +23,23 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.core.graphics.drawable.toBitmap
@@ -47,9 +61,22 @@ fun DiagnosticScreen(
     clinicName: String,
     diagnosticHistoryViewModel: DiagnosticHistoryViewModel,
 ) {
+//    val nestedScrollConnection = remember {
+//        object : NestedScrollConnection {
+//            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+//                // Приоритет отдаётся зумируемому компоненту
+//                return if (/* зумируемый компонент активен */) {
+//                    Offset.Zero // Блокируем колонку
+//                } else {
+//                    super.onPreScroll(available, source)
+//                }
+//            }
+//        }
+//    }
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
 //            .padding(horizontal = Paddings.Medium)
     ) {
         var isFullScreenOpen by remember { mutableStateOf(false) }
@@ -112,16 +139,33 @@ fun DiagnosticScreen(
 
             val context = LocalContext.current
             val imageUri: Uri? = uiState.currentResponse.images?.get(0)?.url
-            val tiffBitmap = TiffBitmapFactory.decodePath(imageUri?.path ?: "")
 
             println("imageUri: $imageUri")
+
+// Переменная для отслеживания текущей страницы
+            val currentPage = remember { mutableStateOf(0) }
+            val numberOfDirectories = remember { mutableStateOf(0f) }
             val bitmap: Bitmap? = imageUri?.let { uri ->
                 val mimeType = context.contentResolver.getType(uri)
                 if (mimeType == "image/tiff") {
                     try {
-                        val parcelFileDescriptor = context.contentResolver.openFileDescriptor(uri, "r")
-                        parcelFileDescriptor?.use { descriptor ->
-                            TiffBitmapFactory.decodeFileDescriptor(descriptor.fd) // Используем descriptor.fd
+                        // Сначала читаем метаинформацию
+                        val initialDescriptor = context.contentResolver.openFileDescriptor(uri, "r")
+                        initialDescriptor?.use { descriptor ->
+                            val options = TiffBitmapFactory.Options()
+
+                            options.inJustDecodeBounds = true
+                            TiffBitmapFactory.decodeFileDescriptor(descriptor.fd, options)
+                            numberOfDirectories.value = options.outDirectoryCount.toFloat()
+                        }
+
+                        // Затем декодируем изображение текущей страницы
+                        val pageDescriptor = context.contentResolver.openFileDescriptor(uri, "r")
+                        pageDescriptor?.use { descriptor ->
+                            val options = TiffBitmapFactory.Options()
+                            options.inDirectoryNumber = currentPage.value
+                            options.inJustDecodeBounds = false
+                            TiffBitmapFactory.decodeFileDescriptor(descriptor.fd, options)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -132,9 +176,33 @@ fun DiagnosticScreen(
                 }
             }
 
+
+            Column(
+                modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+            ) {
+                var sliderPosition by remember { mutableFloatStateOf(0f) }
+                Slider(
+                    value = sliderPosition,
+                    onValueChange = {
+                        sliderPosition = it
+                        currentPage.value = it.toInt()
+                    },
+                    valueRange = 0f..numberOfDirectories.value - 1
+                )
+
+                // Отображаем текущую страницу
+                Text(
+                    text = "Страница: ${currentPage.value + 1}",
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
+
+
             ZoomableCanvasSectorWithConstraints(
                 imageBitmap = bitmap?.asImageBitmap() ?: ImageBitmap.imageResource(R.drawable.paint),
-                pointsList = if (selectedTabIndex == 1) emptyList() else uiState.currentResponse.segments?.get(0)?.contor ?: points,
+                pointsList = if (selectedTabIndex == 1) emptyList() else uiState.currentResponse.segments?.get(currentPage.value)?.contor ?: points,
                 onFullScreen = { isFullScreenOpen = true },
             )
 
