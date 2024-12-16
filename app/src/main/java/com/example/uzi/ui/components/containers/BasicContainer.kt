@@ -14,9 +14,10 @@ import com.example.uzi.ui.theme.Paddings
 
 @Composable
 fun BasicContainer(
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
-    Box(modifier = Modifier
+    Box(modifier = modifier
         .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp))
         .padding(Paddings.Medium)
     ) {

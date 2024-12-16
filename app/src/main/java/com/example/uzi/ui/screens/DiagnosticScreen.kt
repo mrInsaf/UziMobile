@@ -213,23 +213,10 @@ fun DiagnosticScreen(
 
 //          TODO(Здесь надо пользоваться viewModel с репозиторием)
             uiState.currentResponse.formations?.forEachIndexed { i, formation ->
-                val maxTirads = maxOf(
-                    formation.tirads.tirads_23,
-                    formation.tirads.tirads_4,
-                    formation.tirads.tirads_5
-                )
-
-                val formationClass = when (maxTirads) {
-                    formation.tirads.tirads_23 -> 2 // TIRADS 2-3
-                    formation.tirads.tirads_4 -> 4 // TIRADS 4
-                    formation.tirads.tirads_5 -> 5 // TIRADS 5
-                    else -> 0 // На случай ошибки
-                }
-
                 FormationInfoContainer(
                     formationIndex = i,
-                    formationClass = formationClass,
-                    formationProbability = maxTirads,
+                    formationClass = formation.formationClass,
+                    formationProbability = formation.maxTirads,
                     formationDescription = "Описание формации"
                 )
             }

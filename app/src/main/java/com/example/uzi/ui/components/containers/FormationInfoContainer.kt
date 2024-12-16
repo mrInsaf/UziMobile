@@ -23,13 +23,6 @@ fun FormationInfoContainer(
     formationProbability: Int,
     formationDescription: String,
 ) {
-    val (textColor, backgroundColor) = when (formationClass) {
-        in 1..3 -> Pair(Color(0xFF52c41a), Color(0xFFf6ffed))
-        4 -> Pair(Color(0xFFFFA500), Color(0xFFFFF4E5))
-        5 -> Pair(Color(0xFFf5222d), Color(0xFFfff1f0))
-        else -> Pair(Color.Yellow, Color.Red)
-    }
-
     BasicContainer {
         Column(
             verticalArrangement = Arrangement.spacedBy(Paddings.Small),
@@ -40,24 +33,15 @@ fun FormationInfoContainer(
                 text = "Образование №$formationIndex",
                 color = MaterialTheme.colorScheme.tertiary
             )
-            Box(
-                modifier = Modifier
-                    .background(color = backgroundColor)
-                    .border(width = 1.dp, color = textColor)
-                    .padding(Paddings.ExtraSmall)
-            ) {
-                Text(
-                    text = "EU TIRADS $formationClass - $formationProbability%",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = textColor
-                )
-            }
+            TiradsContainer(formationClass, formationProbability)
             Text(
                 text = formationDescription
             )
         }
     }
 }
+
+
 
 @Preview
 @Composable

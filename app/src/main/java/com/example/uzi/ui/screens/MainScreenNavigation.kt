@@ -67,12 +67,8 @@ fun MainScreen(
                     )
                 }
                 composable(Screen.Uploaded.route) {
-                    DiagnosticScreen(
-                        diagnosticDate = diagnosticHistoryUiState.currentResponse.uzi?.dateOfAdmission
-                            ?: "Дата",
-                        clinicName = diagnosticHistoryUiState.currentResponse.uzi?.clinicName
-                            ?: "Клиника",
-                        diagnosticHistoryViewModel = diagnosticHistoryViewModel
+                    DiagnosticsListScreen(
+                        diagnosticsList = TODO(),
                     )
                 }
                 composable(Screen.Account.route) {
