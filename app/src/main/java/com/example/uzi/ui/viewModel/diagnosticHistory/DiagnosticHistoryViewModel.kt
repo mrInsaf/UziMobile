@@ -1,12 +1,7 @@
 package com.example.uzi.ui.viewModel.diagnosticHistory
 
-import android.graphics.Bitmap
-import android.net.Uri
-import android.provider.MediaStore
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.uzi.data.models.ReportResponse
 import com.example.uzi.data.repository.UziServiceRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -7,8 +7,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.uzi.data.models.Formation
-import com.example.uzi.data.models.Tirads
+import com.example.uzi.data.models.networkResponses.Formation
+import com.example.uzi.data.models.networkResponses.Tirads
 import com.example.uzi.ui.theme.Paddings
 
 @Composable

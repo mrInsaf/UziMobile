@@ -13,7 +13,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.uzi.data.repository.MockUziServiceRepository
+import com.example.uzi.data.repository.NetworkUziServiceRepository
 import com.example.uzi.data.repository.UziServiceRepository
+import com.example.uzi.network.RetrofitProvider
 import com.example.uzi.ui.screens.AuthorizationScreen
 import com.example.uzi.ui.screens.MainScreen
 import com.example.uzi.ui.screens.RegistrationScreen
@@ -29,7 +31,11 @@ class MainActivity : ComponentActivity() {
         
         val context = this
 
-        val repository: UziServiceRepository = MockUziServiceRepository()
+        val uziApiService = RetrofitProvider.uziApiService
+        val repository: UziServiceRepository = NetworkUziServiceRepository(
+            uziApiService = uziApiService
+        )
+
         val authorisationViewModel = AuthorisationViewModel(
             repository,
             context = context

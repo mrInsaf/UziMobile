@@ -3,16 +3,16 @@ package com.example.uzi.data.repository
 import android.net.Uri
 import com.example.uzi.data.mock.MockAuthData
 import com.example.uzi.data.mock.MockUziReport
-import com.example.uzi.data.models.Formation
-import com.example.uzi.data.models.Image
-import com.example.uzi.data.models.ReportResponse
+import com.example.uzi.data.models.networkResponses.Formation
+import com.example.uzi.data.models.networkResponses.Image
+import com.example.uzi.data.models.networkResponses.LoginResponse
+import com.example.uzi.data.models.networkResponses.ReportResponse
 import com.example.uzi.data.models.SectorPoint
-import com.example.uzi.data.models.Segment
-import com.example.uzi.data.models.Tirads
+import com.example.uzi.data.models.networkResponses.Segment
+import com.example.uzi.data.models.networkResponses.Tirads
 import com.example.uzi.data.models.User
-import com.example.uzi.data.models.Uzi
+import com.example.uzi.data.models.networkResponses.Uzi
 import kotlinx.coroutines.delay
-import java.text.Normalizer.Form
 
 class MockUziServiceRepository : UziServiceRepository {
     private val authData = MockAuthData()
@@ -27,9 +27,17 @@ class MockUziServiceRepository : UziServiceRepository {
     override suspend fun submitLogin(
         email: String,
         password: String
-    ): Boolean {
-        delay(100)
-        return email == authData.email && password == authData.password
+    ): LoginResponse {
+        delay(100) // Симуляция сетевого вызова
+
+        if (email == authData.email && password == authData.password) {
+            return LoginResponse(
+                accessToken = "mock_access_token",
+                refreshToken = "mock_refresh_token"
+            )
+        } else {
+            throw IllegalArgumentException("Invalid email or password") // Бросаем исключение при ошибке
+        }
     }
 
 

@@ -1,6 +1,6 @@
 package com.example.uzi.ui.viewModel.diagnosticHistory
 
-import com.example.uzi.data.models.ReportResponse
+import com.example.uzi.data.models.networkResponses.ReportResponse
 
 
 data class DiagnosticHistoryUiState(

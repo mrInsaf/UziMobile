@@ -1,15 +1,9 @@
 package com.example.uzi.ui.viewModel.newDiagnostic
 
 import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.uzi.data.models.ReportResponse
-import com.example.uzi.data.repository.MockUziServiceRepository
 import com.example.uzi.data.repository.UziServiceRepository
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update

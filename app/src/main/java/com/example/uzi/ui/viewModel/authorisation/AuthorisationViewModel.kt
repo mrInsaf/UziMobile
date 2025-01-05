@@ -31,24 +31,41 @@ class AuthorisationViewModel(
     fun onSubmitLogin() {
         viewModelScope.launch {
             val isAuthorisedResponse = async {
-                repository.submitLogin(
-                    email = uiState.value.authorizationEmail,
-                    password = uiState.value.authorizationPassword
-                )
+                try {
+                    println("email: ${uiState.value.authorizationEmail}")
+                    println("pwd: ${uiState.value.authorizationPassword}")
+                    repository.submitLogin(
+                        email = uiState.value.authorizationEmail,
+                        password = uiState.value.authorizationPassword
+                    )
+                } catch (e: Exception) {
+                    if (e is retrofit2.HttpException) {
+                        val response = e.response() // Получаем ответ с ошибкой
+                        val errorBody = response?.errorBody()?.string() // Тело ошибки в виде строки
+                        println("Ошибка HTTP: ${e.code()} - ${e.message()}")
+                        println("Тело ошибки: $errorBody")
+                    } else {
+                        println("Ошибка при попытке логинa: $e")
+                    }
+                    null
+                }
             }
-            val isAuthorised = isAuthorisedResponse.await()
-            if (isAuthorised) {
 
+            val loginResponse = isAuthorisedResponse.await()
+            println("loginResponse: $loginResponse")
+
+            if (loginResponse != null) {
                 val userData = async {
                     repository.getUser()
-                }.await() // TODO(Это скорее всего будет по другому)
+                }.await()
 
-                _uiState.update { it.copy(
-                    isAuthorised = isAuthorised,
-                    userData = userData
-                ) }
-            }
-            else {
+                _uiState.update {
+                    it.copy(
+                        isAuthorised = true, // Обновляем состояние с успешной авторизацией
+                        userData = userData
+                    )
+                }
+            } else { // Если loginResponse == null, авторизация не удалась
                 Toast.makeText(context, "Неверные почта или пароль", Toast.LENGTH_LONG).show()
             }
         }

@@ -1,6 +1,7 @@
-package com.example.uzi.data.models
+package com.example.uzi.data.models.networkResponses
 
 import android.net.Uri
+import com.example.uzi.data.models.SectorPoint
 
 data class ReportResponse(
     val formations: List<Formation>?,

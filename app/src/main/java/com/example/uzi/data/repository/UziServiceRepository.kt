@@ -1,7 +1,8 @@
 package com.example.uzi.data.repository
 
 import android.net.Uri
-import com.example.uzi.data.models.ReportResponse
+import com.example.uzi.data.models.networkResponses.LoginResponse
+import com.example.uzi.data.models.networkResponses.ReportResponse
 import com.example.uzi.data.models.User
 
 interface UziServiceRepository {
@@ -10,7 +11,7 @@ interface UziServiceRepository {
     suspend fun submitLogin(
         email: String,
         password: String,
-    ): Boolean
+    ): LoginResponse
 
     suspend fun submitLogout(): Boolean
 
