@@ -137,7 +137,6 @@ fun DiagnosticScreen(
             println("imageUri: $imageUri")
             println("lol")
 
-// Переменная для отслеживания текущей страницы
             val currentPage = remember { mutableStateOf(0) }
             val numberOfDirectories = remember { mutableStateOf(1f) }
             val mimeType = remember { mutableStateOf("") }

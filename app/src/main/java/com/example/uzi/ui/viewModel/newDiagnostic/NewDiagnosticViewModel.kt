@@ -53,15 +53,22 @@ class NewDiagnosticViewModel(
             val dateOfAdmission = uiState.value.dateOfAdmission
             val clinicName = uiState.value.clinicName
 
-            _uiState.update { it.copy(isDiagnosticSent = true) }
+            _uiState.update { it.copy(
+                isDiagnosticSent = true,
+                completedDiagnosticId = "",
+            ) }
 
-            val diagnosticId = repository.createUzi(
-                patientId = userId,
-                imageUris = imageUris,
-                dateOfAdmission = dateOfAdmission,
-                clinicName = clinicName,
-            )
-            _uiState.update { it.copy(completedDiagnosticId = diagnosticId) }
+            try {
+                val diagnosticId = repository.createUzi(
+                    uziUris = imageUris,
+                    projection = "long",
+                    patientId = "72881f74-1d10-4d93-9002-5207a83729ed", // TODO переделать на авторизацию пользователя
+                    deviceId = "1",
+                )
+                _uiState.update { it.copy(completedDiagnosticId = diagnosticId) }
+            } catch (e: Exception) {
+                println(e)
+            }
         }
     }
 }

@@ -60,9 +60,9 @@ fun MainScreen(
                     NewDiagnosticNavigation(
                         newDiagnosticViewModel,
                         onDiagnosticCompleted = {
-                            navController.navigate(Screen.Uploaded.route)
                             diagnosticHistoryViewModel.addUziId(newDiagnosticUiState.completedDiagnosticId)
                             diagnosticHistoryViewModel.onSelectUzi(newDiagnosticUiState.completedDiagnosticId)
+                            navController.navigate(Screen.Uploaded.route)
                         }
                     )
                 }
@@ -107,7 +107,6 @@ fun BottomNavigationBar(navController: NavHostController) {
                     }
                 },
                 icon = { Icon(imageVector = screen.icon, contentDescription = screen.label) },
-//                label = { Text(screen.label) }
             )
         }
     }

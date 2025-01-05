@@ -4,10 +4,12 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.uzi.data.TokenStorage
 import com.example.uzi.data.repository.UziServiceRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -19,6 +21,20 @@ class AuthorisationViewModel(
     private var _uiState = MutableStateFlow(AuthorisationUiState())
     val uiState: StateFlow<AuthorisationUiState>
         get() = _uiState
+
+    init {
+        viewModelScope.launch {
+            // Проверка наличия токенов в DataStore
+            val accessToken = TokenStorage.getAccessToken(context).firstOrNull()
+            val refreshToken = TokenStorage.getRefreshToken(context).firstOrNull()
+
+            // Если оба токена существуют, считаем, что пользователь авторизован
+            _uiState.update { 
+                it.copy(isAuthorised = !accessToken.isNullOrEmpty() && !refreshToken.isNullOrEmpty())
+            }
+            
+        }
+    }
 
     fun onAuthorizationEmailChange(newEmail: String) {
         _uiState.update { it.copy(authorizationEmail = newEmail) }

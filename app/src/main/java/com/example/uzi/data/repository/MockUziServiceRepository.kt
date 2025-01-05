@@ -59,16 +59,16 @@ class MockUziServiceRepository : UziServiceRepository {
     }
 
     override suspend fun createUzi(
-        patientId: String,
-        imageUris: List<Uri>,
-        dateOfAdmission: String,
-        clinicName: String,
+        uziUris: List<Uri>, // URI УЗИ файла
+        projection: String, // Проекция УЗИ
+        patientId: String, // ID пациента
+        deviceId: String // ID устройства
     ): String {
         // Генерация уникального ID для нового отчета
         val uziId = "uzi_${System.currentTimeMillis()}"
 
         // Генерация списка изображений
-        val images = imageUris.mapIndexed { index, uri ->
+        val images = uziUris.mapIndexed { index, uri ->
             Image(
                 id = "image_${index + 1}",
                 page = index + 1,
@@ -113,8 +113,8 @@ class MockUziServiceRepository : UziServiceRepository {
             patient_id = patientId,
             projection = "Projection_${(1..3).random()}",
             url = "wtf",
-            dateOfAdmission = dateOfAdmission,
-            clinicName = clinicName
+            dateOfAdmission = "Время",
+            clinicName = "Клиника"
         )
 
         // Создание отчета
