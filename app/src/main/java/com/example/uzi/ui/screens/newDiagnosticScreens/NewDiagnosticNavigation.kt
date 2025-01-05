@@ -60,7 +60,6 @@ fun NewDiagnosticNavigation(
                         color = MaterialTheme.colorScheme.tertiary
                     )
                 }
-                println(newDiagnosticViewModel.uiState.value.completedDiagnosticId)
 //                NewDiagnosticProgressBar(newDiagnosticUiState.currentScreenIndex)
                 NewDiagnosticProgressBar(currentScreenIndex = newDiagnosticUiState.currentScreenIndex)
                 NavHost(
@@ -74,7 +73,7 @@ fun NewDiagnosticNavigation(
                                     NewDiagnosticScreen.AdditionalInformationRoute.route
                                 )
                                 newDiagnosticViewModel.onNextScreenButtonClick()
-//                                newDiagnosticViewModel.onDiagnosticStart()
+                                newDiagnosticViewModel.onDiagnosticStart()
                             },
                             newDiagnosticViewModel = newDiagnosticViewModel,
                             modifier = Modifier.padding(padding),

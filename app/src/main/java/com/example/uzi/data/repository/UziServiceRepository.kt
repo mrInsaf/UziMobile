@@ -13,6 +13,8 @@ interface UziServiceRepository {
         password: String,
     ): LoginResponse
 
+    suspend fun refreshToken(): Unit
+
     suspend fun submitLogout(): Boolean
 
     suspend fun getUser(): User

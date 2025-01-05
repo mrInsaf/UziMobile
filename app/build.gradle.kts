@@ -41,6 +41,9 @@ android {
 }
 
 dependencies {
+
+    implementation(libs.androidx.datastore.preferences.v100)
+
     // Retrofit
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.retrofit)
