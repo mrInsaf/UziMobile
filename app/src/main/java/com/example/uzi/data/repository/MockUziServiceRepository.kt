@@ -40,6 +40,10 @@ class MockUziServiceRepository : UziServiceRepository {
         }
     }
 
+    override suspend fun refreshToken() {
+        TODO("Not yet implemented")
+    }
+
 
     override suspend fun submitLogout(): Boolean {
         delay(100)

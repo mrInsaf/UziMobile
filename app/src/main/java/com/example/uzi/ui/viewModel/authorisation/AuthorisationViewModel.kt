@@ -39,6 +39,7 @@ class AuthorisationViewModel(
                         password = uiState.value.authorizationPassword
                     )
                 } catch (e: Exception) {
+                    println("yo")
                     if (e is retrofit2.HttpException) {
                         val response = e.response() // Получаем ответ с ошибкой
                         val errorBody = response?.errorBody()?.string() // Тело ошибки в виде строки
@@ -55,17 +56,17 @@ class AuthorisationViewModel(
             println("loginResponse: $loginResponse")
 
             if (loginResponse != null) {
-                val userData = async {
-                    repository.getUser()
-                }.await()
+//                val userData = async {
+//                    repository.getUser()
+//                }.await()
 
                 _uiState.update {
                     it.copy(
-                        isAuthorised = true, // Обновляем состояние с успешной авторизацией
-                        userData = userData
+                        isAuthorised = true,
+//                        userData = userData
                     )
                 }
-            } else { // Если loginResponse == null, авторизация не удалась
+            } else {
                 Toast.makeText(context, "Неверные почта или пароль", Toast.LENGTH_LONG).show()
             }
         }

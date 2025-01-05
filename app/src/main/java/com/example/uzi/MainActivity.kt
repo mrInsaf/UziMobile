@@ -33,7 +33,8 @@ class MainActivity : ComponentActivity() {
 
         val uziApiService = RetrofitProvider.uziApiService
         val repository: UziServiceRepository = NetworkUziServiceRepository(
-            uziApiService = uziApiService
+            uziApiService = uziApiService,
+            context = this
         )
 
         val authorisationViewModel = AuthorisationViewModel(
