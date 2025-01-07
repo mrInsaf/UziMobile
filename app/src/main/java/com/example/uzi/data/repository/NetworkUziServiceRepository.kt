@@ -139,7 +139,7 @@ class NetworkUziServiceRepository(
                     refreshResponse.accessKey
                 } catch (refreshException: Exception) {
                     println("Ошибка при обновлении токена: ${refreshException.message}")
-                    throw Exception("Failed to refresh token", refreshException)
+                    throw refreshException
                 }
 
                 return apiCall(newTokens)

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.uzi.data.TokenStorage
 import com.example.uzi.data.repository.UziServiceRepository
+import com.example.uzi.ui.UiEvent
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -37,12 +38,12 @@ class AuthorisationViewModel(
         }
     }
 
-    fun onTokenExpired() {
+    private fun onTokenExpired() {
         _uiState.update { it.copy(isAuthorised = false) }
     }
 
     // Метод для подписки на события истечения токена
-    fun observeTokenExpiration(tokenExpiredEvent: SharedFlow<Unit>) {
+    fun observeTokenExpiration(tokenExpiredEvent: SharedFlow<UiEvent>) {
         viewModelScope.launch {
             tokenExpiredEvent.collect {
                 onTokenExpired() // Когда событие приходит, вызываем метод для обновления состояния

@@ -60,8 +60,8 @@ class MainActivity : ComponentActivity() {
             repository = repository
         )
 
-        authorisationViewModel.observeTokenExpiration(newDiagnosticViewModel.tokenExpiredEvent)
-        newDiagnosticViewModel.tokenExpiredEvent
+        authorisationViewModel.observeTokenExpiration(newDiagnosticViewModel.uiEvent)
+        newDiagnosticViewModel.uiEvent
             .onEach {
                 // Здесь показываем тост, когда событие будет получено
                 Toast.makeText(context, "Сессия истекла", Toast.LENGTH_SHORT).show()

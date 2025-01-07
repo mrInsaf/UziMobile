@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,7 +35,7 @@ fun UploadImage(
     newDiagnosticViewModel: NewDiagnosticViewModel,
     modifier: Modifier = Modifier
 ) {
-
+    val uiState = newDiagnosticViewModel.uiState.collectAsState()
     val combinedPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument(),
         onResult = { uri ->
@@ -75,7 +76,8 @@ fun UploadImage(
         )
 
         MainButton(
-            text = "Начать диагностику"
+            text = "Начать диагностику",
+            enabled = uiState.value.selectedImageUris.isNotEmpty()
         ) {
             onStartDiagnosticClick()
         }

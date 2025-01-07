@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.uzi.data.repository.UziServiceRepository
+import com.example.uzi.ui.UiEvent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class NewDiagnosticViewModel(
     val repository: UziServiceRepository,
@@ -20,8 +22,8 @@ class NewDiagnosticViewModel(
     val uiState: StateFlow<NewDiagnosticUiState>
         get() = _uiState
 
-    private val _tokenExpiredEvent = MutableSharedFlow<Unit>(replay = 1) // replay = 1, чтобы новое подписывающееся приложение получало последнее событие
-    val tokenExpiredEvent: SharedFlow<Unit> = _tokenExpiredEvent.asSharedFlow()
+    private val _uiEvent = MutableSharedFlow<UiEvent>()
+    val uiEvent = _uiEvent.asSharedFlow()
 
     fun onDatePick(newDate: String) {
         println("yooooo")
@@ -73,16 +75,26 @@ class NewDiagnosticViewModel(
                     deviceId = "1",
                 )
                 _uiState.update { it.copy(completedDiagnosticId = diagnosticId) }
-            } catch (e: Exception) {
+            }
+            catch (e: HttpException) {
                 onTokenExpiration()
+                _uiState.update {
+                    it.copy(
+                        currentScreenIndex = 0,
+                        selectedImageUris = emptyList()
+                    )
+                }
                 println("wtf $e")
+            }
+            catch (e: Exception) {
+
             }
         }
     }
 
     private fun onTokenExpiration() {
         viewModelScope.launch {
-            _tokenExpiredEvent.emit(Unit)
+            _uiEvent.emit(UiEvent.ShowToast("Сессия истекла"))
         }
     }
 }
