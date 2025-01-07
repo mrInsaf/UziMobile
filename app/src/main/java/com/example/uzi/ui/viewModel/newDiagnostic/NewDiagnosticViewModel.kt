@@ -1,11 +1,15 @@
 package com.example.uzi.ui.viewModel.newDiagnostic
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.uzi.data.repository.UziServiceRepository
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -15,6 +19,9 @@ class NewDiagnosticViewModel(
     private var _uiState = MutableStateFlow(NewDiagnosticUiState())
     val uiState: StateFlow<NewDiagnosticUiState>
         get() = _uiState
+
+    private val _tokenExpiredEvent = MutableSharedFlow<Unit>(replay = 1) // replay = 1, чтобы новое подписывающееся приложение получало последнее событие
+    val tokenExpiredEvent: SharedFlow<Unit> = _tokenExpiredEvent.asSharedFlow()
 
     fun onDatePick(newDate: String) {
         println("yooooo")
@@ -67,8 +74,15 @@ class NewDiagnosticViewModel(
                 )
                 _uiState.update { it.copy(completedDiagnosticId = diagnosticId) }
             } catch (e: Exception) {
-                println(e)
+                onTokenExpiration()
+                println("wtf $e")
             }
+        }
+    }
+
+    private fun onTokenExpiration() {
+        viewModelScope.launch {
+            _tokenExpiredEvent.emit(Unit)
         }
     }
 }

@@ -8,6 +8,7 @@ import com.example.uzi.data.TokenStorage
 import com.example.uzi.data.repository.UziServiceRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
@@ -33,6 +34,19 @@ class AuthorisationViewModel(
                 it.copy(isAuthorised = !accessToken.isNullOrEmpty() && !refreshToken.isNullOrEmpty())
             }
             
+        }
+    }
+
+    fun onTokenExpired() {
+        _uiState.update { it.copy(isAuthorised = false) }
+    }
+
+    // Метод для подписки на события истечения токена
+    fun observeTokenExpiration(tokenExpiredEvent: SharedFlow<Unit>) {
+        viewModelScope.launch {
+            tokenExpiredEvent.collect {
+                onTokenExpired() // Когда событие приходит, вызываем метод для обновления состояния
+            }
         }
     }
 
