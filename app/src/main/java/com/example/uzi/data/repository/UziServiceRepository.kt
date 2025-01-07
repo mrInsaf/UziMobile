@@ -4,6 +4,7 @@ import android.net.Uri
 import com.example.uzi.data.models.networkResponses.LoginResponse
 import com.example.uzi.data.models.networkResponses.ReportResponse
 import com.example.uzi.data.models.User
+import com.example.uzi.data.models.networkResponses.UziImage
 
 interface UziServiceRepository {
     suspend fun checkAuthorisation(): Boolean
@@ -27,4 +28,9 @@ interface UziServiceRepository {
     ): String
 
     suspend fun getUziById(uziId: String): ReportResponse
+
+    suspend fun getUziImages(
+        uziId: String // ID УЗИ
+    ): List<UziImage>?
+
 }

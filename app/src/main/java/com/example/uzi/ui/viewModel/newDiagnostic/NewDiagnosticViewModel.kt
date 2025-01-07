@@ -1,14 +1,12 @@
 package com.example.uzi.ui.viewModel.newDiagnostic
 
 import android.net.Uri
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.uzi.data.repository.UziServiceRepository
 import com.example.uzi.ui.UiEvent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.update
@@ -74,6 +72,11 @@ class NewDiagnosticViewModel(
                     patientId = "72881f74-1d10-4d93-9002-5207a83729ed", // TODO переделать на авторизацию пользователя
                     deviceId = "1",
                 )
+                println("diagnosticId: $diagnosticId")
+
+                val uziImages = repository.getUziImages(diagnosticId)
+                println("uziImages: $uziImages")
+
                 _uiState.update { it.copy(completedDiagnosticId = diagnosticId) }
             }
             catch (e: HttpException) {

@@ -60,7 +60,7 @@ fun MainScreen(
                     NewDiagnosticNavigation(
                         newDiagnosticViewModel,
                         onDiagnosticCompleted = {
-                            diagnosticHistoryViewModel.addUziId(newDiagnosticUiState.completedDiagnosticId)
+//                            diagnosticHistoryViewModel.addUziId(newDiagnosticUiState.completedDiagnosticId) TODO Переделать на сохранение в локальное хранилище
                             diagnosticHistoryViewModel.onSelectUzi(newDiagnosticUiState.completedDiagnosticId)
                             navController.navigate(Screen.Uploaded.route)
                         }

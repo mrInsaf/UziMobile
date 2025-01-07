@@ -9,7 +9,9 @@ import com.example.uzi.data.models.networkResponses.LoginResponse
 import com.example.uzi.data.models.networkResponses.ReportResponse
 import com.example.uzi.data.models.User
 import com.example.uzi.data.models.networkRequests.LoginRequest
+import com.example.uzi.data.models.networkResponses.UziImage
 import com.example.uzi.network.UziApiService
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -98,6 +100,35 @@ class NetworkUziServiceRepository(
         }
     }
 
+
+    override suspend fun getUziImages(uziId: String): List<UziImage> {
+        val maxRetries = 24         // Максимальное количество попыток
+        val delayMillis = 5000L     // Задержка между попытками (2 секунды)
+
+        repeat(maxRetries) { attempt -> // Повторяем запрос указанное количество раз
+            try {
+                val result = safeApiCall { accessToken ->
+                    uziApiService.getUziImages(
+                        accessToken = accessToken,
+                        uziId = uziId
+                    )
+                }
+
+                if (!result.isNullOrEmpty()) { // Если результат не пустой — возвращаем его
+                    return result
+                } else {
+                    println("Попытка ${attempt + 1}: Пустой результат. Жду $delayMillis мс...")
+                    delay(delayMillis) // Ждем перед следующей попыткой
+                }
+            } catch (e: Exception) {
+                println("Попытка ${attempt + 1}: Ошибка - ${e.message}")
+                if (attempt == maxRetries - 1) throw e // Если последняя попытка — пробрасываем ошибку
+                delay(delayMillis) // Ждем перед следующей попыткой
+            }
+        }
+
+        throw Exception("Не удалось получить изображения после $maxRetries попыток.")
+    }
 
     override suspend fun submitLogout(): Boolean {
         TODO("Not yet implemented")
