@@ -3,9 +3,8 @@ package com.example.uzi.data.repository
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
-import android.provider.MediaStore
 import android.provider.OpenableColumns
-import com.example.uzi.data.TokenStorage
+import com.example.uzi.data.repository.local.TokenStorage
 import com.example.uzi.data.models.networkResponses.LoginResponse
 import com.example.uzi.data.models.networkResponses.ReportResponse
 import com.example.uzi.data.models.User
