@@ -1,12 +1,11 @@
 package com.example.uzi.data.models.networkResponses
 
 import android.net.Uri
-import com.example.uzi.data.models.SectorPoint
 
 data class ReportResponse(
     val formations: List<Formation>?,
     val images: List<Image>?,
-    val segments: List<Segment>?,
+    val segments: List<SegmentFake>?,
     val uzi: Uzi?
 )
 
@@ -45,7 +44,7 @@ data class Image(
     val url: Uri
 )
 
-data class Segment(
+data class SegmentFake(
     val contor: List<SectorPoint>,
     val formation_id: String,
     val id: String,

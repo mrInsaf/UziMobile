@@ -15,4 +15,6 @@ data class NewDiagnosticUiState(
     var isDiagnosticSent: Boolean = false,
 
     var completedDiagnosticId: String = "",
+
+    var downloadedImagesUris: MutableList<Uri> = mutableListOf()
 )

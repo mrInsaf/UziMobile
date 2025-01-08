@@ -3,8 +3,10 @@ package com.example.uzi.data.repository
 import android.net.Uri
 import com.example.uzi.data.models.User
 import com.example.uzi.data.models.networkResponses.LoginResponse
+import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
 import com.example.uzi.data.models.networkResponses.ReportResponse
 import com.example.uzi.data.models.networkResponses.UziImage
+import okhttp3.ResponseBody
 
 //
 //import android.net.Uri
@@ -14,7 +16,7 @@ import com.example.uzi.data.models.networkResponses.UziImage
 //import com.example.uzi.data.models.networkResponses.Image
 //import com.example.uzi.data.models.networkResponses.LoginResponse
 //import com.example.uzi.data.models.networkResponses.ReportResponse
-//import com.example.uzi.data.models.SectorPoint
+//import com.example.uzi.data.models.networkResponses.SectorPoint
 //import com.example.uzi.data.models.networkResponses.Segment
 //import com.example.uzi.data.models.networkResponses.Tirads
 //import com.example.uzi.data.models.User
@@ -177,7 +179,19 @@ class MockUziServiceRepository : UziServiceRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUziImages(uziId: String): List<UziImage>? {
+    override suspend fun getUziImages(uziId: String): List<UziImage> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getImageNodesAndSegments(imageId: String): NodesSegmentsResponse {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun downloadUziImage(uziId: String, imageId: String): ResponseBody {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun saveUziImageAndGetCacheUri(uziId: String, imageId: String): Uri {
         TODO("Not yet implemented")
     }
 }

@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.uzi.data.repository.UziServiceRepository
 import com.example.uzi.ui.UiEvent
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -76,6 +78,30 @@ class NewDiagnosticViewModel(
 
                 val uziImages = repository.getUziImages(diagnosticId)
                 println("uziImages: $uziImages")
+
+                val downloadedImagesUris = mutableListOf<Uri>() // Локальный список для хранения URI
+
+                val tasks = uziImages.map { image ->
+                    async {
+                        val downloadedImageUri = repository.saveUziImageAndGetCacheUri(diagnosticId, image.id)
+                        downloadedImageUri // Возвращаем URI
+                    }
+                }
+
+                downloadedImagesUris.addAll(tasks.awaitAll()) // Собираем результаты в список
+
+                val uziImageNodesSegments = async {
+                    repository.getImageNodesAndSegments(uziImages.first().id)
+                }.await()
+
+                _uiState.update { state ->
+                    state.apply {
+                        downloadedImagesUris.addAll(downloadedImagesUris)
+                    }
+                }
+
+                println("uziImageNodesSegments: $uziImageNodesSegments")
+
 
                 _uiState.update { it.copy(completedDiagnosticId = diagnosticId) }
             }

@@ -9,7 +9,9 @@ import com.example.uzi.data.models.networkResponses.LoginResponse
 import com.example.uzi.data.models.networkResponses.ReportResponse
 import com.example.uzi.data.models.User
 import com.example.uzi.data.models.networkRequests.LoginRequest
+import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
 import com.example.uzi.data.models.networkResponses.UziImage
+import com.example.uzi.data.repository.local.CacheFileUtil
 import com.example.uzi.network.UziApiService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -18,6 +20,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.ResponseBody
 import retrofit2.HttpException
 import java.io.File
 
@@ -102,10 +105,10 @@ class NetworkUziServiceRepository(
 
 
     override suspend fun getUziImages(uziId: String): List<UziImage> {
-        val maxRetries = 24         // Максимальное количество попыток
-        val delayMillis = 5000L     // Задержка между попытками (2 секунды)
+        val maxRetries = 50
+        val delayMillis = 5000L
 
-        repeat(maxRetries) { attempt -> // Повторяем запрос указанное количество раз
+        repeat(maxRetries) { attempt ->
             try {
                 val result = safeApiCall { accessToken ->
                     uziApiService.getUziImages(
@@ -114,21 +117,75 @@ class NetworkUziServiceRepository(
                     )
                 }
 
-                if (!result.isNullOrEmpty()) { // Если результат не пустой — возвращаем его
+                if (!result.isNullOrEmpty()) {
                     return result
                 } else {
                     println("Попытка ${attempt + 1}: Пустой результат. Жду $delayMillis мс...")
-                    delay(delayMillis) // Ждем перед следующей попыткой
+                    delay(delayMillis)
                 }
             } catch (e: Exception) {
                 println("Попытка ${attempt + 1}: Ошибка - ${e.message}")
-                if (attempt == maxRetries - 1) throw e // Если последняя попытка — пробрасываем ошибку
-                delay(delayMillis) // Ждем перед следующей попыткой
+                if (attempt == maxRetries - 1) throw e
+                delay(delayMillis)
             }
         }
 
         throw Exception("Не удалось получить изображения после $maxRetries попыток.")
     }
+
+    override suspend fun getImageNodesAndSegments(imageId: String): NodesSegmentsResponse {
+        val maxAttempts = 50
+        val delayMillis = 5000L
+
+        repeat(maxAttempts) { attempt ->
+            try {
+                val response = safeApiCall { accessToken ->
+                    uziApiService.getImageNodesAndSegments(accessToken, imageId)
+                }
+
+                if (response.nodes.isNotEmpty() && response.segments.isNotEmpty()) {
+                    return response
+                }
+            } catch (e: Exception) {
+                println("Попытка ${attempt + 1}: Ошибка - ${e.message}")
+            }
+
+            delay(delayMillis)
+        }
+
+        throw Exception("Не удалось получить ноды и сегменты после $maxAttempts попыток.")
+    }
+
+    override suspend fun downloadUziImage(uziId: String, imageId: String): ResponseBody {
+        // Повторяющийся запрос с задержкой
+        repeat(3) { attempt -> // 3 попытки
+            try {
+                val response = safeApiCall { accessToken ->
+                    uziApiService.downloadUziImage(accessToken, uziId, imageId)
+                }
+
+                if (response.isSuccessful && response.body() != null) {
+                    return response.body()!!
+                } else {
+                    println("Ошибка запроса: ${response.code()} ${response.message()}, попытка ${attempt + 1}")
+                }
+            } catch (e: Exception) {
+                println("Ошибка при получении изображения: ${e.message}, попытка ${attempt + 1}")
+            }
+            delay(2000) // Задержка между попытками
+        }
+
+        throw Exception("Не удалось получить изображение после нескольких попыток.")
+    }
+
+    override suspend fun saveUziImageAndGetCacheUri(uziId: String, imageId: String): Uri {
+        println("Сохраняю картинку $imageId")
+        val responseBody = downloadUziImage(uziId, imageId)
+        val fileName = "$uziId-$imageId.jpg"
+        return CacheFileUtil.saveFileToCache(context, fileName, responseBody)
+            ?: throw Exception("Не удалось сохранить файл в кэш.")
+    }
+
 
     override suspend fun submitLogout(): Boolean {
         TODO("Not yet implemented")

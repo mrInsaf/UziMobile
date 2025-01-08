@@ -4,7 +4,9 @@ import android.net.Uri
 import com.example.uzi.data.models.networkResponses.LoginResponse
 import com.example.uzi.data.models.networkResponses.ReportResponse
 import com.example.uzi.data.models.User
+import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
 import com.example.uzi.data.models.networkResponses.UziImage
+import okhttp3.ResponseBody
 
 interface UziServiceRepository {
     suspend fun checkAuthorisation(): Boolean
@@ -31,6 +33,11 @@ interface UziServiceRepository {
 
     suspend fun getUziImages(
         uziId: String // ID УЗИ
-    ): List<UziImage>?
+    ): List<UziImage>
 
+    suspend fun getImageNodesAndSegments(imageId: String): NodesSegmentsResponse
+
+    suspend fun downloadUziImage(uziId: String, imageId: String): ResponseBody
+
+    suspend fun saveUziImageAndGetCacheUri(uziId: String, imageId: String): Uri
 }
