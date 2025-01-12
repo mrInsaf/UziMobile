@@ -75,9 +75,11 @@ class NewDiagnosticViewModel(
                     patientId = "72881f74-1d10-4d93-9002-5207a83729ed", // TODO: заменить на ID авторизованного пользователя
                     deviceId = "1",
                 )
+
+//                val diagnosticId = "a098e2a7-394f-476f-a618-36782165dde9"
                 println("diagnosticId: $diagnosticId")
 
-                val uziImagesIds = repository.getUziImages(diagnosticId)
+                val uziImages = repository.getUziImages(diagnosticId)
 
                 // Загрузка всех изображений УЗИ одним запросом
                 val downloadedUziResponseBody = repository.downloadUziFile(
@@ -91,14 +93,15 @@ class NewDiagnosticViewModel(
 
                 // Получение информации о сегментах и узлах для первого изображения
                 val uziImageNodesSegments = async {
-                    repository.getImageNodesAndSegments(uziImagesIds.first().id)
+                    repository.getImageNodesAndSegments(uziImages.first().id, false)
                 }.await()
 
                 // Обновляем состояние с результатами диагностики
                 _uiState.update { state ->
                     state.copy(
                         completedDiagnosticId = diagnosticId,
-                        downloadedImagesUris = mutableListOf(downloadedUziUri), // Устанавливаем URI загруженного УЗИ
+                        downloadedImagesUris = imageUris.toMutableList(), // Устанавливаем URI загруженного УЗИ
+                        uziImages = uziImages,
                         nodesAndSegmentsResponse = uziImageNodesSegments
                     )
                 }

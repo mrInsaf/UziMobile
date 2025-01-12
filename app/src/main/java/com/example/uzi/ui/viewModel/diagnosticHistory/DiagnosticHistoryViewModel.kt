@@ -1,10 +1,11 @@
 package com.example.uzi.ui.viewModel.diagnosticHistory
 
-import androidx.datastore.preferences.core.stringSetPreferencesKey
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
+import com.example.uzi.data.models.networkResponses.UziImage
 import com.example.uzi.data.repository.UziServiceRepository
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -21,15 +22,37 @@ class DiagnosticHistoryViewModel(
         _uiState.update { it.copy(uziIds = (it.uziIds + uziId).toMutableList()) }
     }
 
-    fun onSelectUzi(uziId: String) {
+    fun onSelectUzi(
+        completedDiagnosticId: String,
+        downloadedImagesUris: MutableList<Uri>,
+        uziImages: List<UziImage>,
+        nodesAndSegmentsResponse: NodesSegmentsResponse
+    ) {
         viewModelScope.launch {
-            val uziReportResponse = async { repository.getUziById(uziId) }.await()
 
             _uiState.update { it.copy(
-                currentResponse = uziReportResponse,
-                currentUziId = uziId
+                completedDiagnosticId = completedDiagnosticId,
+                downloadedImagesUris = downloadedImagesUris,
+                uziImages = uziImages,
+                nodesAndSegmentsResponse = nodesAndSegmentsResponse,
             ) }
         }
     }
+
+    fun onUziPageChanged(imageId: String) {
+        viewModelScope.launch {
+            try {
+                val newNodesSegmentsResponse = repository.getImageNodesAndSegments(imageId, true)
+                _uiState.update {
+                    it.copy(
+                        nodesAndSegmentsResponse = newNodesSegmentsResponse
+                    )
+                }
+            } catch (e: Exception) {
+                println("Ошибка: ${e.message}")
+            }
+        }
+    }
+
 
 }

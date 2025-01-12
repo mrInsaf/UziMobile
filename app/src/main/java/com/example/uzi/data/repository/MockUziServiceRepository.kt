@@ -183,7 +183,7 @@ class MockUziServiceRepository : UziServiceRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getImageNodesAndSegments(imageId: String): NodesSegmentsResponse {
+    override suspend fun getImageNodesAndSegments(imageId: String, diagnosticCompleted: Boolean): NodesSegmentsResponse {
         TODO("Not yet implemented")
     }
 

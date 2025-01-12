@@ -55,18 +55,6 @@ fun DiagnosticScreen(
     clinicName: String,
     diagnosticHistoryViewModel: DiagnosticHistoryViewModel,
 ) {
-//    val nestedScrollConnection = remember {
-//        object : NestedScrollConnection {
-//            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-//                // Приоритет отдаётся зумируемому компоненту
-//                return if (/* зумируемый компонент активен */) {
-//                    Offset.Zero // Блокируем колонку
-//                } else {
-//                    super.onPreScroll(available, source)
-//                }
-//            }
-//        }
-//    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -132,24 +120,23 @@ fun DiagnosticScreen(
             )
 
             val context = LocalContext.current
-            val imageUri: Uri? = uiState.currentResponse.images?.get(0)?.url
+            val uziFileUri: Uri = uiState.downloadedImagesUris.first()
 
-            println("imageUri: $imageUri")
+            println("imageUri: $uziFileUri")
             println("lol")
 
             val currentPage = remember { mutableStateOf(0) }
             val numberOfDirectories = remember { mutableStateOf(1f) }
             val mimeType = remember { mutableStateOf("") }
-            val bitmap: Bitmap? = imageUri?.let { uri ->
+            val bitmap: Bitmap? = uziFileUri.let { uri ->
                 mimeType.value = context.contentResolver.getType(uri) ?: ""
-                println("mimeType: $mimeType")
+                println("mimeType: ${mimeType.value}") // Печатаем значение MIME-типа
                 if (mimeType.value == "image/tiff") {
                     try {
                         // Сначала читаем метаинформацию
                         val initialDescriptor = context.contentResolver.openFileDescriptor(uri, "r")
                         initialDescriptor?.use { descriptor ->
                             val options = TiffBitmapFactory.Options()
-
                             options.inJustDecodeBounds = true
                             TiffBitmapFactory.decodeFileDescriptor(descriptor.fd, options)
                             numberOfDirectories.value = options.outDirectoryCount.toFloat()
@@ -181,8 +168,8 @@ fun DiagnosticScreen(
             if (mimeType.value == "image/tiff") {
                 Column(
                     modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 ) {
                     var sliderPosition by remember { mutableFloatStateOf(0f) }
 
@@ -191,6 +178,9 @@ fun DiagnosticScreen(
                         onValueChange = {
                             sliderPosition = it
                             currentPage.value = it.toInt()
+                            diagnosticHistoryViewModel.onUziPageChanged(
+                                uiState.uziImages[currentPage.value].id
+                            )
                         },
                         valueRange = 0f..numberOfDirectories.value - 1
                     )
@@ -203,14 +193,16 @@ fun DiagnosticScreen(
                 }
             }
 
-
+            println("points size: ${uiState.nodesAndSegmentsResponse.segments.size}")
             ZoomableCanvasSectorWithConstraints(
                 imageBitmap = bitmap?.asImageBitmap() ?: ImageBitmap.imageResource(R.drawable.paint),
-                pointsList = if (selectedTabIndex == 1) emptyList() else uiState.currentResponse.segments?.get(currentPage.value)?.contor ?: points,
+                pointsList = if (selectedTabIndex == 1) emptyList() else uiState
+                    .nodesAndSegmentsResponse
+                    .segments.first() // TODO Здесь надо учесть что для страницы может быть несколько сегментов
+                    .getContorPoints() ?: points,
                 onFullScreen = { isFullScreenOpen = true },
             )
 
-//          TODO(Здесь надо пользоваться viewModel с репозиторием)
             uiState.currentResponse.formations?.forEachIndexed { i, formation ->
                 FormationInfoContainer(
                     formationIndex = i,

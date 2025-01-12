@@ -35,7 +35,7 @@ interface UziServiceRepository {
         uziId: String // ID УЗИ
     ): List<UziImage>
 
-    suspend fun getImageNodesAndSegments(imageId: String): NodesSegmentsResponse
+    suspend fun getImageNodesAndSegments(imageId: String, diagnosticCompleted: Boolean): NodesSegmentsResponse
 
     suspend fun downloadUziImage(uziId: String, imageId: String): ResponseBody
 

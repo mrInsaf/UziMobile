@@ -1,6 +1,9 @@
 package com.example.uzi.ui.viewModel.diagnosticHistory
 
+import android.net.Uri
+import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
 import com.example.uzi.data.models.networkResponses.ReportResponse
+import com.example.uzi.data.models.networkResponses.UziImage
 
 
 data class DiagnosticHistoryUiState(
@@ -12,5 +15,13 @@ data class DiagnosticHistoryUiState(
         images = null,
         segments = null,
         uzi = null
-    )
+    ),
+
+    var completedDiagnosticId: String = "",
+
+    var downloadedImagesUris: MutableList<Uri> = mutableListOf(),
+
+    var uziImages: List<UziImage> = emptyList(),
+
+    var nodesAndSegmentsResponse: NodesSegmentsResponse = NodesSegmentsResponse(emptyList(), emptyList())
 )

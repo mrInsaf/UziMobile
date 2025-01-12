@@ -61,14 +61,21 @@ fun MainScreen(
                         newDiagnosticViewModel,
                         onDiagnosticCompleted = {
 //                            diagnosticHistoryViewModel.addUziId(newDiagnosticUiState.completedDiagnosticId) TODO Переделать на сохранение в локальное хранилище
-                            diagnosticHistoryViewModel.onSelectUzi(newDiagnosticUiState.completedDiagnosticId)
+                            diagnosticHistoryViewModel.onSelectUzi(
+                                completedDiagnosticId = newDiagnosticUiState.completedDiagnosticId,
+                                downloadedImagesUris = newDiagnosticUiState.downloadedImagesUris,
+                                nodesAndSegmentsResponse = newDiagnosticUiState.nodesAndSegmentsResponse,
+                                uziImages = newDiagnosticUiState.uziImages
+                            )
                             navController.navigate(Screen.Uploaded.route)
                         }
                     )
                 }
                 composable(Screen.Uploaded.route) {
-                    DiagnosticsListScreen(
-                        diagnosticsList = TODO(),
+                    DiagnosticScreen(
+                        diagnosticDate = "Дата",
+                        clinicName = "Клиника",
+                        diagnosticHistoryViewModel = diagnosticHistoryViewModel
                     )
                 }
                 composable(Screen.Account.route) {
