@@ -2,7 +2,6 @@ package com.example.uzi.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -64,7 +63,7 @@ fun MainScreen(
                             diagnosticHistoryViewModel.onSelectUzi(
                                 completedDiagnosticId = newDiagnosticUiState.completedDiagnosticId,
                                 downloadedImagesUris = newDiagnosticUiState.downloadedImagesUris,
-                                nodesAndSegmentsResponse = newDiagnosticUiState.nodesAndSegmentsResponse,
+                                nodesAndSegmentsResponses = newDiagnosticUiState.nodesAndSegmentsResponses,
                                 uziImages = newDiagnosticUiState.uziImages
                             )
                             navController.navigate(Screen.Uploaded.route)

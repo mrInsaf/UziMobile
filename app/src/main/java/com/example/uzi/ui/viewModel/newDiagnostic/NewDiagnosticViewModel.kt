@@ -3,9 +3,11 @@ package com.example.uzi.ui.viewModel.newDiagnostic
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
 import com.example.uzi.data.repository.UziServiceRepository
 import com.example.uzi.ui.UiEvent
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -69,14 +71,14 @@ class NewDiagnosticViewModel(
 
             try {
                 // Создание УЗИ
-                val diagnosticId = repository.createUzi(
-                    uziUris = imageUris,
-                    projection = "long",
-                    patientId = "72881f74-1d10-4d93-9002-5207a83729ed", // TODO: заменить на ID авторизованного пользователя
-                    deviceId = "1",
-                )
+//                val diagnosticId = repository.createUzi(
+//                    uziUris = imageUris,
+//                    projection = "long",
+//                    patientId = "72881f74-1d10-4d93-9002-5207a83729ed", // TODO: заменить на ID авторизованного пользователя
+//                    deviceId = "1",
+//                )
 
-//                val diagnosticId = "a098e2a7-394f-476f-a618-36782165dde9"
+                val diagnosticId = "f09282f0-eb96-4f71-a7ee-332b532c9dc8"
                 println("diagnosticId: $diagnosticId")
 
                 val uziImages = repository.getUziImages(diagnosticId)
@@ -91,10 +93,33 @@ class NewDiagnosticViewModel(
                 val downloadedUziUri = repository.saveUziFileAndGetCacheUri(diagnosticId, downloadedUziResponseBody)
                 println("Сохраненный URI УЗИ: $downloadedUziUri")
 
-                // Получение информации о сегментах и узлах для первого изображения
-                val uziImageNodesSegments = async {
+                val firstImageNodesSegments = async {
                     repository.getImageNodesAndSegments(uziImages.first().id, false)
                 }.await()
+
+                println("Успешно получил сегменты первого снимка: $firstImageNodesSegments")
+
+                val remainingImageNodesSegments = uziImages.drop(1).map { image ->
+                    async {
+                        println("Запрашиваю ноды для ${image.id}")
+                        try {
+                            repository.getImageNodesAndSegments(image.id, true)
+                        } catch (e: Exception) {
+                            println("Ошибка при получении нод для изображения с ID ${image.id}: ${e.message}")
+                            if (e.message?.contains("Не удалось выполнить запрос после") == true) {
+                                println("Пустой ответ для изображения с ID ${image.id}")
+                                null
+                            } else {
+                                println("Серьезная ошибка $e")
+                                throw e
+                            }
+                        }
+                    }
+                }.awaitAll()
+
+                val uziImageNodesSegments = mutableListOf(firstImageNodesSegments)
+                uziImageNodesSegments.addAll(remainingImageNodesSegments.filterNotNull()) // Фильтруем null-значения
+
 
                 // Обновляем состояние с результатами диагностики
                 _uiState.update { state ->
@@ -102,7 +127,7 @@ class NewDiagnosticViewModel(
                         completedDiagnosticId = diagnosticId,
                         downloadedImagesUris = imageUris.toMutableList(), // Устанавливаем URI загруженного УЗИ
                         uziImages = uziImages,
-                        nodesAndSegmentsResponse = uziImageNodesSegments
+                        nodesAndSegmentsResponses = uziImageNodesSegments
                     )
                 }
 

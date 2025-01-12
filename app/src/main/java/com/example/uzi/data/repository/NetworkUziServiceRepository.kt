@@ -104,79 +104,46 @@ class NetworkUziServiceRepository(
         }
     }
 
-
     override suspend fun getUziImages(uziId: String): List<UziImage> {
-        val maxRetries = 50
-        val delayMillis = 5000L
+        return retryWithHandling(maxAttempts = 50, delayMillis = 5000L) { accessToken ->
+            val result = uziApiService.getUziImages(
+                accessToken = accessToken,
+                uziId = uziId
+            )
 
-        repeat(maxRetries) { attempt ->
-            try {
-                val result = safeApiCall { accessToken ->
-                    uziApiService.getUziImages(
-                        accessToken = accessToken,
-                        uziId = uziId
-                    )
-                }
-
-                if (!result.isNullOrEmpty()) {
-                    return result
-                } else {
-                    println("Попытка ${attempt + 1}: Пустой результат. Жду $delayMillis мс...")
-                    delay(delayMillis)
-                }
-            } catch (e: Exception) {
-                println("Попытка ${attempt + 1}: Ошибка - ${e.message}")
-                if (attempt == maxRetries - 1) throw e
-                delay(delayMillis)
+            if (!result.isNullOrEmpty()) {
+                result
+            } else {
+                throw Exception("Пустой результат для изображения с ID: $uziId")
             }
         }
-
-        throw Exception("Не удалось получить изображения после $maxRetries попыток.")
     }
 
     override suspend fun getImageNodesAndSegments(imageId: String, diagnosticCompleted: Boolean): NodesSegmentsResponse {
         val maxAttempts = if (diagnosticCompleted) 1 else 50
         val delayMillis = 5000L
 
-        repeat(maxAttempts) { attempt ->
-            try {
-                val response = safeApiCall { accessToken ->
-                    uziApiService.getImageNodesAndSegments(accessToken, imageId)
-                }
+        return retryWithHandling(maxAttempts = maxAttempts, delayMillis = delayMillis) { accessToken ->
+            val response = uziApiService.getImageNodesAndSegments(accessToken, imageId)
 
-                if (response.nodes.isNotEmpty() && response.segments.isNotEmpty()) {
-                    return response
-                }
-            } catch (e: Exception) {
-                println("Попытка ${attempt + 1}: Ошибка - ${e.message}")
+            if (response.nodes.isNotEmpty() && response.segments.isNotEmpty()) {
+                response
+            } else {
+                throw Exception("Получен пустой ответ для изображения с ID: $imageId")
             }
-
-            delay(delayMillis)
         }
-
-        throw Exception("Не удалось получить ноды и сегменты после $maxAttempts попыток.")
     }
 
     override suspend fun downloadUziImage(uziId: String, imageId: String): ResponseBody {
-        // Повторяющийся запрос с задержкой
-        repeat(3) { attempt -> // 3 попытки
-            try {
-                val response = safeApiCall { accessToken ->
-                    uziApiService.downloadUziImage(accessToken, uziId, imageId)
-                }
+        return retryWithHandling(maxAttempts = 3, delayMillis = 2000L) { accessToken ->
+            val response = uziApiService.downloadUziImage(accessToken, uziId, imageId)
 
-                if (response.isSuccessful && response.body() != null) {
-                    return response.body()!!
-                } else {
-                    println("Ошибка запроса: ${response.code()} ${response.message()}, попытка ${attempt + 1}")
-                }
-            } catch (e: Exception) {
-                println("Ошибка при получении изображения: ${e.message}, попытка ${attempt + 1}")
+            if (response.isSuccessful && response.body() != null) {
+                response.body()!!
+            } else {
+                throw Exception("Ошибка запроса: ${response.code()} ${response.message()}")
             }
-            delay(2000) // Задержка между попытками
         }
-
-        throw Exception("Не удалось получить изображение после нескольких попыток.")
     }
 
     override suspend fun saveUziImageAndGetCacheUri(uziId: String, imageId: String): Uri {
@@ -188,26 +155,15 @@ class NetworkUziServiceRepository(
     }
 
     override suspend fun downloadUziFile(uziId: String): ResponseBody {
-        repeat(10) { attempt ->
-            try {
-                val response = safeApiCall { accessToken ->
-                    uziApiService.downloadUzi(accessToken, uziId)
-                }
+        return retryWithHandling(maxAttempts = 10, delayMillis = 2000L) { accessToken ->
+            val response = uziApiService.downloadUzi(accessToken, uziId)
 
-                if (response.isSuccessful && response.body() != null) {
-                    val body = response.body()!!
-                    return body
-                } else {
-                    println("Ошибка запроса: ${response.code()} ${response.message()}, попытка ${attempt + 1}")
-                }
-            } catch (e: Exception) {
-                println("Ошибка при получении УЗИ: ${e.message}, попытка ${attempt + 1}")
-                e.printStackTrace()
+            if (response.isSuccessful && response.body() != null) {
+                response.body()!!
+            } else {
+                throw Exception("Ошибка запроса: ${response.code()} ${response.message()}")
             }
-            delay(2000)
         }
-
-        throw Exception("Не удалось получить УЗИ после нескольких попыток.")
     }
 
     override suspend fun saveUziFileAndGetCacheUri(uziId: String, responseBody: ResponseBody): Uri {
@@ -245,6 +201,31 @@ class NetworkUziServiceRepository(
         TODO("Not yet implemented")
     }
 
+    private suspend fun <T> retryWithHandling(
+        maxAttempts: Int,
+        delayMillis: Long,
+        apiCall: suspend (String) -> T
+    ): T {
+        repeat(maxAttempts) { attempt ->
+            try {
+                return safeApiCall(apiCall)
+            } catch (e: HttpException) {
+                // Обработка ошибки 403
+                if (e.code() == 403) {
+                    throw Exception("Ошибка 403: Доступ запрещен.")
+                }
+                println("Попытка ${attempt + 1}: Ошибка - ${e.message()}")
+            } catch (e: Exception) {
+                println("Попытка ${attempt + 1}: Ошибка - ${e.message}")
+            }
+
+            delay(delayMillis)
+        }
+
+        throw Exception("Не удалось выполнить запрос после $maxAttempts попыток.")
+    }
+
+
     private suspend fun <T> safeApiCall(
         apiCall: suspend (String) -> T
     ): T {
@@ -276,6 +257,7 @@ class NetworkUziServiceRepository(
                     refreshResponse.accessKey
                 } catch (refreshException: Exception) {
                     println("Ошибка при обновлении токена: ${refreshException.message}")
+                    TokenStorage.clearTokens(context)
                     throw refreshException
                 }
 

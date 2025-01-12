@@ -22,5 +22,5 @@ data class NewDiagnosticUiState(
 
     var uziImages: List<UziImage> = emptyList(),
 
-    var nodesAndSegmentsResponse: NodesSegmentsResponse = NodesSegmentsResponse(emptyList(), emptyList())
+    var nodesAndSegmentsResponses: List<NodesSegmentsResponse> = emptyList()
 )

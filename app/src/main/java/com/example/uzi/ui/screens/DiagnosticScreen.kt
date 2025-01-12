@@ -141,6 +141,7 @@ fun DiagnosticScreen(
                             TiffBitmapFactory.decodeFileDescriptor(descriptor.fd, options)
                             numberOfDirectories.value = options.outDirectoryCount.toFloat()
                         }
+                        println("numberOfDirectories.value: ${numberOfDirectories.value}")
 
                         // Затем декодируем изображение текущей страницы
                         val pageDescriptor = context.contentResolver.openFileDescriptor(uri, "r")
@@ -178,9 +179,6 @@ fun DiagnosticScreen(
                         onValueChange = {
                             sliderPosition = it
                             currentPage.value = it.toInt()
-                            diagnosticHistoryViewModel.onUziPageChanged(
-                                uiState.uziImages[currentPage.value].id
-                            )
                         },
                         valueRange = 0f..numberOfDirectories.value - 1
                     )
@@ -193,21 +191,44 @@ fun DiagnosticScreen(
                 }
             }
 
-            println("points size: ${uiState.nodesAndSegmentsResponse.segments.size}")
             ZoomableCanvasSectorWithConstraints(
                 imageBitmap = bitmap?.asImageBitmap() ?: ImageBitmap.imageResource(R.drawable.paint),
-                pointsList = if (selectedTabIndex == 1) emptyList() else uiState
-                    .nodesAndSegmentsResponse
-                    .segments.first() // TODO Здесь надо учесть что для страницы может быть несколько сегментов
-                    .getContorPoints() ?: points,
+                pointsList = if (selectedTabIndex == 1) {
+                    emptyList()
+                } else {
+                    try {
+                        uiState.nodesAndSegmentsResponses
+                            .flatMap { it.segments } // Собираем все сегменты в один список
+                            .filter { segment ->
+                                segment.image_id == uiState.uziImages[currentPage.value].id
+                            } // Фильтруем по image_id
+                            .flatMap { it.getContorPoints() ?: emptyList() } // Получаем точки из сегментов
+                    } catch (e: Exception) {
+                        println(e)
+                        throw e
+                    }
+                },
                 onFullScreen = { isFullScreenOpen = true },
             )
 
-            uiState.currentResponse.formations?.forEachIndexed { i, formation ->
+            val nodes = uiState.nodesAndSegmentsResponses
+                .flatMap { it.segments } // Перебираем все сегменты
+                .filter { segment ->
+                    segment.image_id == uiState.uziImages[currentPage.value].id // Фильтруем по image_id
+                }
+                .map { segment ->
+                    // Находим ноду по node_id каждого сегмента
+                    uiState.nodesAndSegmentsResponses
+                        .flatMap { it.nodes }
+                        .firstOrNull { node -> node.id == segment.node_id } // Ищем ноду с совпадающим id
+                }
+                .filterNotNull() // Отфильтровываем null значения (если не найдена соответствующая нода)
+
+                nodes.forEachIndexed { i, formation ->
                 FormationInfoContainer(
                     formationIndex = i,
                     formationClass = formation.formationClass,
-                    formationProbability = formation.maxTirads,
+                    formationProbability = formation.maxTirads.times(100).toInt(),
                     formationDescription = "Описание формации"
                 )
             }

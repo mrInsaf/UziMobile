@@ -26,7 +26,7 @@ class DiagnosticHistoryViewModel(
         completedDiagnosticId: String,
         downloadedImagesUris: MutableList<Uri>,
         uziImages: List<UziImage>,
-        nodesAndSegmentsResponse: NodesSegmentsResponse
+        nodesAndSegmentsResponses: List<NodesSegmentsResponse>
     ) {
         viewModelScope.launch {
 
@@ -34,23 +34,8 @@ class DiagnosticHistoryViewModel(
                 completedDiagnosticId = completedDiagnosticId,
                 downloadedImagesUris = downloadedImagesUris,
                 uziImages = uziImages,
-                nodesAndSegmentsResponse = nodesAndSegmentsResponse,
+                nodesAndSegmentsResponses = nodesAndSegmentsResponses,
             ) }
-        }
-    }
-
-    fun onUziPageChanged(imageId: String) {
-        viewModelScope.launch {
-            try {
-                val newNodesSegmentsResponse = repository.getImageNodesAndSegments(imageId, true)
-                _uiState.update {
-                    it.copy(
-                        nodesAndSegmentsResponse = newNodesSegmentsResponse
-                    )
-                }
-            } catch (e: Exception) {
-                println("Ошибка: ${e.message}")
-            }
         }
     }
 

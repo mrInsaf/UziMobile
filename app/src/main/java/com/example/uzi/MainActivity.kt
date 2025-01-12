@@ -26,6 +26,8 @@ import com.example.uzi.ui.viewModel.authorisation.AuthorisationViewModel
 import com.example.uzi.ui.viewModel.diagnosticHistory.DiagnosticHistoryViewModel
 import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
 import com.example.uzi.ui.viewModel.registraion.RegistraionViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -52,6 +54,18 @@ class MainActivity : ComponentActivity() {
 //        }
 
         val uziApiService = RetrofitProvider.uziApiService
+
+        lifecycleScope.launch {
+            // Получаем значения токенов из потока
+            val accessToken = TokenStorage.getAccessToken(context).first() // Берем первое значение
+            val refreshToken = TokenStorage.getRefreshToken(context).first() // Берем первое значение
+
+            // Выводим токены в консоль
+            println("accessToken: $accessToken")
+            println("refreshToken: $refreshToken")
+        }
+
+
         val repository: UziServiceRepository = NetworkUziServiceRepository(
             uziApiService = uziApiService,
             context = this
