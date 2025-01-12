@@ -194,4 +194,12 @@ class MockUziServiceRepository : UziServiceRepository {
     override suspend fun saveUziImageAndGetCacheUri(uziId: String, imageId: String): Uri {
         TODO("Not yet implemented")
     }
+
+    override suspend fun downloadUziFile(uziId: String): ResponseBody {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun saveUziFileAndGetCacheUri(uziId: String, responseBody: ResponseBody): Uri {
+        TODO("Not yet implemented")
+    }
 }

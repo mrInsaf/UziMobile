@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.uzi.data.repository.UziServiceRepository
 import com.example.uzi.ui.UiEvent
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -62,52 +61,51 @@ class NewDiagnosticViewModel(
             val dateOfAdmission = uiState.value.dateOfAdmission
             val clinicName = uiState.value.clinicName
 
+            // Обновляем UI-состояние перед началом диагностики
             _uiState.update { it.copy(
                 isDiagnosticSent = true,
                 completedDiagnosticId = "",
             ) }
 
             try {
-                println("отправляю узи")
+                // Создание УЗИ
                 val diagnosticId = repository.createUzi(
                     uziUris = imageUris,
                     projection = "long",
-                    patientId = "72881f74-1d10-4d93-9002-5207a83729ed", // TODO переделать на авторизацию пользователя
+                    patientId = "72881f74-1d10-4d93-9002-5207a83729ed", // TODO: заменить на ID авторизованного пользователя
                     deviceId = "1",
                 )
-                println("отправил узи")
                 println("diagnosticId: $diagnosticId")
 
-                val uziImages = repository.getUziImages(diagnosticId)
-                println("uziImages: $uziImages")
+                val uziImagesIds = repository.getUziImages(diagnosticId)
 
-                val downloadedImagesUris = mutableListOf<Uri>() // Локальный список для хранения URI
+                // Загрузка всех изображений УЗИ одним запросом
+                val downloadedUziResponseBody = repository.downloadUziFile(
+                    uziId = diagnosticId
+                )
+                println("УЗИ успешно загружено")
 
-                val tasks = uziImages.map { image ->
-                    async {
-                        val downloadedImageUri = repository.saveUziImageAndGetCacheUri(diagnosticId, image.id)
-                        downloadedImageUri // Возвращаем URI
-                    }
-                }
+                // Сохранение УЗИ в локальное хранилище
+                val downloadedUziUri = repository.saveUziFileAndGetCacheUri(diagnosticId, downloadedUziResponseBody)
+                println("Сохраненный URI УЗИ: $downloadedUziUri")
 
-                downloadedImagesUris.addAll(tasks.awaitAll()) // Собираем результаты в список
-
+                // Получение информации о сегментах и узлах для первого изображения
                 val uziImageNodesSegments = async {
-                    repository.getImageNodesAndSegments(uziImages.first().id)
+                    repository.getImageNodesAndSegments(uziImagesIds.first().id)
                 }.await()
 
+                // Обновляем состояние с результатами диагностики
                 _uiState.update { state ->
-                    state.apply {
-                        downloadedImagesUris.addAll(downloadedImagesUris)
-                    }
+                    state.copy(
+                        completedDiagnosticId = diagnosticId,
+                        downloadedImagesUris = mutableListOf(downloadedUziUri), // Устанавливаем URI загруженного УЗИ
+                        nodesAndSegmentsResponse = uziImageNodesSegments
+                    )
                 }
 
                 println("uziImageNodesSegments: $uziImageNodesSegments")
-
-
-                _uiState.update { it.copy(completedDiagnosticId = diagnosticId) }
-            }
-            catch (e: HttpException) {
+            } catch (e: HttpException) {
+                // Обработка ошибок авторизации
                 onTokenExpiration()
                 _uiState.update {
                     it.copy(
@@ -115,10 +113,10 @@ class NewDiagnosticViewModel(
                         selectedImageUris = emptyList()
                     )
                 }
-                println("wtf $e")
-            }
-            catch (e: Exception) {
-                println(e)
+                println("Ошибка HTTP: $e")
+            } catch (e: Exception) {
+                // Общая обработка ошибок
+                println("Ошибка: $e")
                 throw e
             }
         }

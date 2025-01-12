@@ -187,6 +187,48 @@ class NetworkUziServiceRepository(
             ?: throw Exception("Не удалось сохранить файл в кэш.")
     }
 
+    override suspend fun downloadUziFile(uziId: String): ResponseBody {
+        // Повторяющийся запрос с задержкой
+        repeat(3) { attempt -> // 3 попытки
+            try {
+                val response = safeApiCall { accessToken ->
+                    uziApiService.downloadUzi(accessToken, uziId) // Новый API для загрузки УЗИ
+                }
+
+                if (response.isSuccessful && response.body() != null) {
+                    return response.body()!!
+                } else {
+                    println("Ошибка запроса: ${response.code()} ${response.message()}, попытка ${attempt + 1}")
+                }
+            } catch (e: Exception) {
+                println("Ошибка при получении УЗИ: ${e.message}, попытка ${attempt + 1}")
+            }
+            delay(2000) // Задержка между попытками
+        }
+
+        throw Exception("Не удалось получить УЗИ после нескольких попыток.")
+    }
+
+    override suspend fun saveUziFileAndGetCacheUri(uziId: String, responseBody: ResponseBody): Uri {
+        // Определяем MIME-тип из заголовков ответа
+        val contentType = responseBody.contentType()?.toString()
+        val extension = when {
+            contentType?.contains("tiff") == true -> "tiff"
+            contentType?.contains("png") == true -> "png"
+            else -> "unknown" // Можно задать стандартное расширение, если тип не распознан
+        }
+
+        println("extension: $extension")
+
+        // Создаем имя файла с расширением
+        val fileName = "$uziId.$extension"
+        println("Сохраняем файл с именем: $fileName")
+
+        // Сохраняем файл в кэш
+        return CacheFileUtil.saveFileToCache(context, fileName, responseBody)
+            ?: throw Exception("Не удалось сохранить УЗИ в кэш.")
+    }
+
 
     override suspend fun submitLogout(): Boolean {
         TODO("Not yet implemented")

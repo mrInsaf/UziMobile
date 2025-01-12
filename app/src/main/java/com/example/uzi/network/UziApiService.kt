@@ -56,4 +56,10 @@ interface UziApiService {
         @Path("uzi_id") uziId: String,
         @Path("image_id") imageId: String
     ): Response<ResponseBody> // ResponseBody для бинарных данных
+
+    @GET("download/uzi/{id}")
+    suspend fun downloadUzi(
+        @Header("token") token: String,
+        @Path("id") uziId: String
+    ): Response<ResponseBody> // ResponseBody для получения бинарных данных
 }
