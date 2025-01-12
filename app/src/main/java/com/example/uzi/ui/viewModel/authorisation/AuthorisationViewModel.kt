@@ -45,11 +45,19 @@ class AuthorisationViewModel(
     // Метод для подписки на события истечения токена
     fun observeTokenExpiration(tokenExpiredEvent: SharedFlow<UiEvent>) {
         viewModelScope.launch {
+            println("Начинаю наблюдение за tokenExpiredEvent")
             tokenExpiredEvent.collect {
-                onTokenExpired() // Когда событие приходит, вызываем метод для обновления состояния
+                println("Событие получено: $it")
+                try {
+                    onTokenExpired()
+                } catch (e: Exception) {
+                    println("Ошибка в onTokenExpired: ${e.message}")
+                    e.printStackTrace()
+                }
             }
         }
     }
+
 
     fun onAuthorizationEmailChange(newEmail: String) {
         _uiState.update { it.copy(authorizationEmail = newEmail) }

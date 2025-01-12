@@ -68,12 +68,14 @@ class NewDiagnosticViewModel(
             ) }
 
             try {
+                println("отправляю узи")
                 val diagnosticId = repository.createUzi(
                     uziUris = imageUris,
                     projection = "long",
                     patientId = "72881f74-1d10-4d93-9002-5207a83729ed", // TODO переделать на авторизацию пользователя
                     deviceId = "1",
                 )
+                println("отправил узи")
                 println("diagnosticId: $diagnosticId")
 
                 val uziImages = repository.getUziImages(diagnosticId)
@@ -116,7 +118,8 @@ class NewDiagnosticViewModel(
                 println("wtf $e")
             }
             catch (e: Exception) {
-
+                println(e)
+                throw e
             }
         }
     }

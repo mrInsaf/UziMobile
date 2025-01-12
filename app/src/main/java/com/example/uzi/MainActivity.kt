@@ -35,11 +35,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         
         val context = this
-        lifecycleScope.launch {
-            TokenStorage.getAccessToken(context).collect { token ->
-                println("Access token: $token")
-            }
-        }
+//        try {
+//            lifecycleScope.launch {
+//                try {
+//                    println("Получаю токен")
+//                    TokenStorage.getAccessToken(context).collect { token ->
+//                        println("Access token: $token")
+//                    }
+//                    println("Получил токен")
+//                } catch (e: Exception) {
+//                    println(e)
+//                }
+//            }
+//        } catch (e: Exception) {
+//            println(e)
+//        }
 
         val uziApiService = RetrofitProvider.uziApiService
         val repository: UziServiceRepository = NetworkUziServiceRepository(

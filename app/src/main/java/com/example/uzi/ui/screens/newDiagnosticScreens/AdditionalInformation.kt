@@ -66,7 +66,11 @@ fun AdditionalInformation(
         MainButton(
             text = "Далее"
         ) {
-            onNextButtonClick()
+            try {
+                onNextButtonClick()
+            } catch (e: Exception) {
+                println(e)
+            }
         }
     }
 }

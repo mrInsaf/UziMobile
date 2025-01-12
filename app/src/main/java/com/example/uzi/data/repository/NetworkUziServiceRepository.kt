@@ -71,17 +71,18 @@ class NetworkUziServiceRepository(
         patientId: String,
         deviceId: String
     ): String {
+        println("я в репозитории")
         return safeApiCall { accessToken ->
-
+            println("получаю юри")
             val uziFile = File(getRealPathFromURI(context, uziUris.first())) // TODO: Добавить обработку нескольких файлов
-
+            println("получил юри")
             val requestFile = uziFile.asRequestBody("image/*".toMediaTypeOrNull())
             val uziFilePart = MultipartBody.Part.createFormData("file", uziFile.name, requestFile)
 
             val projectionRequestBody = projection.toRequestBody(MultipartBody.FORM)
             val patientIdRequestBody = patientId.toRequestBody(MultipartBody.FORM)
             val deviceIdRequestBody = deviceId.toRequestBody(MultipartBody.FORM)
-
+            println("отправляю узи через апи ")
             val response = uziApiService.createUzi(
                 accessToken = accessToken,
                 uziFile = uziFilePart,
@@ -203,7 +204,12 @@ class NetworkUziServiceRepository(
     private suspend fun <T> safeApiCall(
         apiCall: suspend (String) -> T
     ): T {
-        val accessToken = TokenStorage.getAccessToken(context).firstOrNull()
+        val accessToken = try {
+            TokenStorage.getAccessToken(context).firstOrNull()
+        } catch (e: Exception) {
+            println(e)
+            throw e
+        }
 
         requireNotNull(accessToken) { "Access token is missing" }
 
@@ -241,17 +247,22 @@ class NetworkUziServiceRepository(
     }
 
     private fun getRealPathFromURI(context: Context, uri: Uri): String? {
-        val contentResolver = context.contentResolver
-        val fileName = getFileName(contentResolver, uri) // Получаем имя файла
+        try {
+            val contentResolver = context.contentResolver
+            val fileName = getFileName(contentResolver, uri) // Получаем имя файла
 
-        // Сохраняем файл во внутреннее хранилище
-        val file = File(context.cacheDir, fileName)
-        contentResolver.openInputStream(uri)?.use { inputStream ->
-            file.outputStream().use { outputStream ->
-                inputStream.copyTo(outputStream)
+            // Сохраняем файл во внутреннее хранилище
+            val file = File(context.cacheDir, fileName)
+            contentResolver.openInputStream(uri)?.use { inputStream ->
+                file.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
             }
+            return file.absolutePath // Возвращаем путь до сохраненного файла
+        } catch (e: Exception) {
+            println(e)
+            throw e
         }
-        return file.absolutePath // Возвращаем путь до сохраненного файла
     }
 
     // Получаем имя файла из URI

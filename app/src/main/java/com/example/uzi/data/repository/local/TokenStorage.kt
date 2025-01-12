@@ -9,7 +9,13 @@ import kotlinx.coroutines.flow.map
 
 
 object TokenStorage {
-    private val Context.tokenDataStore by preferencesDataStore(name = "token_data_store")
+    private val Context.tokenDataStore by preferencesDataStore(name = "token_data_store").also {
+        println("Создается DataStore для файла: token_data_store")
+    }
+
+    init {
+        println("Создаю TokenStorage")
+    }
 
     // Ключи для хранения токенов
     private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
@@ -31,10 +37,15 @@ object TokenStorage {
 
     // Извлечение access token
     fun getAccessToken(context: Context): Flow<String?> {
-        return context.tokenDataStore.data
-            .map { preferences ->
-                preferences[ACCESS_TOKEN_KEY]
-            }
+        try {
+            return context.tokenDataStore.data
+                .map { preferences ->
+                    preferences[ACCESS_TOKEN_KEY]
+                }
+        } catch (e: Exception) {
+            println(e)
+            throw e
+        }
     }
 
     // Извлечение refresh token

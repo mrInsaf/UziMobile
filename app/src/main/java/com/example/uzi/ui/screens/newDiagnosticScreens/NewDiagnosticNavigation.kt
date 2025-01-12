@@ -99,7 +99,13 @@ fun NewDiagnosticNavigation(
                                 ) {
                                     popUpTo(navController.graph.startDestinationId) { inclusive = true }
                                 }
-                                newDiagnosticViewModel.onDiagnosticStart()
+                                println("yo1")
+                                try {
+                                    newDiagnosticViewModel.onDiagnosticStart()
+                                } catch (e: Exception) {
+                                    println(e)
+                                }
+                                println("yo2")
                             }
                         )
                     }
