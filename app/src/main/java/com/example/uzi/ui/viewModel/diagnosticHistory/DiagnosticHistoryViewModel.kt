@@ -22,6 +22,10 @@ class DiagnosticHistoryViewModel(
         _uiState.update { it.copy(uziIds = (it.uziIds + uziId).toMutableList()) }
     }
 
+    fun fetchUziList(patientId: String) {
+
+    }
+
     fun onSelectUzi(
         completedDiagnosticId: String,
         downloadedImagesUris: MutableList<Uri>,

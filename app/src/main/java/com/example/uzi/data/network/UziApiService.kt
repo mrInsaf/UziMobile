@@ -5,6 +5,7 @@ import com.example.uzi.data.models.networkResponses.LoginResponse
 import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
 import com.example.uzi.data.models.networkResponses.RefreshResponse
 import com.example.uzi.data.models.networkResponses.UziImage
+import com.example.uzi.data.models.networkResponses.UziListResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -62,4 +63,10 @@ interface UziApiService {
         @Header("token") token: String,
         @Path("id") uziId: String
     ): Response<ResponseBody> // ResponseBody для получения бинарных данных
+
+    @GET("uzi/patient/{id}/uzis")
+    suspend fun getPatientUzis(
+        @Header("token") accessToken: String, // Токен доступа
+        @Path("id") patientId: String // ID пациента
+    ): UziListResponse
 }

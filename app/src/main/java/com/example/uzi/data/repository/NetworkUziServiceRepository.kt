@@ -10,6 +10,7 @@ import com.example.uzi.data.models.networkResponses.ReportResponse
 import com.example.uzi.data.models.User
 import com.example.uzi.data.models.networkRequests.LoginRequest
 import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
+import com.example.uzi.data.models.networkResponses.Uzi
 import com.example.uzi.data.models.networkResponses.UziImage
 import com.example.uzi.data.repository.local.CacheFileUtil
 import com.example.uzi.data.network.UziApiService
@@ -187,6 +188,12 @@ class NetworkUziServiceRepository(
 
         println("Файл успешно сохранен: ${file.path}, размер: ${File(file.path).length()} байт")
         return file
+    }
+
+    override suspend fun getUziList(patientId: String): List<Uzi> {
+        return safeApiCall { accessToken ->
+            uziApiService.getPatientUzis(accessToken, patientId)
+        }.uzis
     }
 
 

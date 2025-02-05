@@ -14,7 +14,7 @@ data class DiagnosticHistoryUiState(
         formations = null,
         images = null,
         segments = null,
-        uzi = null
+        fakeUzi = null
     ),
 
     var completedDiagnosticId: String = "",

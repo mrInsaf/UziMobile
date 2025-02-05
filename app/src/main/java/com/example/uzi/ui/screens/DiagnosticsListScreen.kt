@@ -36,8 +36,8 @@ fun DiagnosticsListScreen(
         LazyColumn {
             items(diagnosticsList) {
                 DiagnosticListItem(
-                    date = it.uzi?.dateOfAdmission ?: "Неизвестная дата",
-                    clinic = it.uzi?.clinicName ?: "Неизвестная клиника",
+                    date = it.fakeUzi?.dateOfAdmission ?: "Неизвестная дата",
+                    clinic = it.fakeUzi?.clinicName ?: "Неизвестная клиника",
                     formations = emptyList(),
                     modifier = Modifier
                         .clickable {

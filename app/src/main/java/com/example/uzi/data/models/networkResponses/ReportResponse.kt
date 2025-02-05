@@ -6,7 +6,7 @@ data class ReportResponse(
     val formations: List<Formation>?,
     val images: List<Image>?,
     val segments: List<SegmentFake>?,
-    val uzi: Uzi?
+    val fakeUzi: FakeUzi?
 )
 
 data class Formation(
@@ -53,7 +53,7 @@ data class SegmentFake(
 )
 
 
-data class Uzi(
+data class FakeUzi(
     val device_id: Int,
     val id: String,
     val patient_id: String,
