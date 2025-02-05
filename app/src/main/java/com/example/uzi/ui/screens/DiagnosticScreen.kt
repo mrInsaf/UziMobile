@@ -212,19 +212,16 @@ fun DiagnosticScreen(
             )
 
             val nodes = uiState.nodesAndSegmentsResponses
-                .flatMap { it.segments } // Перебираем все сегменты
+                .flatMap { it.segments }
                 .filter { segment ->
-                    segment.image_id == uiState.uziImages[currentPage.value].id // Фильтруем по image_id
-                }
-                .map { segment ->
-                    // Находим ноду по node_id каждого сегмента
+                    segment.image_id == uiState.uziImages[currentPage.value].id
+                }.mapNotNull { segment ->
                     uiState.nodesAndSegmentsResponses
                         .flatMap { it.nodes }
-                        .firstOrNull { node -> node.id == segment.node_id } // Ищем ноду с совпадающим id
+                        .firstOrNull { node -> node.id == segment.node_id }
                 }
-                .filterNotNull() // Отфильтровываем null значения (если не найдена соответствующая нода)
 
-                nodes.forEachIndexed { i, formation ->
+            nodes.forEachIndexed { i, formation ->
                 FormationInfoContainer(
                     formationIndex = i,
                     formationClass = formation.formationClass,

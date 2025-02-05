@@ -170,6 +170,8 @@ class NetworkUziServiceRepository(
         val contentType = responseBody.contentType()?.toString()
             ?: throw Exception("Невозможно определить MIME-тип файла")
 
+        println("contentType: $contentType")
+
         val extension = when {
             contentType.contains("tiff", ignoreCase = true) -> "tiff"
             contentType.contains("png", ignoreCase = true) -> "png"

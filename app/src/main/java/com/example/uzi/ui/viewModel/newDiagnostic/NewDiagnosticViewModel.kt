@@ -71,15 +71,15 @@ class NewDiagnosticViewModel(
 
             try {
                 // Создание УЗИ
-//                val diagnosticId = repository.createUzi(
-//                    uziUris = imageUris,
-//                    projection = "long",
-//                    patientId = "72881f74-1d10-4d93-9002-5207a83729ed", // TODO: заменить на ID авторизованного пользователя
-//                    deviceId = "1",
-//                )
+                val diagnosticId = repository.createUzi(
+                    uziUris = imageUris,
+                    projection = "long",
+                    patientId = "72881f74-1d10-4d93-9002-5207a83729ed", // TODO: заменить на ID авторизованного пользователя
+                    deviceId = "1",
+                )
 
-                val diagnosticId = "f09282f0-eb96-4f71-a7ee-332b532c9dc8"
-                println("diagnosticId: $diagnosticId")
+//                val diagnosticId = "f09282f0-eb96-4f71-a7ee-332b532c9dc8"
+//                println("diagnosticId: $diagnosticId")
 
                 val uziImages = repository.getUziImages(diagnosticId)
 

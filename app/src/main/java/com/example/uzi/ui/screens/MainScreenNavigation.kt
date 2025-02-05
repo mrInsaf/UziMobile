@@ -2,6 +2,7 @@ package com.example.uzi.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -36,57 +37,68 @@ fun MainScreen(
     diagnosticHistoryViewModel: DiagnosticHistoryViewModel,
     userData: User,
 ) {
-    Column(
+    val navController = rememberNavController()
+
+    Scaffold(
+        bottomBar = { BottomNavigationBar(navController = navController) },
         modifier = Modifier
             .padding(horizontal = Paddings.Large)
-            .background(color = MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.background)
+    ) { padding ->
+        NavigationGraph(
+            navController = navController,
+            padding = padding,
+            newDiagnosticViewModel = newDiagnosticViewModel,
+            diagnosticHistoryViewModel = diagnosticHistoryViewModel,
+            userData = userData
+        )
+    }
+}
+
+@Composable
+fun NavigationGraph(
+    navController: NavHostController,
+    padding: PaddingValues,
+    newDiagnosticViewModel: NewDiagnosticViewModel,
+    diagnosticHistoryViewModel: DiagnosticHistoryViewModel,
+    userData: User,
+) {
+    NavHost(
+        navController = navController,
+        startDestination = Screen.Load.route,
+        modifier = Modifier.padding(padding)
     ) {
-        val newDiagnosticUiState = newDiagnosticViewModel.uiState.collectAsState().value
-        val diagnosticHistoryUiState = diagnosticHistoryViewModel.uiState.collectAsState().value
-        val navController = rememberNavController()
-        Scaffold(
-            bottomBar = {
-                BottomNavigationBar(navController = navController)
-            },
-        ) { padding ->
-            NavHost(
-                navController = navController,
-                startDestination = Screen.Load.route,
-                modifier = Modifier
-                    .padding(padding)
-            ) {
-                composable(Screen.Load.route) {
-                    NewDiagnosticNavigation(
-                        newDiagnosticViewModel,
-                        onDiagnosticCompleted = {
-//                            diagnosticHistoryViewModel.addUziId(newDiagnosticUiState.completedDiagnosticId) TODO Переделать на сохранение в локальное хранилище
-                            diagnosticHistoryViewModel.onSelectUzi(
-                                completedDiagnosticId = newDiagnosticUiState.completedDiagnosticId,
-                                downloadedImagesUris = newDiagnosticUiState.downloadedImagesUris,
-                                nodesAndSegmentsResponses = newDiagnosticUiState.nodesAndSegmentsResponses,
-                                uziImages = newDiagnosticUiState.uziImages
-                            )
-                            navController.navigate(Screen.Uploaded.route)
-                        }
+        composable(Screen.Load.route) {
+            val uiState by newDiagnosticViewModel.uiState.collectAsState()
+            NewDiagnosticNavigation(
+                newDiagnosticViewModel,
+                onDiagnosticCompleted = {
+                    diagnosticHistoryViewModel.onSelectUzi(
+                        completedDiagnosticId = uiState.completedDiagnosticId,
+                        downloadedImagesUris = uiState.downloadedImagesUris,
+                        nodesAndSegmentsResponses = uiState.nodesAndSegmentsResponses,
+                        uziImages = uiState.uziImages
                     )
+                    navController.navigate(Screen.Uploaded.route)
                 }
-                composable(Screen.Uploaded.route) {
-                    DiagnosticScreen(
-                        diagnosticDate = "Дата",
-                        clinicName = "Клиника",
-                        diagnosticHistoryViewModel = diagnosticHistoryViewModel
-                    )
-                }
-                composable(Screen.Account.route) {
-                    ProfileScreen(
-                        userName = userData.userName,
-                        userEmail = userData.userEmail,
-                    )
-                }
-            }
+            )
+        }
+        composable(Screen.Uploaded.route) {
+            DiagnosticScreen(
+                diagnosticDate = "Дата",
+                clinicName = "Клиника",
+                diagnosticHistoryViewModel = diagnosticHistoryViewModel
+            )
+        }
+        composable(Screen.Account.route) {
+            ProfileScreen(
+                userName = userData.userName,
+                userEmail = userData.userEmail,
+            )
         }
     }
 }
+
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
