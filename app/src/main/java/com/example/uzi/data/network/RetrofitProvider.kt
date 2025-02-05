@@ -1,4 +1,4 @@
-package com.example.uzi.network
+package com.example.uzi.data.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json

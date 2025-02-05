@@ -4,10 +4,12 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
+import com.example.uzi.data.models.networkResponses.UziImage
 import com.example.uzi.data.repository.UziServiceRepository
 import com.example.uzi.ui.UiEvent
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -59,95 +61,118 @@ class NewDiagnosticViewModel(
 
     fun onDiagnosticStart(userId: String = "1") {
         viewModelScope.launch {
-            val imageUris = uiState.value.selectedImageUris
-            val dateOfAdmission = uiState.value.dateOfAdmission
-            val clinicName = uiState.value.clinicName
-
-            // Обновляем UI-состояние перед началом диагностики
-            _uiState.update { it.copy(
-                isDiagnosticSent = true,
-                completedDiagnosticId = "",
-            ) }
-
             try {
-                // Создание УЗИ
-                val diagnosticId = repository.createUzi(
-                    uziUris = imageUris,
-                    projection = "long",
-                    patientId = "72881f74-1d10-4d93-9002-5207a83729ed", // TODO: заменить на ID авторизованного пользователя
-                    deviceId = "1",
-                )
+                updateUiBeforeDiagnosticStart()
 
-//                val diagnosticId = "f09282f0-eb96-4f71-a7ee-332b532c9dc8"
-//                println("diagnosticId: $diagnosticId")
+                val diagnosticId = createDiagnostic()
+                val uziImages = fetchUziImages(diagnosticId)
+                val downloadedUziUri = downloadAndSaveUzi(diagnosticId)
 
-                val uziImages = repository.getUziImages(diagnosticId)
+                val uziImageNodesSegments = fetchImageNodesSegments(uziImages)
 
-                // Загрузка всех изображений УЗИ одним запросом
-                val downloadedUziResponseBody = repository.downloadUziFile(
-                    uziId = diagnosticId
-                )
-                println("УЗИ успешно загружено")
+                updateUiAfterDiagnosticCompletion(diagnosticId, downloadedUziUri, uziImages, uziImageNodesSegments)
 
-                // Сохранение УЗИ в локальное хранилище
-                val downloadedUziUri = repository.saveUziFileAndGetCacheUri(diagnosticId, downloadedUziResponseBody)
-                println("Сохраненный URI УЗИ: $downloadedUziUri")
-
-                val firstImageNodesSegments = async {
-                    repository.getImageNodesAndSegments(uziImages.first().id, false)
-                }.await()
-
-                println("Успешно получил сегменты первого снимка: $firstImageNodesSegments")
-
-                val remainingImageNodesSegments = uziImages.drop(1).map { image ->
-                    async {
-                        println("Запрашиваю ноды для ${image.id}")
-                        try {
-                            repository.getImageNodesAndSegments(image.id, true)
-                        } catch (e: Exception) {
-                            println("Ошибка при получении нод для изображения с ID ${image.id}: ${e.message}")
-                            if (e.message?.contains("Не удалось выполнить запрос после") == true) {
-                                println("Пустой ответ для изображения с ID ${image.id}")
-                                null
-                            } else {
-                                println("Серьезная ошибка $e")
-                                throw e
-                            }
-                        }
-                    }
-                }.awaitAll()
-
-                val uziImageNodesSegments = mutableListOf(firstImageNodesSegments)
-                uziImageNodesSegments.addAll(remainingImageNodesSegments.filterNotNull()) // Фильтруем null-значения
-
-
-                // Обновляем состояние с результатами диагностики
-                _uiState.update { state ->
-                    state.copy(
-                        completedDiagnosticId = diagnosticId,
-                        downloadedImagesUris = imageUris.toMutableList(), // Устанавливаем URI загруженного УЗИ
-                        uziImages = uziImages,
-                        nodesAndSegmentsResponses = uziImageNodesSegments
-                    )
-                }
-
-                println("uziImageNodesSegments: $uziImageNodesSegments")
             } catch (e: HttpException) {
-                // Обработка ошибок авторизации
-                onTokenExpiration()
-                _uiState.update {
-                    it.copy(
-                        currentScreenIndex = 0,
-                        selectedImageUris = emptyList()
-                    )
-                }
-                println("Ошибка HTTP: $e")
+                handleHttpException(e)
             } catch (e: Exception) {
-                // Общая обработка ошибок
-                println("Ошибка: $e")
+                handleGeneralException(e)
+            }
+        }
+    }
+
+    private fun updateUiBeforeDiagnosticStart() {
+        _uiState.update { it.copy(
+            isDiagnosticSent = true,
+            completedDiagnosticId = "",
+        ) }
+    }
+
+    private suspend fun createDiagnostic(): String {
+        return repository.createUzi(
+            uziUris = uiState.value.selectedImageUris,
+            projection = "long",
+            patientId = "72881f74-1d10-4d93-9002-5207a83729ed", // TODO: заменить на ID авторизованного пользователя
+            deviceId = "1",
+        ).also {
+            println("diagnosticId: $it")
+        }
+    }
+
+    private suspend fun fetchUziImages(diagnosticId: String): List<UziImage> {
+        return repository.getUziImages(diagnosticId)
+    }
+
+    private suspend fun downloadAndSaveUzi(diagnosticId: String): Uri {
+        val responseBody = repository.downloadUziFile(diagnosticId)
+        println("УЗИ успешно загружено")
+        return repository.saveUziFileAndGetCacheUri(diagnosticId, responseBody).also {
+            println("Сохраненный URI УЗИ: $it")
+        }
+    }
+
+    private suspend fun fetchImageNodesSegments(uziImages: List<UziImage>): List<NodesSegmentsResponse> =
+        coroutineScope {
+            val firstImageNodesSegments = async {
+                repository.getImageNodesAndSegments(uziImages.first().id, false)
+            }.await()
+
+            println("Успешно получил сегменты первого снимка: $firstImageNodesSegments")
+
+            val remainingImageNodesSegments = uziImages.drop(1).map { image ->
+                async { fetchImageNodesForSingleImage(image) }
+            }.awaitAll()
+
+            listOf(firstImageNodesSegments) + remainingImageNodesSegments.filterNotNull()
+        }
+
+
+    private suspend fun fetchImageNodesForSingleImage(image: UziImage): NodesSegmentsResponse? {
+        return try {
+            println("Запрашиваю ноды для ${image.id}")
+            repository.getImageNodesAndSegments(image.id, true)
+        } catch (e: Exception) {
+            println("Ошибка при получении нод для изображения с ID ${image.id}: ${e.message}")
+            if (e.message?.contains("Не удалось выполнить запрос после") == true) {
+                println("Пустой ответ для изображения с ID ${image.id}")
+                null
+            } else {
+                println("Серьезная ошибка $e")
                 throw e
             }
         }
+    }
+
+    private fun updateUiAfterDiagnosticCompletion(
+        diagnosticId: String,
+        downloadedUziUri: Uri,
+        uziImages: List<UziImage>,
+        uziImageNodesSegments: List<NodesSegmentsResponse>
+    ) {
+        _uiState.update { state ->
+            state.copy(
+                completedDiagnosticId = diagnosticId,
+                downloadedImagesUris = uiState.value.selectedImageUris.toMutableList(),
+                uziImages = uziImages,
+                nodesAndSegmentsResponses = uziImageNodesSegments
+            )
+        }
+        println("uziImageNodesSegments: $uziImageNodesSegments")
+    }
+
+    private fun handleHttpException(e: HttpException) {
+        onTokenExpiration()
+        _uiState.update {
+            it.copy(
+                currentScreenIndex = 0,
+                selectedImageUris = emptyList()
+            )
+        }
+        println("Ошибка HTTP: $e")
+    }
+
+    private fun handleGeneralException(e: Exception) {
+        println("Ошибка: $e")
+        throw e
     }
 
     private fun onTokenExpiration() {

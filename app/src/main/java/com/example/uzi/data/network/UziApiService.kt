@@ -1,4 +1,4 @@
-package com.example.uzi.network
+package com.example.uzi.data.network
 
 import com.example.uzi.data.models.networkRequests.LoginRequest
 import com.example.uzi.data.models.networkResponses.LoginResponse

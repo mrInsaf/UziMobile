@@ -18,7 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.uzi.data.repository.local.TokenStorage
 import com.example.uzi.data.repository.NetworkUziServiceRepository
 import com.example.uzi.data.repository.UziServiceRepository
-import com.example.uzi.network.RetrofitProvider
+import com.example.uzi.data.network.RetrofitProvider
 import com.example.uzi.ui.screens.AuthorizationScreen
 import com.example.uzi.ui.screens.MainScreen
 import com.example.uzi.ui.screens.RegistrationScreen
