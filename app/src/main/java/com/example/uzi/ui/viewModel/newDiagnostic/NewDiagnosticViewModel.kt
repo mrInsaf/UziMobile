@@ -75,6 +75,11 @@ class NewDiagnosticViewModel(
             } catch (e: HttpException) {
                 handleHttpException(e)
             } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(
+                        diagnosticProcessState = DiagnosticProcessState.Failure
+                    )
+                }
                 handleGeneralException(e)
             }
         }
@@ -82,13 +87,17 @@ class NewDiagnosticViewModel(
 
     private fun updateUiBeforeDiagnosticStart() {
         _uiState.update { it.copy(
-            isDiagnosticSent = true,
-            completedDiagnosticId = "",
+            diagnosticProcessState = DiagnosticProcessState.Sending,
         ) }
     }
 
     private suspend fun createDiagnostic(): String {
-        return repository.createUzi(
+        _uiState.update {
+            it.copy(
+                diagnosticProcessState = DiagnosticProcessState.Sending,
+            )
+        }
+        val uziId = repository.createUzi(
             uziUris = uiState.value.selectedImageUris,
             projection = "long",
             patientId = "72881f74-1d10-4d93-9002-5207a83729ed", // TODO: заменить на ID авторизованного пользователя
@@ -96,6 +105,7 @@ class NewDiagnosticViewModel(
         ).also {
             println("diagnosticId: $it")
         }
+        return uziId
     }
 
     private suspend fun fetchUziImages(diagnosticId: String): List<UziImage> {
@@ -150,6 +160,7 @@ class NewDiagnosticViewModel(
     ) {
         _uiState.update { state ->
             state.copy(
+                diagnosticProcessState = DiagnosticProcessState.Success(diagnosticId),
                 completedDiagnosticId = diagnosticId,
                 downloadedImagesUris = uiState.value.selectedImageUris.toMutableList(),
                 uziImages = uziImages,
@@ -172,7 +183,6 @@ class NewDiagnosticViewModel(
 
     private fun handleGeneralException(e: Exception) {
         println("Ошибка: $e")
-        throw e
     }
 
     private fun onTokenExpiration() {

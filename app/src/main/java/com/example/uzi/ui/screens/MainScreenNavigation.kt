@@ -26,16 +26,20 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.uzi.data.models.User
 import com.example.uzi.data.repository.MockUziServiceRepository
+import com.example.uzi.data.repository.local.UserInfoStorage
 import com.example.uzi.ui.screens.newDiagnosticScreens.NewDiagnosticNavigation
 import com.example.uzi.ui.theme.Paddings
 import com.example.uzi.ui.viewModel.diagnosticHistory.DiagnosticHistoryViewModel
+import com.example.uzi.ui.viewModel.newDiagnostic.DiagnosticProcessState
 import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
+import com.example.uzi.ui.viewModel.newDiagnostic.isSuccess
 
 @Composable
 fun MainScreen(
     newDiagnosticViewModel: NewDiagnosticViewModel,
     diagnosticHistoryViewModel: DiagnosticHistoryViewModel,
     userData: User,
+    patientId: String,
 ) {
     val navController = rememberNavController()
 
@@ -50,7 +54,8 @@ fun MainScreen(
             padding = padding,
             newDiagnosticViewModel = newDiagnosticViewModel,
             diagnosticHistoryViewModel = diagnosticHistoryViewModel,
-            userData = userData
+            userData = userData,
+            patientId = patientId
         )
     }
 }
@@ -62,32 +67,39 @@ fun NavigationGraph(
     newDiagnosticViewModel: NewDiagnosticViewModel,
     diagnosticHistoryViewModel: DiagnosticHistoryViewModel,
     userData: User,
+    patientId: String
 ) {
     NavHost(
         navController = navController,
         startDestination = Screen.Load.route,
         modifier = Modifier.padding(padding)
     ) {
+        println("yo")
         composable(Screen.Load.route) {
             val uiState by newDiagnosticViewModel.uiState.collectAsState()
-            NewDiagnosticNavigation(
-                newDiagnosticViewModel,
-                onDiagnosticCompleted = {
-                    diagnosticHistoryViewModel.onSelectUzi(
-                        completedDiagnosticId = uiState.completedDiagnosticId,
-                        downloadedImagesUris = uiState.downloadedImagesUris,
-                        nodesAndSegmentsResponses = uiState.nodesAndSegmentsResponses,
-                        uziImages = uiState.uziImages
-                    )
-                    navController.navigate(Screen.Uploaded.route)
-                }
-            )
+
+                NewDiagnosticNavigation(
+                    newDiagnosticViewModel,
+                    onDiagnosticCompleted = {
+                        if (uiState.diagnosticProcessState.isSuccess) {
+                            diagnosticHistoryViewModel.onSelectUzi(
+                                completedDiagnosticId = uiState.completedDiagnosticId,
+                                downloadedImagesUris = uiState.downloadedImagesUris,
+                                nodesAndSegmentsResponses = uiState.nodesAndSegmentsResponses,
+                                uziImages = uiState.uziImages
+                            )
+                            navController.navigate(Screen.Uploaded.route)
+                        }
+                    }
+                )
         }
         composable(Screen.Uploaded.route) {
-            DiagnosticScreen(
-                diagnosticDate = "Дата",
-                clinicName = "Клиника",
-                diagnosticHistoryViewModel = diagnosticHistoryViewModel
+            val uiState by diagnosticHistoryViewModel.uiState.collectAsState()
+            diagnosticHistoryViewModel.fetchUziList(
+                patientId = patientId
+            )
+            DiagnosticsListScreen(
+                uziList = uiState.uziList,
             )
         }
         composable(Screen.Account.route) {
@@ -136,16 +148,17 @@ sealed class Screen(val route: String, val label: String, val icon: ImageVector)
     object Account : Screen("account", "Аккаунт", Icons.Default.Person)
 }
 
-@Preview
-@Composable
-fun DiagnosticScreensNavigationPreview() {
-    MainScreen(
-        newDiagnosticViewModel = NewDiagnosticViewModel(
-            repository = MockUziServiceRepository()
-        ),
-        userData = User(),
-        diagnosticHistoryViewModel = DiagnosticHistoryViewModel(
-            MockUziServiceRepository()
-        )
-    )
-}
+//@Preview
+//@Composable
+//fun DiagnosticScreensNavigationPreview() {
+//    MainScreen(
+//        newDiagnosticViewModel = NewDiagnosticViewModel(
+//            repository = MockUziServiceRepository()
+//        ),
+//        userData = User(),
+//        diagnosticHistoryViewModel = DiagnosticHistoryViewModel(
+//            MockUziServiceRepository()
+//        ),
+//        patientId = ""
+//    )
+//}

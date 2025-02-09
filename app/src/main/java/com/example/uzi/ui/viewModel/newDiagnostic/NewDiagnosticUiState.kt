@@ -14,7 +14,9 @@ data class NewDiagnosticUiState(
 
     var selectedImageUris: List<Uri> = emptyList(),
 
-    var isDiagnosticSent: Boolean = false,
+    var diagnosticProcessState: DiagnosticProcessState = DiagnosticProcessState.Idle,
+
+//    var isDiagnosticSent: Boolean = false,
 
     var completedDiagnosticId: String = "",
 
@@ -22,5 +24,17 @@ data class NewDiagnosticUiState(
 
     var uziImages: List<UziImage> = emptyList(),
 
-    var nodesAndSegmentsResponses: List<NodesSegmentsResponse> = emptyList()
+    var nodesAndSegmentsResponses: List<NodesSegmentsResponse> = emptyList(),
+
+//    var isDiagnosticFailed: Boolean = false,
 )
+
+sealed class DiagnosticProcessState  {
+    data object Idle : DiagnosticProcessState () // начальное состояние
+    data object Sending : DiagnosticProcessState () // диагностика отправляется
+    data class Success(val diagnosticId: String) : DiagnosticProcessState () // успешно завершено
+    data object Failure : DiagnosticProcessState () // произошла ошибка
+}
+
+val DiagnosticProcessState.isSuccess: Boolean
+    get() = this is DiagnosticProcessState.Success

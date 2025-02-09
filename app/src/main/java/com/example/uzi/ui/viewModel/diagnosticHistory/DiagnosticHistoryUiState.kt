@@ -3,11 +3,12 @@ package com.example.uzi.ui.viewModel.diagnosticHistory
 import android.net.Uri
 import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
 import com.example.uzi.data.models.networkResponses.ReportResponse
+import com.example.uzi.data.models.networkResponses.Uzi
 import com.example.uzi.data.models.networkResponses.UziImage
 
 
 data class DiagnosticHistoryUiState(
-    var uziIds: MutableList<String> = mutableListOf(),
+    var uziList: List<Uzi> = emptyList(),
     var currentUziId: String = "",
 
     var currentResponse: ReportResponse = ReportResponse(

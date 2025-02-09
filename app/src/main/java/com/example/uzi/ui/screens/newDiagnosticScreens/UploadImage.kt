@@ -35,6 +35,7 @@ fun UploadImage(
     newDiagnosticViewModel: NewDiagnosticViewModel,
     modifier: Modifier = Modifier
 ) {
+    println("yo")
     val uiState = newDiagnosticViewModel.uiState.collectAsState()
     val combinedPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument(),

@@ -16,11 +16,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.uzi.R
+import com.example.uzi.data.repository.MockUziServiceRepository
 import com.example.uzi.ui.components.LoadingAnimation
 import com.example.uzi.ui.components.MainButton
+import com.example.uzi.ui.viewModel.newDiagnostic.DiagnosticProcessState
 import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
+import com.example.uzi.ui.viewModel.newDiagnostic.isSuccess
 
 @Composable
 fun DiagnosticLoading(
@@ -36,49 +40,80 @@ fun DiagnosticLoading(
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
     ) {
-        println(uiState.completedDiagnosticId)
-        if (uiState.completedDiagnosticId == "") {
-            LoadingAnimation()
+        when(uiState.diagnosticProcessState) {
+            DiagnosticProcessState.Idle -> TODO()
+            DiagnosticProcessState.Sending -> {
+                LoadingAnimation()
 
-            Text(
-                text = "Проводится диагностика",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleLarge
-            )
+                Text(
+                    text = "Проводится диагностика",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge
+                )
 
-            Text(
-                text = "Анализ снимка занимает некоторое время",
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.tertiary
-            )
-        }
-        else {
-            Image(
-                painter = painterResource(R.drawable.correct),
-                contentDescription = "",
-                Modifier.size(80.dp)
-            )
+                Text(
+                    text = "Анализ снимка занимает некоторое время",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+            }
+            is DiagnosticProcessState.Success -> {
+                Image(
+                    painter = painterResource(R.drawable.correct),
+                    contentDescription = "",
+                    Modifier.size(80.dp)
+                )
 
-            Text(
-                text = "Диагностика завершена",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleLarge
-            )
+                Text(
+                    text = "Диагностика завершена",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge
+                )
 
-            Text(
-                text = "Посмотрите результат, нажав на кнопку",
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.tertiary
-            )
+                Text(
+                    text = "Посмотрите результат, нажав на кнопку",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+            }
+            DiagnosticProcessState.Failure -> {
+                Image(
+                    painter = painterResource(R.drawable.close),
+                    contentDescription = "",
+                    Modifier.size(80.dp)
+                )
+
+                Text(
+                    text = "Произошла ошибка при диагностике",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Text(
+                    text = "Мы уже занимаемся этой проблемой, повторите попытку позже",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+            }
         }
 
 
         MainButton(
             text = "Открыть результат",
-            enabled = uiState.completedDiagnosticId != ""
+            enabled = uiState.diagnosticProcessState.isSuccess
         ) {
             onDiagnosticCompleted()
         }
     }
+}
+
+@Preview
+@Composable
+fun DiagnosticLoadingPreview() {
+    DiagnosticLoading(
+        viewModel = NewDiagnosticViewModel(MockUziServiceRepository()),
+        modifier = Modifier,
+        onDiagnosticCompleted = {}
+    )
 }
 

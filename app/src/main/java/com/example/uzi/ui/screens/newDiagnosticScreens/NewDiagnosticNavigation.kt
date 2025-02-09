@@ -19,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.uzi.data.repository.MockUziServiceRepository
 import com.example.uzi.ui.components.canvas.NewDiagnosticProgressBar
+import com.example.uzi.ui.viewModel.newDiagnostic.DiagnosticProcessState
 import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
 
 @Composable
@@ -26,6 +27,7 @@ fun NewDiagnosticNavigation(
     newDiagnosticViewModel: NewDiagnosticViewModel,
     onDiagnosticCompleted: () -> Unit,
 ) {
+    println("yo")
     val newDiagnosticUiState = newDiagnosticViewModel.uiState.collectAsState().value
     val navController = rememberNavController()
 
@@ -41,11 +43,8 @@ fun NewDiagnosticNavigation(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-//            Spacer(modifier = Modifier.size(20.dp))
-
-            Column (
-//                modifier = Modifier.fillMaxWidth(0.85f)
-            ){
+            Column()
+            {
                 TextButton(
                     onClick = {
                         onAndroidBackClick(
@@ -53,7 +52,7 @@ fun NewDiagnosticNavigation(
                             viewModel = newDiagnosticViewModel
                         )
                     },
-                    enabled = (newDiagnosticUiState.currentScreenIndex > 0) && (!newDiagnosticUiState.isDiagnosticSent)
+                    enabled = (newDiagnosticUiState.currentScreenIndex > 0) && (newDiagnosticUiState.diagnosticProcessState !is DiagnosticProcessState.Failure)
                 ) {
                     Text(
                         text = "Назад",
@@ -72,7 +71,6 @@ fun NewDiagnosticNavigation(
                                     NewDiagnosticScreen.AdditionalInformationRoute.route
                                 )
                                 newDiagnosticViewModel.onNextScreenButtonClick()
-//                                newDiagnosticViewModel.onDiagnosticStart()
                             },
                             newDiagnosticViewModel = newDiagnosticViewModel,
                             modifier = Modifier.padding(padding),
@@ -137,13 +135,13 @@ sealed class NewDiagnosticScreen(val route: String) {
     object DiagnosticLoadingRoute : NewDiagnosticScreen("diagnostic_loading")
 }
 
-@Preview
-@Composable
-fun NewDiagnosticNavigationPreview() {
-    NewDiagnosticNavigation(
-        newDiagnosticViewModel = NewDiagnosticViewModel(
-            repository = MockUziServiceRepository()
-        ),
-        onDiagnosticCompleted = {  }
-    )
-}
+//@Preview
+//@Composable
+//fun NewDiagnosticNavigationPreview() {
+//    NewDiagnosticNavigation(
+//        newDiagnosticViewModel = NewDiagnosticViewModel(
+//            repository = MockUziServiceRepository()
+//        ),
+//        onDiagnosticCompleted = {  }
+//    )
+//}

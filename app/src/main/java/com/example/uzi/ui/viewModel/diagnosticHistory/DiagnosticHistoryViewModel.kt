@@ -18,12 +18,13 @@ class DiagnosticHistoryViewModel(
     val uiState: StateFlow<DiagnosticHistoryUiState>
         get() = _uiState
 
-    fun addUziId(uziId: String) {
-        _uiState.update { it.copy(uziIds = (it.uziIds + uziId).toMutableList()) }
-    }
-
     fun fetchUziList(patientId: String) {
-
+        viewModelScope.launch {
+            val uziList = repository.getUziList(patientId)
+            _uiState.update {
+                it.copy(uziList = uziList)
+            }
+        }
     }
 
     fun onSelectUzi(

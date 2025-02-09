@@ -6,7 +6,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
 object UserInfoStorage {
     private val Context.userInfoDataStore: DataStore<Preferences> by preferencesDataStore(name = "user_info")
@@ -19,10 +21,9 @@ object UserInfoStorage {
         }
     }
 
-    suspend fun getUserId(context: Context): String {
+    fun getUserId(context: Context): Flow<String> {
         return context.applicationContext.userInfoDataStore.data
-            .first() // Берем только первое значение из потока
-            .let { preferences -> preferences[USER_ID_KEY] ?: "" }
+            .map { preferences -> preferences[USER_ID_KEY] ?: "" }
     }
 
     suspend fun clearUserId(context: Context) {

@@ -19,6 +19,7 @@ import com.example.uzi.data.repository.local.TokenStorage
 import com.example.uzi.data.repository.NetworkUziServiceRepository
 import com.example.uzi.data.repository.UziServiceRepository
 import com.example.uzi.data.network.RetrofitProvider
+import com.example.uzi.data.repository.local.UserInfoStorage
 import com.example.uzi.ui.screens.AuthorizationScreen
 import com.example.uzi.ui.screens.MainScreen
 import com.example.uzi.ui.screens.RegistrationScreen
@@ -29,6 +30,7 @@ import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
 import com.example.uzi.ui.viewModel.registraion.RegistraionViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -39,6 +41,8 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
 
+        val context = this
+
         val uziApiService = RetrofitProvider.uziApiService
         val repository: UziServiceRepository = NetworkUziServiceRepository(
             uziApiService = uziApiService,
@@ -48,6 +52,21 @@ class MainActivity : ComponentActivity() {
         val registrationViewModel = RegistraionViewModel()
         val newDiagnosticViewModel = NewDiagnosticViewModel(repository = repository)
         val diagnosticHistoryViewModel = DiagnosticHistoryViewModel(repository = repository)
+        var patientId: String? = null
+
+        lifecycleScope.launch {
+            println("Достаю userid")
+            patientId = UserInfoStorage.getUserId(context = context).firstOrNull() ?: ""
+            println("patientId: $patientId")
+
+            if (patientId?.isBlank() == true) {
+                println("Patient ID is empty")
+                UserInfoStorage.saveUserId(context = context, userId = "72881f74-1d10-4d93-9002-5207a83729ed")
+                // TODO поменять на получение настоящего id
+            } else {
+                println("Patient ID: $patientId")
+            }
+        } // TODO Переместить в отдельную функцию
 
         retrieveTokens()
 
@@ -70,7 +89,8 @@ class MainActivity : ComponentActivity() {
                     authorisationViewModel = authorisationViewModel,
                     registrationViewModel = registrationViewModel,
                     newDiagnosticViewModel = newDiagnosticViewModel,
-                    diagnosticHistoryViewModel = diagnosticHistoryViewModel
+                    diagnosticHistoryViewModel = diagnosticHistoryViewModel,
+                    patientId = patientId ?: ""
                 )
             }
         }

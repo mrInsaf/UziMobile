@@ -25,6 +25,7 @@ fun AppNavigation(
     registrationViewModel: RegistraionViewModel,
     newDiagnosticViewModel: NewDiagnosticViewModel,
     diagnosticHistoryViewModel: DiagnosticHistoryViewModel,
+    patientId: String,
 ) {
     NavHost(
         navController = navController,
@@ -46,16 +47,19 @@ fun AppNavigation(
             )
         }
         composable(route = AuthScreens.MainScreenRoute.route) {
+            println("рисую главный экран")
             MainScreen(
                 newDiagnosticViewModel = newDiagnosticViewModel,
                 userData = authorisationUiState.userData,
-                diagnosticHistoryViewModel = diagnosticHistoryViewModel
+                diagnosticHistoryViewModel = diagnosticHistoryViewModel,
+                patientId = patientId
             )
         }
     }
 
     // Навигация в зависимости от состояния авторизации
     LaunchedEffect(authorisationUiState.isAuthorised) {
+        println("Проверяю авторизацию")
         if (authorisationUiState.isAuthorised) {
             navController.navigate(AuthScreens.MainScreenRoute.route) {
                 popUpTo(0)

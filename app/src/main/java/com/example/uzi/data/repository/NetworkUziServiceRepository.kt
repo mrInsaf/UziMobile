@@ -1,5 +1,6 @@
 package com.example.uzi.data.repository
 
+import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
@@ -24,6 +25,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import retrofit2.HttpException
 import java.io.File
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 class NetworkUziServiceRepository(
     private val uziApiService: UziApiService,
@@ -190,10 +193,20 @@ class NetworkUziServiceRepository(
         return file
     }
 
+    @SuppressLint("NewApi")
+    private fun parseDate(dateString: String): ZonedDateTime {
+        val formatter = DateTimeFormatter.ISO_DATE_TIME
+        return ZonedDateTime.parse(dateString, formatter)
+    }
+
     override suspend fun getUziList(patientId: String): List<Uzi> {
         return safeApiCall { accessToken ->
             uziApiService.getPatientUzis(accessToken, patientId)
-        }.uzis
+        }.uzis.map { uzi ->
+            uzi.copy(
+                createAt = parseDate(uzi.createAt).toString()
+            )
+        }
     }
 
 

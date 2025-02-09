@@ -13,13 +13,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.uzi.data.models.networkResponses.ReportResponse
+import com.example.uzi.data.models.networkResponses.Uzi
+import com.example.uzi.data.models.networkResponses.UziListResponse
 import com.example.uzi.ui.components.containers.DiagnosticListItem
 import com.example.uzi.ui.theme.Paddings
 
 @Composable
 fun DiagnosticsListScreen(
-    diagnosticsList: List<ReportResponse>,
+    uziList: List<Uzi>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -34,10 +35,10 @@ fun DiagnosticsListScreen(
         )
         Spacer(Modifier.size(Paddings.Large))
         LazyColumn {
-            items(diagnosticsList) {
+            items(uziList) { uzi ->
                 DiagnosticListItem(
-                    date = it.fakeUzi?.dateOfAdmission ?: "Неизвестная дата",
-                    clinic = it.fakeUzi?.clinicName ?: "Неизвестная клиника",
+                    date = uzi.createAt ?: "Неизвестная дата",
+                    clinic = "Неизвестная клиника",
                     formations = emptyList(),
                     modifier = Modifier
                         .clickable {
@@ -53,6 +54,6 @@ fun DiagnosticsListScreen(
 @Composable
 fun DiagnosticsListScreenPreview() {
     DiagnosticsListScreen(
-        diagnosticsList = emptyList(),
+        uziList = emptyList(),
     )
 }
