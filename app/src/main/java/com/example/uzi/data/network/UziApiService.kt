@@ -6,6 +6,7 @@ import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
 import com.example.uzi.data.models.networkResponses.RefreshResponse
 import com.example.uzi.data.models.networkResponses.UziImage
 import com.example.uzi.data.models.networkResponses.UziListResponse
+import com.example.uzi.data.models.networkResponses.UziNodesResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -69,4 +70,10 @@ interface UziApiService {
         @Header("token") accessToken: String, // Токен доступа
         @Path("id") patientId: String // ID пациента
     ): UziListResponse
+
+    @GET("uzi/uzis/{id}/nodes")
+    suspend fun getUziNodes(
+        @Path("id") uziId: String,
+        @Header("token") accessToken: String
+    ): UziNodesResponse
 }

@@ -13,6 +13,7 @@ import com.example.uzi.data.models.networkRequests.LoginRequest
 import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
 import com.example.uzi.data.models.networkResponses.Uzi
 import com.example.uzi.data.models.networkResponses.UziImage
+import com.example.uzi.data.models.networkResponses.UziNodesResponse
 import com.example.uzi.data.repository.local.CacheFileUtil
 import com.example.uzi.data.network.UziApiService
 import kotlinx.coroutines.delay
@@ -206,6 +207,12 @@ class NetworkUziServiceRepository(
             uzi.copy(
                 createAt = parseDate(uzi.createAt).toString()
             )
+        }
+    }
+
+    override suspend fun getUziNodes(uziId: String): UziNodesResponse {
+        return safeApiCall { accessToken ->
+            uziApiService.getUziNodes(uziId, accessToken)
         }
     }
 

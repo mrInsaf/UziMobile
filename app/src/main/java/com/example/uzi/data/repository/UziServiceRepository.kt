@@ -7,6 +7,7 @@ import com.example.uzi.data.models.User
 import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
 import com.example.uzi.data.models.networkResponses.Uzi
 import com.example.uzi.data.models.networkResponses.UziImage
+import com.example.uzi.data.models.networkResponses.UziNodesResponse
 import okhttp3.ResponseBody
 
 interface UziServiceRepository {
@@ -47,4 +48,6 @@ interface UziServiceRepository {
     suspend fun saveUziFileAndGetCacheUri(uziId: String, responseBody: ResponseBody): Uri
 
     suspend fun getUziList(patientId: String): List<Uzi>
+
+    suspend fun getUziNodes(uziId: String): UziNodesResponse
 }
