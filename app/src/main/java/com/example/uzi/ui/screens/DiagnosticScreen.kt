@@ -59,14 +59,10 @@ fun DiagnosticScreen(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-//            .padding(horizontal = Paddings.Medium)
     ) {
         var isFullScreenOpen by remember { mutableStateOf(false) }
         val uiState = diagnosticHistoryViewModel.uiState.collectAsState().value
 
-        println(uiState.currentResponse.fakeUzi?.dateOfAdmission)
-        println(uiState.currentResponse.fakeUzi?.clinicName)
-        println(uiState.currentResponse.fakeUzi)
         TextButton(
             onClick = {
 //                onAndroidBackClick(
@@ -82,12 +78,12 @@ fun DiagnosticScreen(
             )
         }
         Text(
-            text = "Диагностика от ${uiState.currentResponse.fakeUzi?.dateOfAdmission}",
+            text = "Диагностика от $diagnosticDate",
             style = MaterialTheme.typography.titleMedium,
             color = Color.Black
         )
         Text(
-            text = uiState.currentResponse.fakeUzi?.clinicName ?: "Нет названия клиники",
+            text = clinicName,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Normal,
             fontSize = 20.sp,

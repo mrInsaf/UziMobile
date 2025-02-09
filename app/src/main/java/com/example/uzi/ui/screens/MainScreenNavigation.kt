@@ -1,7 +1,6 @@
 package com.example.uzi.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -18,19 +17,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.uzi.data.models.User
-import com.example.uzi.data.repository.MockUziServiceRepository
-import com.example.uzi.data.repository.local.UserInfoStorage
 import com.example.uzi.ui.screens.newDiagnosticScreens.NewDiagnosticNavigation
 import com.example.uzi.ui.theme.Paddings
 import com.example.uzi.ui.viewModel.diagnosticHistory.DiagnosticHistoryViewModel
-import com.example.uzi.ui.viewModel.newDiagnostic.DiagnosticProcessState
 import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
 import com.example.uzi.ui.viewModel.newDiagnostic.isSuccess
 
@@ -82,13 +77,13 @@ fun NavigationGraph(
                     newDiagnosticViewModel,
                     onDiagnosticCompleted = {
                         if (uiState.diagnosticProcessState.isSuccess) {
-                            diagnosticHistoryViewModel.onSelectUzi(
+                            diagnosticHistoryViewModel.onUziCompleted(
                                 completedDiagnosticId = uiState.completedDiagnosticId,
                                 downloadedImagesUris = uiState.downloadedImagesUris,
                                 nodesAndSegmentsResponses = uiState.nodesAndSegmentsResponses,
                                 uziImages = uiState.uziImages
                             )
-                            navController.navigate(Screen.Uploaded.route)
+                            navController.navigate(Screen.Diagnostic.route)
                         }
                     }
                 )
@@ -100,12 +95,34 @@ fun NavigationGraph(
             )
             DiagnosticsListScreen(
                 uziList = uiState.uziList,
+                onDiagnosticListItemClick = { uziId, uziDate ->
+                    diagnosticHistoryViewModel.onSelectUzi(
+                        uziId = uziId,
+                        uziDate = uziDate
+                    )
+                },
             )
         }
         composable(Screen.Account.route) {
             ProfileScreen(
                 userName = userData.userName,
                 userEmail = userData.userEmail,
+            )
+        }
+
+        composable(Screen.Diagnostic.route) {
+            val diagnosticHistoryUiState by diagnosticHistoryViewModel.uiState.collectAsState()
+//            diagnosticHistoryViewModel.onUziCompleted(
+//                completedDiagnosticId = uiState.completedDiagnosticId,
+//                downloadedImagesUris = uiState.downloadedImagesUris,
+//                nodesAndSegmentsResponses = uiState.nodesAndSegmentsResponses,
+//                uziImages = uiState.uziImages
+//            )
+
+            DiagnosticScreen(
+                diagnosticDate = diagnosticHistoryUiState.selectedDiagnosticDate,
+                clinicName = diagnosticHistoryUiState.selectedClinicName ?: "Неизвестная клиника",
+                diagnosticHistoryViewModel = diagnosticHistoryViewModel
             )
         }
     }
@@ -145,6 +162,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
     object Load : Screen("load", "Загрузить", Icons.Default.Add)
     object Uploaded : Screen("uploaded", "Загруженные", Icons.Default.List)
+    object Diagnostic : Screen("diagnostic", "Диагностика", Icons.Default.List)
     object Account : Screen("account", "Аккаунт", Icons.Default.Person)
 }
 

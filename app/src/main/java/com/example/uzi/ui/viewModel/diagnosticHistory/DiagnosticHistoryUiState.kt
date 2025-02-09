@@ -24,5 +24,11 @@ data class DiagnosticHistoryUiState(
 
     var uziImages: List<UziImage> = emptyList(),
 
-    var nodesAndSegmentsResponses: List<NodesSegmentsResponse> = emptyList()
+    var nodesAndSegmentsResponses: List<NodesSegmentsResponse> = emptyList(),
+
+    var selectedDiagnosticId: String = "",
+    var selectedDiagnosticDate: String = "",
+    var selectedClinicName: String? = null,
+
+
 )

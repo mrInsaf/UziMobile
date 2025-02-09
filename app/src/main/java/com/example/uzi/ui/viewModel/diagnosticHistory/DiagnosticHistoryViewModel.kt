@@ -27,7 +27,7 @@ class DiagnosticHistoryViewModel(
         }
     }
 
-    fun onSelectUzi(
+    fun onUziCompleted(
         completedDiagnosticId: String,
         downloadedImagesUris: MutableList<Uri>,
         uziImages: List<UziImage>,
@@ -41,6 +41,18 @@ class DiagnosticHistoryViewModel(
                 uziImages = uziImages,
                 nodesAndSegmentsResponses = nodesAndSegmentsResponses,
             ) }
+        }
+    }
+
+    fun onSelectUzi(
+        uziId: String,
+        uziDate: String,
+    ) {
+        _uiState.update {
+            it.copy(
+                selectedDiagnosticId = uziId,
+                selectedDiagnosticDate = uziDate
+            )
         }
     }
 

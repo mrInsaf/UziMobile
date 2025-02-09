@@ -21,6 +21,7 @@ import com.example.uzi.ui.theme.Paddings
 @Composable
 fun DiagnosticsListScreen(
     uziList: List<Uzi>,
+    onDiagnosticListItemClick: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -42,7 +43,7 @@ fun DiagnosticsListScreen(
                     formations = emptyList(),
                     modifier = Modifier
                         .clickable {
-                            TODO()
+                            onDiagnosticListItemClick(uzi.id, uzi.createAt,)
                         }
                 )
             }
@@ -55,5 +56,6 @@ fun DiagnosticsListScreen(
 fun DiagnosticsListScreenPreview() {
     DiagnosticsListScreen(
         uziList = emptyList(),
+        onDiagnosticListItemClick = {_, _ -> }
     )
 }
