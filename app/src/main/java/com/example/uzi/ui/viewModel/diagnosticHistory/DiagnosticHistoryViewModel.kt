@@ -21,6 +21,13 @@ class DiagnosticHistoryViewModel(
     fun fetchUziList(patientId: String) {
         viewModelScope.launch {
             val uziList = repository.getUziList(patientId)
+            uziList.forEach { uzi ->
+                val id = uzi.id
+                val date = uzi.createAt
+                val nodesResponse = repository.getUziNodes(id)
+                
+            }
+
             _uiState.update {
                 it.copy(uziList = uziList)
             }
@@ -53,6 +60,18 @@ class DiagnosticHistoryViewModel(
                 selectedDiagnosticId = uziId,
                 selectedDiagnosticDate = uziDate
             )
+        }
+    }
+
+    fun openRecommendationBottomSheet() {
+        _uiState.update {
+            it.copy(isRecommendationSheetVisible = true)
+        }
+    }
+
+    fun closeRecommendationBottomSheet() {
+        _uiState.update {
+            it.copy(isRecommendationSheetVisible = false)
         }
     }
 

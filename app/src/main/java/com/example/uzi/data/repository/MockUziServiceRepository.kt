@@ -9,6 +9,7 @@ import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
 import com.example.uzi.data.models.networkResponses.ReportResponse
 import com.example.uzi.data.models.networkResponses.Uzi
 import com.example.uzi.data.models.networkResponses.UziImage
+import com.example.uzi.data.models.networkResponses.UziNodesResponse
 import com.example.uzi.data.repository.local.TokenStorage
 import kotlinx.coroutines.delay
 import okhttp3.ResponseBody
@@ -88,6 +89,10 @@ class MockUziServiceRepository(
     }
 
     override suspend fun getUziList(patientId: String): List<Uzi> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getUziNodes(uziId: String): UziNodesResponse {
         TODO("Not yet implemented")
     }
 }

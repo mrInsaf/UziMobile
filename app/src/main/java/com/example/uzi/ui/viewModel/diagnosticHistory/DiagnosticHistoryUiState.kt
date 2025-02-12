@@ -30,5 +30,6 @@ data class DiagnosticHistoryUiState(
     var selectedDiagnosticDate: String = "",
     var selectedClinicName: String? = null,
 
+    var isRecommendationSheetVisible: Boolean = false,
 
 )

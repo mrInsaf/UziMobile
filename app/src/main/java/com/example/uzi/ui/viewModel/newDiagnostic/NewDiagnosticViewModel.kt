@@ -64,7 +64,8 @@ class NewDiagnosticViewModel(
             try {
                 updateUiBeforeDiagnosticStart()
 
-                val diagnosticId = createDiagnostic()
+//                val diagnosticId = createDiagnostic()
+                val diagnosticId = "c1f6b1f6-3ac3-464e-a0a7-7769340ec8b7"
                 val uziImages = fetchUziImages(diagnosticId)
                 val downloadedUziUri = downloadAndSaveUzi(diagnosticId)
 
