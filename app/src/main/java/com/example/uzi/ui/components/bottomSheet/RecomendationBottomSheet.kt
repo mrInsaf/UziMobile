@@ -33,7 +33,7 @@ fun RecommendationBottomSheet(
     ) {
         Column(
             modifier = Modifier
-                .padding(Paddings.Medium)
+                .padding(start = Paddings.Medium, end = Paddings.Medium, bottom = Paddings.Medium)
         )  {
             Text(
                 text = stringResource(R.string.longRecommendationForPatient),
