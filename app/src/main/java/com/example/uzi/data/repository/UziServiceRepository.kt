@@ -50,4 +50,7 @@ interface UziServiceRepository {
     suspend fun getUziList(patientId: String): List<Uzi>
 
     suspend fun getUziNodes(uziId: String): UziNodesResponse
+
+    suspend fun getUzi(uziId: String): Uzi
+
 }

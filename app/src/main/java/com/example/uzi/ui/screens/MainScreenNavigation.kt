@@ -96,6 +96,7 @@ fun NavigationGraph(
             DiagnosticsListScreen(
                 uziList = uiState.uziList,
                 onDiagnosticListItemClick = { uziId, uziDate ->
+                    println("uziDate: $uziDate")
                     diagnosticHistoryViewModel.onSelectUzi(
                         uziId = uziId,
                         uziDate = uziDate

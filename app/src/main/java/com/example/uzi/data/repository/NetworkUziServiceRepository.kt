@@ -216,6 +216,12 @@ class NetworkUziServiceRepository(
         }
     }
 
+    override suspend fun getUzi(uziId: String): Uzi {
+        return safeApiCall {token ->
+            uziApiService.getUzi(token, uziId)
+        }
+    }
+
 
     override suspend fun submitLogout(): Boolean {
         TODO("Not yet implemented")

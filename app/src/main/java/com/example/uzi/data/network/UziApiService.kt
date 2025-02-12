@@ -4,6 +4,7 @@ import com.example.uzi.data.models.networkRequests.LoginRequest
 import com.example.uzi.data.models.networkResponses.LoginResponse
 import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
 import com.example.uzi.data.models.networkResponses.RefreshResponse
+import com.example.uzi.data.models.networkResponses.Uzi
 import com.example.uzi.data.models.networkResponses.UziImage
 import com.example.uzi.data.models.networkResponses.UziListResponse
 import com.example.uzi.data.models.networkResponses.UziNodesResponse
@@ -76,4 +77,10 @@ interface UziApiService {
         @Path("id") uziId: String,
         @Header("token") accessToken: String
     ): UziNodesResponse
+
+    @GET("uzi/uzis/{id}")
+    suspend fun getUzi(
+        @Header("token") accessToken: String,
+        @Path("id") uziId: String
+    ): Uzi
 }
