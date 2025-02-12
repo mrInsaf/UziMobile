@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.provider.OpenableColumns
+import androidx.annotation.RequiresApi
 import com.example.uzi.data.repository.local.TokenStorage
 import com.example.uzi.data.models.networkResponses.LoginResponse
 import com.example.uzi.data.models.networkResponses.ReportResponse
@@ -26,6 +28,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import retrofit2.HttpException
 import java.io.File
+import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -216,10 +219,18 @@ class NetworkUziServiceRepository(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getUzi(uziId: String): Uzi {
-        return safeApiCall {token ->
-            uziApiService.getUzi(token, uziId)
+        return safeApiCall { token ->
+            val uzi = uziApiService.getUzi(token, uziId)
+            uzi.copy(createAt = formatDate(uzi.createAt)) // Преобразуем дату перед возвратом
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun formatDate(isoDate: String): String {
+        return LocalDate.parse(isoDate.substringBefore("T"))
+            .format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
     }
 
 

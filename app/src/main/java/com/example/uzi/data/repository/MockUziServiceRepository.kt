@@ -95,4 +95,8 @@ class MockUziServiceRepository(
     override suspend fun getUziNodes(uziId: String): UziNodesResponse {
         TODO("Not yet implemented")
     }
+
+    override suspend fun getUzi(uziId: String): Uzi {
+        TODO("Not yet implemented")
+    }
 }
