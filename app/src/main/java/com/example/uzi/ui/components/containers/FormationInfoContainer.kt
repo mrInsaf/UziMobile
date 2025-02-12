@@ -1,17 +1,14 @@
 package com.example.uzi.ui.components.containers
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.uzi.ui.theme.Paddings
 
 @Composable
@@ -38,6 +35,10 @@ fun FormationInfoContainer(
             Text(
                 text = formationDescription
             )
+            Text(
+                text = "Подробнее",
+                color = MaterialTheme.colorScheme.tertiary
+            )
         }
     }
 }
@@ -52,6 +53,6 @@ fun FormationInfoContainerPreview() {
         formationClass = 3,
         formationProbability = 80,
         formationDescription = "Вероятно злокачественные изменения ЩЖ",
-        modifier = Modifier
+        modifier = Modifier,
     )
 }

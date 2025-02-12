@@ -233,8 +233,6 @@ fun DiagnosticScreen(
             )
         }
 
-        // TODO Добавить bottom sheet
-
         if (isFullScreenOpen) {
             Dialog(onDismissRequest = { isFullScreenOpen = false }) {
                 UziImageFullScreen(
