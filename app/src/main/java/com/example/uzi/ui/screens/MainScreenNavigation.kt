@@ -81,7 +81,8 @@ fun NavigationGraph(
                                 completedDiagnosticId = uiState.completedDiagnosticId,
                                 downloadedImagesUris = uiState.downloadedImagesUris,
                                 nodesAndSegmentsResponses = uiState.nodesAndSegmentsResponses,
-                                uziImages = uiState.uziImages
+                                uziImages = uiState.uziImages,
+                                selectedDiagnosticDate = uiState.completedDiagnosticInformation?.createAt ?: "",
                             )
                             navController.navigate(Screen.Diagnostic.route)
                         }

@@ -2,6 +2,7 @@ package com.example.uzi.ui.viewModel.newDiagnostic
 
 import android.net.Uri
 import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
+import com.example.uzi.data.models.networkResponses.Uzi
 import com.example.uzi.data.models.networkResponses.UziImage
 
 data class NewDiagnosticUiState(
@@ -19,6 +20,8 @@ data class NewDiagnosticUiState(
 //    var isDiagnosticSent: Boolean = false,
 
     var completedDiagnosticId: String = "",
+
+    var completedDiagnosticInformation: Uzi? = null,
 
     var downloadedImagesUris: MutableList<Uri> = mutableListOf(),
 

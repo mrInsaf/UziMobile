@@ -38,7 +38,8 @@ class DiagnosticHistoryViewModel(
         completedDiagnosticId: String,
         downloadedImagesUris: MutableList<Uri>,
         uziImages: List<UziImage>,
-        nodesAndSegmentsResponses: List<NodesSegmentsResponse>
+        nodesAndSegmentsResponses: List<NodesSegmentsResponse>,
+        selectedDiagnosticDate: String,
     ) {
         viewModelScope.launch {
 
@@ -47,6 +48,7 @@ class DiagnosticHistoryViewModel(
                 downloadedImagesUris = downloadedImagesUris,
                 uziImages = uziImages,
                 nodesAndSegmentsResponses = nodesAndSegmentsResponses,
+                selectedDiagnosticDate = selectedDiagnosticDate,
             ) }
         }
     }

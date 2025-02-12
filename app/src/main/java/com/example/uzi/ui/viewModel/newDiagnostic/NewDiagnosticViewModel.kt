@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
+import com.example.uzi.data.models.networkResponses.Uzi
 import com.example.uzi.data.models.networkResponses.UziImage
 import com.example.uzi.data.repository.UziServiceRepository
 import com.example.uzi.ui.UiEvent
@@ -67,13 +68,15 @@ class NewDiagnosticViewModel(
 //                val diagnosticId = createDiagnostic()
                 val diagnosticId = "c1f6b1f6-3ac3-464e-a0a7-7769340ec8b7"
                 val uziInformation = repository.getUzi(diagnosticId)
-                println("uziInformation: $uziInformation")
                 val uziImages = fetchUziImages(diagnosticId)
                 val downloadedUziUri = downloadAndSaveUzi(diagnosticId)
 
                 val uziImageNodesSegments = fetchImageNodesSegments(uziImages)
 
-                updateUiAfterDiagnosticCompletion(diagnosticId, downloadedUziUri, uziImages, uziImageNodesSegments)
+                updateUiAfterDiagnosticCompletion(
+                    diagnosticId, downloadedUziUri, uziImages, uziImageNodesSegments,
+                    uziInformation = uziInformation
+                )
 
             } catch (e: HttpException) {
                 handleHttpException(e)
@@ -159,7 +162,8 @@ class NewDiagnosticViewModel(
         diagnosticId: String,
         downloadedUziUri: Uri,
         uziImages: List<UziImage>,
-        uziImageNodesSegments: List<NodesSegmentsResponse>
+        uziImageNodesSegments: List<NodesSegmentsResponse>,
+        uziInformation: Uzi?,
     ) {
         _uiState.update { state ->
             state.copy(
@@ -167,7 +171,8 @@ class NewDiagnosticViewModel(
                 completedDiagnosticId = diagnosticId,
                 downloadedImagesUris = uiState.value.selectedImageUris.toMutableList(),
                 uziImages = uziImages,
-                nodesAndSegmentsResponses = uziImageNodesSegments
+                nodesAndSegmentsResponses = uziImageNodesSegments,
+                completedDiagnosticInformation = uziInformation,
             )
         }
         println("uziImageNodesSegments: $uziImageNodesSegments")
