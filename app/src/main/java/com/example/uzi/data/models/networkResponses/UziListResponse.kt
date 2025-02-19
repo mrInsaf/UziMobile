@@ -15,5 +15,5 @@ data class Uzi(
     @SerialName("projection") val projection: String,
     @SerialName("create_at") val createAt: String,
     @SerialName("device_id") val deviceId: Int,
-    @SerialName("checked") val checked: Boolean = false // если это поле необязательное
+    @SerialName("checked") val checked: Boolean = false
 )

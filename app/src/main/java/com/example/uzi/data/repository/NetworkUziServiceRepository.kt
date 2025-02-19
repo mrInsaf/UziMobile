@@ -198,20 +198,21 @@ class NetworkUziServiceRepository(
     }
 
     @SuppressLint("NewApi")
-    private fun parseDate(dateString: String): ZonedDateTime {
+    private fun parseDate(dateString: String): String {
         val formatter = DateTimeFormatter.ISO_DATE_TIME
-        return ZonedDateTime.parse(dateString, formatter)
+        val date = ZonedDateTime.parse(dateString, formatter)
+        return date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
     }
 
+
     override suspend fun getPatientUzis(patientId: String): List<Uzi> {
-        println("getPatientUzis")
         return safeApiCall { accessToken ->
             uziApiService.getPatientUzis(accessToken, patientId)
         }.uzis.map { uzi ->
             uzi.copy(
                 createAt = parseDate(uzi.createAt).toString()
             )
-        }
+        }.also { println(it) }
     }
 
     override suspend fun getUziNodes(uziId: String): UziNodesResponse {
