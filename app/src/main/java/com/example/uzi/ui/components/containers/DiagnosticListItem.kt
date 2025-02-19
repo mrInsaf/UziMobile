@@ -3,6 +3,7 @@ package com.example.uzi.ui.components.containers
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,8 +27,14 @@ fun DiagnosticListItem(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Text(date)
-            Text(clinic)
+            Text(
+                text = date,
+                style = MaterialTheme.typography.bodySmall
+            )
+            Text(
+                text = clinic,
+                style = MaterialTheme.typography.bodyLarge
+            )
             formations.forEach() {
                 TiradsContainer(
                     formationClass = it.formationClass,
