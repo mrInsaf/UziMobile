@@ -18,9 +18,9 @@ class DiagnosticHistoryViewModel(
     val uiState: StateFlow<DiagnosticHistoryUiState>
         get() = _uiState
 
-    fun fetchUziList(patientId: String) {
+    fun getPatientUzis(patientId: String) {
         viewModelScope.launch {
-            val uziList = repository.getUziList(patientId)
+            val uziList = repository.getPatientUzis(patientId)
             uziList.forEach { uzi ->
                 val id = uzi.id
                 val date = uzi.createAt

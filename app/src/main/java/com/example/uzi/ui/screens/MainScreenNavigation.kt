@@ -91,7 +91,7 @@ fun NavigationGraph(
         }
         composable(Screen.Uploaded.route) {
             val uiState by diagnosticHistoryViewModel.uiState.collectAsState()
-            diagnosticHistoryViewModel.fetchUziList(
+            diagnosticHistoryViewModel.getPatientUzis(
                 patientId = patientId
             )
             DiagnosticsListScreen(

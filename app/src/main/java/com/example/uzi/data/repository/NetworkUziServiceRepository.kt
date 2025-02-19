@@ -203,7 +203,8 @@ class NetworkUziServiceRepository(
         return ZonedDateTime.parse(dateString, formatter)
     }
 
-    override suspend fun getUziList(patientId: String): List<Uzi> {
+    override suspend fun getPatientUzis(patientId: String): List<Uzi> {
+        println("getPatientUzis")
         return safeApiCall { accessToken ->
             uziApiService.getPatientUzis(accessToken, patientId)
         }.uzis.map { uzi ->
