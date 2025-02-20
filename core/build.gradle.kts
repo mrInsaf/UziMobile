@@ -33,6 +33,19 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.datastore.preferences.v100)
+
+    // Retrofit
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.retrofit)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.logging.interceptor)
+
+    implementation (libs.beyka.android.tiffbitmapfactory)
+    implementation (libs.androidx.datastore.preferences)
+
+    implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

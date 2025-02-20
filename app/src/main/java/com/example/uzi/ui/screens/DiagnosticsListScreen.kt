@@ -13,8 +13,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.uzi.data.models.basic.NodesWithUziId
-import com.example.uzi.data.models.basic.Uzi
+import com.mrinsaf.core.data.models.basic.NodesWithUziId
+import com.mrinsaf.core.data.models.basic.Uzi
 import com.example.uzi.ui.components.containers.DiagnosticListItem
 import com.example.uzi.ui.theme.Paddings
 
