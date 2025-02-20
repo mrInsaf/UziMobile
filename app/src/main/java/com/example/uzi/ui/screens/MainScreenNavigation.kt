@@ -81,12 +81,12 @@ fun NavigationGraph(
                     newDiagnosticViewModel,
                     onDiagnosticCompleted = {
                         if (uiState.diagnosticProcessState.isSuccess) {
-                            diagnosticViewModel.onUziCompleted(
-                                completedDiagnosticId = uiState.completedDiagnosticId,
-                                downloadedImagesUris = uiState.downloadedImagesUris,
+                            diagnosticViewModel.onUziSelected(
+                                uziId = uiState.completedDiagnosticId,
+                                imagesUris = uiState.downloadedImagesUris,
                                 nodesAndSegmentsResponses = uiState.nodesAndSegmentsResponses,
                                 uziImages = uiState.uziImages,
-                                selectedDiagnosticDate = uiState.completedDiagnosticInformation?.createAt ?: "",
+                                selectedUziDate = uiState.completedDiagnosticInformation?.createAt ?: "",
                             )
                             navController.navigate(Screen.Diagnostic.route)
                         }
@@ -101,10 +101,8 @@ fun NavigationGraph(
             DiagnosticsListScreen(
                 uziList = uiState.uziList,
                 onDiagnosticListItemClick = { uziId, uziDate ->
-                    diagnosticViewModel.onSelectUzi(
-                        uziId = uziId,
-                        uziDate = uziDate
-                    )
+
+                    navController.navigate(Screen.Diagnostic.route)
                 },
                 nodesWithUziIds = uiState.nodesWithUziId,
             )
@@ -127,7 +125,7 @@ fun NavigationGraph(
 //            )
 
             DiagnosticScreen(
-                diagnosticDate = diagnosticHistoryUiState.selectedDiagnosticDate,
+                diagnosticDate = diagnosticHistoryUiState.selectedUziDate,
                 clinicName = diagnosticHistoryUiState.selectedClinicName ?: "Неизвестная клиника",
                 diagnosticViewModel = diagnosticViewModel
             )

@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "uzi"
 include(":app")
+include(":core")

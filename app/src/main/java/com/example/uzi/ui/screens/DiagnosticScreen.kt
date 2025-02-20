@@ -191,7 +191,7 @@ fun DiagnosticScreen(
                     emptyList()
                 } else {
                     try {
-                        uiState.completedUziNodesAndSegments
+                        uiState.selectedUziNodesAndSegments
                             .flatMap { it.segments } // Собираем все сегменты в один список
                             .filter { segment ->
                                 segment.image_id == uiState.uziImages[currentPage.value].id
@@ -205,12 +205,12 @@ fun DiagnosticScreen(
                 onFullScreen = { isFullScreenOpen = true },
             )
 
-            val nodes = uiState.completedUziNodesAndSegments
+            val nodes = uiState.selectedUziNodesAndSegments
                 .flatMap { it.segments }
                 .filter { segment ->
                     segment.image_id == uiState.uziImages[currentPage.value].id
                 }.mapNotNull { segment ->
-                    uiState.completedUziNodesAndSegments
+                    uiState.selectedUziNodesAndSegments
                         .flatMap { it.nodes }
                         .firstOrNull { node -> node.id == segment.node_id }
                 }

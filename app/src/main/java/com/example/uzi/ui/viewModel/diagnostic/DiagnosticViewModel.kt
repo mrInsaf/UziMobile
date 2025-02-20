@@ -20,36 +20,27 @@ class DiagnosticViewModel(
 
 
 
-    fun onUziCompleted(
-        completedDiagnosticId: String,
-        downloadedImagesUris: MutableList<Uri>,
+    fun onUziSelected(
+        uziId: String,
+        imagesUris: MutableList<Uri>,
         uziImages: List<UziImage>,
         nodesAndSegmentsResponses: List<NodesSegmentsResponse>,
-        selectedDiagnosticDate: String,
+        selectedUziDate: String,
     ) {
         viewModelScope.launch {
 
-            _uiState.update { it.copy(
-                completedDiagnosticId = completedDiagnosticId,
-                downloadedImagesUris = downloadedImagesUris,
-                uziImages = uziImages,
-                completedUziNodesAndSegments = nodesAndSegmentsResponses,
-                selectedDiagnosticDate = selectedDiagnosticDate,
-            ) }
+            _uiState.update {
+                it.copy(
+                    currentUziId = uziId,
+                    downloadedImagesUris = imagesUris,
+                    uziImages = uziImages,
+                    selectedUziNodesAndSegments = nodesAndSegmentsResponses,
+                    selectedUziDate = selectedUziDate,
+                )
+            }
         }
     }
 
-    fun onSelectUzi(
-        uziId: String,
-        uziDate: String,
-    ) {
-        _uiState.update {
-            it.copy(
-                selectedDiagnosticId = uziId,
-                selectedDiagnosticDate = uziDate
-            )
-        }
-    }
 
     fun openRecommendationBottomSheet() {
         _uiState.update {
