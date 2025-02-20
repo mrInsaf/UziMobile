@@ -13,7 +13,8 @@ import com.example.uzi.ui.screens.MainScreen
 import com.example.uzi.ui.screens.RegistrationScreen
 import com.example.uzi.ui.viewModel.authorisation.AuthorisationUiState
 import com.example.uzi.ui.viewModel.authorisation.AuthorisationViewModel
-import com.example.uzi.ui.viewModel.diagnosticHistory.DiagnosticHistoryViewModel
+import com.example.uzi.ui.viewModel.diagnostic.DiagnosticViewModel
+import com.example.uzi.ui.viewModel.diagnosticList.DiagnosticListViewModel
 import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
 import com.example.uzi.ui.viewModel.registraion.RegistraionViewModel
 
@@ -24,7 +25,8 @@ fun AppNavigation(
     authorisationViewModel: AuthorisationViewModel,
     registrationViewModel: RegistraionViewModel,
     newDiagnosticViewModel: NewDiagnosticViewModel,
-    diagnosticHistoryViewModel: DiagnosticHistoryViewModel,
+    diagnosticViewModel: DiagnosticViewModel,
+    diagnosticListViewModel: DiagnosticListViewModel,
     patientId: String,
 ) {
     NavHost(
@@ -51,7 +53,8 @@ fun AppNavigation(
             MainScreen(
                 newDiagnosticViewModel = newDiagnosticViewModel,
                 userData = authorisationUiState.userData,
-                diagnosticHistoryViewModel = diagnosticHistoryViewModel,
+                diagnosticViewModel = diagnosticViewModel,
+                diagnosticListViewModel = diagnosticListViewModel,
                 patientId = patientId
             )
         }

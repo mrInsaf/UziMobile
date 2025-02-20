@@ -14,7 +14,7 @@ import com.example.uzi.ui.theme.Paddings
 fun DiagnosticListItem(
     date: String,
     clinic: String,
-    formations: List<Node>,
+    nodes: List<Node>?,
     modifier: Modifier = Modifier
 ) {
     BasicContainer(
@@ -33,14 +33,15 @@ fun DiagnosticListItem(
                 text = clinic,
                 style = MaterialTheme.typography.bodyLarge
             )
-            formations.forEach() {
-                TiradsContainer(
-                    formationClass = it.formationClass,
-                    formationProbability = it.maxTirads.times(100).toInt(),
-                )
+            if (!nodes.isNullOrEmpty()){
+                nodes.forEach() {
+                    TiradsContainer(
+                        formationClass = it.formationClass,
+                        formationProbability = it.maxTirads.times(100).toInt(),
+                    )
+                }
             }
         }
-
     }
 }
 

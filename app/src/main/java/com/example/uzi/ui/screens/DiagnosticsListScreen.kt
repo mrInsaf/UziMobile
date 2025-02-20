@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.uzi.data.models.basic.NodesWithUziId
 import com.example.uzi.data.models.basic.Uzi
 import com.example.uzi.ui.components.containers.DiagnosticListItem
 import com.example.uzi.ui.theme.Paddings
@@ -20,6 +21,7 @@ import com.example.uzi.ui.theme.Paddings
 @Composable
 fun DiagnosticsListScreen(
     uziList: List<Uzi>,
+    nodesWithUziIds: List<NodesWithUziId>,
     onDiagnosticListItemClick: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -36,10 +38,12 @@ fun DiagnosticsListScreen(
         Spacer(Modifier.size(Paddings.Large))
         LazyColumn {
             items(uziList) { uzi ->
+                val nodes = nodesWithUziIds.find { it.uziId == uzi.id }?.nodes
+                println(nodes)
                 DiagnosticListItem(
                     date = uzi.createAt ?: "Неизвестная дата",
                     clinic = "Неизвестная клиника",
-                    formations = emptyList(),
+                    nodes = nodes,
                     modifier = Modifier
                         .clickable {
                             onDiagnosticListItemClick(uzi.id, uzi.createAt,)
@@ -55,6 +59,7 @@ fun DiagnosticsListScreen(
 fun DiagnosticsListScreenPreview() {
     DiagnosticsListScreen(
         uziList = emptyList(),
-        onDiagnosticListItemClick = {_, _ -> }
+        onDiagnosticListItemClick = { _, _ -> },
+        nodesWithUziIds = emptyList(),
     )
 }

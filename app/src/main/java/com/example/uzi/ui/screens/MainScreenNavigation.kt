@@ -25,14 +25,16 @@ import androidx.navigation.compose.rememberNavController
 import com.example.uzi.data.models.User
 import com.example.uzi.ui.screens.newDiagnosticScreens.NewDiagnosticNavigation
 import com.example.uzi.ui.theme.Paddings
-import com.example.uzi.ui.viewModel.diagnosticHistory.DiagnosticHistoryViewModel
+import com.example.uzi.ui.viewModel.diagnostic.DiagnosticViewModel
+import com.example.uzi.ui.viewModel.diagnosticList.DiagnosticListViewModel
 import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
 import com.example.uzi.ui.viewModel.newDiagnostic.isSuccess
 
 @Composable
 fun MainScreen(
     newDiagnosticViewModel: NewDiagnosticViewModel,
-    diagnosticHistoryViewModel: DiagnosticHistoryViewModel,
+    diagnosticViewModel: DiagnosticViewModel,
+    diagnosticListViewModel: DiagnosticListViewModel,
     userData: User,
     patientId: String,
 ) {
@@ -48,7 +50,8 @@ fun MainScreen(
             navController = navController,
             padding = padding,
             newDiagnosticViewModel = newDiagnosticViewModel,
-            diagnosticHistoryViewModel = diagnosticHistoryViewModel,
+            diagnosticViewModel = diagnosticViewModel,
+            diagnosticListViewModel = diagnosticListViewModel,
             userData = userData,
             patientId = patientId
         )
@@ -60,7 +63,8 @@ fun NavigationGraph(
     navController: NavHostController,
     padding: PaddingValues,
     newDiagnosticViewModel: NewDiagnosticViewModel,
-    diagnosticHistoryViewModel: DiagnosticHistoryViewModel,
+    diagnosticViewModel: DiagnosticViewModel,
+    diagnosticListViewModel: DiagnosticListViewModel,
     userData: User,
     patientId: String
 ) {
@@ -77,7 +81,7 @@ fun NavigationGraph(
                     newDiagnosticViewModel,
                     onDiagnosticCompleted = {
                         if (uiState.diagnosticProcessState.isSuccess) {
-                            diagnosticHistoryViewModel.onUziCompleted(
+                            diagnosticViewModel.onUziCompleted(
                                 completedDiagnosticId = uiState.completedDiagnosticId,
                                 downloadedImagesUris = uiState.downloadedImagesUris,
                                 nodesAndSegmentsResponses = uiState.nodesAndSegmentsResponses,
@@ -90,21 +94,22 @@ fun NavigationGraph(
                 )
         }
         composable(Screen.Uploaded.route) {
-            val uiState by diagnosticHistoryViewModel.uiState.collectAsState()
-            diagnosticHistoryViewModel.getPatientUzis(
+            val uiState by diagnosticListViewModel.uiState.collectAsState()
+            diagnosticListViewModel.getPatientUzis(
                 patientId = patientId
             )
             DiagnosticsListScreen(
                 uziList = uiState.uziList,
                 onDiagnosticListItemClick = { uziId, uziDate ->
-                    println("uziDate: $uziDate")
-                    diagnosticHistoryViewModel.onSelectUzi(
+                    diagnosticViewModel.onSelectUzi(
                         uziId = uziId,
                         uziDate = uziDate
                     )
                 },
+                nodesWithUziIds = uiState.nodesWithUziId,
             )
         }
+
         composable(Screen.Account.route) {
             ProfileScreen(
                 userName = userData.userName,
@@ -113,7 +118,7 @@ fun NavigationGraph(
         }
 
         composable(Screen.Diagnostic.route) {
-            val diagnosticHistoryUiState by diagnosticHistoryViewModel.uiState.collectAsState()
+            val diagnosticHistoryUiState by diagnosticViewModel.uiState.collectAsState()
 //            diagnosticHistoryViewModel.onUziCompleted(
 //                completedDiagnosticId = uiState.completedDiagnosticId,
 //                downloadedImagesUris = uiState.downloadedImagesUris,
@@ -124,7 +129,7 @@ fun NavigationGraph(
             DiagnosticScreen(
                 diagnosticDate = diagnosticHistoryUiState.selectedDiagnosticDate,
                 clinicName = diagnosticHistoryUiState.selectedClinicName ?: "Неизвестная клиника",
-                diagnosticHistoryViewModel = diagnosticHistoryViewModel
+                diagnosticViewModel = diagnosticViewModel
             )
         }
     }

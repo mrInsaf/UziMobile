@@ -49,7 +49,7 @@ import com.example.uzi.ui.components.bottomSheet.RecommendationBottomSheet
 import com.example.uzi.ui.components.canvas.ZoomableCanvasSectorWithConstraints
 import com.example.uzi.ui.components.containers.FormationInfoContainer
 import com.example.uzi.ui.theme.Paddings
-import com.example.uzi.ui.viewModel.diagnosticHistory.DiagnosticHistoryViewModel
+import com.example.uzi.ui.viewModel.diagnostic.DiagnosticViewModel
 import org.beyka.tiffbitmapfactory.TiffBitmapFactory
 
 
@@ -58,7 +58,7 @@ import org.beyka.tiffbitmapfactory.TiffBitmapFactory
 fun DiagnosticScreen(
     diagnosticDate: String,
     clinicName: String,
-    diagnosticHistoryViewModel: DiagnosticHistoryViewModel,
+    diagnosticViewModel: DiagnosticViewModel,
 ) {
     Column(
         modifier = Modifier
@@ -66,7 +66,7 @@ fun DiagnosticScreen(
             .verticalScroll(rememberScrollState())
     ) {
         var isFullScreenOpen by remember { mutableStateOf(false) }
-        val uiState = diagnosticHistoryViewModel.uiState.collectAsState().value
+        val uiState = diagnosticViewModel.uiState.collectAsState().value
 
         TextButton(
             onClick = {
@@ -191,7 +191,7 @@ fun DiagnosticScreen(
                     emptyList()
                 } else {
                     try {
-                        uiState.nodesAndSegmentsResponses
+                        uiState.completedUziNodesAndSegments
                             .flatMap { it.segments } // Собираем все сегменты в один список
                             .filter { segment ->
                                 segment.image_id == uiState.uziImages[currentPage.value].id
@@ -205,12 +205,12 @@ fun DiagnosticScreen(
                 onFullScreen = { isFullScreenOpen = true },
             )
 
-            val nodes = uiState.nodesAndSegmentsResponses
+            val nodes = uiState.completedUziNodesAndSegments
                 .flatMap { it.segments }
                 .filter { segment ->
                     segment.image_id == uiState.uziImages[currentPage.value].id
                 }.mapNotNull { segment ->
-                    uiState.nodesAndSegmentsResponses
+                    uiState.completedUziNodesAndSegments
                         .flatMap { it.nodes }
                         .firstOrNull { node -> node.id == segment.node_id }
                 }
@@ -223,12 +223,12 @@ fun DiagnosticScreen(
                     formationDescription = stringResource(R.string.shortRecommendationForPatient),
                     modifier = Modifier
                         .clip(RoundedCornerShape(20.dp))
-                        .clickable { diagnosticHistoryViewModel.openRecommendationBottomSheet() }
+                        .clickable { diagnosticViewModel.openRecommendationBottomSheet() }
                 )
             }
             RecommendationBottomSheet(
                 isVisible = uiState.isRecommendationSheetVisible,
-                onDismiss = { diagnosticHistoryViewModel.closeRecommendationBottomSheet() }
+                onDismiss = { diagnosticViewModel.closeRecommendationBottomSheet() }
             )
         }
 
@@ -255,7 +255,7 @@ fun DiagnosticScreenPreview() {
     DiagnosticScreen(
         diagnosticDate = "24.11.2024",
         clinicName = "Клиника",
-        diagnosticHistoryViewModel = DiagnosticHistoryViewModel(
+        diagnosticViewModel = DiagnosticViewModel(
             MockUziServiceRepository()
         )
     )

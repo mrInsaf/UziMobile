@@ -1,4 +1,4 @@
-package com.example.uzi.ui.viewModel.diagnosticHistory
+package com.example.uzi.ui.viewModel.diagnostic
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
@@ -11,28 +11,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class DiagnosticHistoryViewModel(
+class DiagnosticViewModel(
     val repository: UziServiceRepository,
 ) : ViewModel() {
-    private var _uiState = MutableStateFlow(DiagnosticHistoryUiState())
-    val uiState: StateFlow<DiagnosticHistoryUiState>
+    private var _uiState = MutableStateFlow(DiagnosticUiState())
+    val uiState: StateFlow<DiagnosticUiState>
         get() = _uiState
 
-    fun getPatientUzis(patientId: String) {
-        viewModelScope.launch {
-            val uziList = repository.getPatientUzis(patientId)
-            uziList.forEach { uzi ->
-                val id = uzi.id
-                val date = uzi.createAt
-                val nodesResponse = repository.getUziNodes(id)
-                
-            }
 
-            _uiState.update {
-                it.copy(uziList = uziList)
-            }
-        }
-    }
 
     fun onUziCompleted(
         completedDiagnosticId: String,
@@ -47,7 +33,7 @@ class DiagnosticHistoryViewModel(
                 completedDiagnosticId = completedDiagnosticId,
                 downloadedImagesUris = downloadedImagesUris,
                 uziImages = uziImages,
-                nodesAndSegmentsResponses = nodesAndSegmentsResponses,
+                completedUziNodesAndSegments = nodesAndSegmentsResponses,
                 selectedDiagnosticDate = selectedDiagnosticDate,
             ) }
         }

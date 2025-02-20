@@ -5,30 +5,21 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.uzi.data.repository.local.TokenStorage
 import com.example.uzi.data.repository.NetworkUziServiceRepository
 import com.example.uzi.data.repository.UziServiceRepository
 import com.example.uzi.data.network.RetrofitProvider
 import com.example.uzi.data.repository.local.UserInfoStorage
-import com.example.uzi.ui.screens.AuthorizationScreen
-import com.example.uzi.ui.screens.MainScreen
-import com.example.uzi.ui.screens.RegistrationScreen
 import com.example.uzi.ui.theme.UziTheme
 import com.example.uzi.ui.viewModel.authorisation.AuthorisationViewModel
-import com.example.uzi.ui.viewModel.diagnosticHistory.DiagnosticHistoryViewModel
+import com.example.uzi.ui.viewModel.diagnostic.DiagnosticViewModel
+import com.example.uzi.ui.viewModel.diagnosticList.DiagnosticListViewModel
 import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
 import com.example.uzi.ui.viewModel.registraion.RegistraionViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
@@ -51,7 +42,9 @@ class MainActivity : ComponentActivity() {
         val authorisationViewModel = AuthorisationViewModel(repository, context = this)
         val registrationViewModel = RegistraionViewModel()
         val newDiagnosticViewModel = NewDiagnosticViewModel(repository = repository)
-        val diagnosticHistoryViewModel = DiagnosticHistoryViewModel(repository = repository)
+        val diagnosticViewModel = DiagnosticViewModel(repository = repository)
+        val diagnosticListViewModel = DiagnosticListViewModel(repository = repository)
+
         var patientId: String? = null
 
         lifecycleScope.launch {
@@ -89,8 +82,9 @@ class MainActivity : ComponentActivity() {
                     authorisationViewModel = authorisationViewModel,
                     registrationViewModel = registrationViewModel,
                     newDiagnosticViewModel = newDiagnosticViewModel,
-                    diagnosticHistoryViewModel = diagnosticHistoryViewModel,
-                    patientId = patientId ?: ""
+                    diagnosticViewModel = diagnosticViewModel,
+                    diagnosticListViewModel = diagnosticListViewModel,
+                    patientId = patientId ?: "",
                 )
             }
         }
