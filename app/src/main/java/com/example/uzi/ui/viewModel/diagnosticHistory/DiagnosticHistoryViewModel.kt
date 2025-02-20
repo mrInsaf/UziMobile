@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
-import com.example.uzi.data.models.networkResponses.UziImage
+import com.example.uzi.data.models.basic.UziImage
 import com.example.uzi.data.repository.UziServiceRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

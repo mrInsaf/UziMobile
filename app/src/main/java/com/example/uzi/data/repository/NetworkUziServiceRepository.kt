@@ -9,12 +9,11 @@ import android.provider.OpenableColumns
 import androidx.annotation.RequiresApi
 import com.example.uzi.data.repository.local.TokenStorage
 import com.example.uzi.data.models.networkResponses.LoginResponse
-import com.example.uzi.data.models.networkResponses.ReportResponse
 import com.example.uzi.data.models.User
 import com.example.uzi.data.models.networkRequests.LoginRequest
 import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
-import com.example.uzi.data.models.networkResponses.Uzi
-import com.example.uzi.data.models.networkResponses.UziImage
+import com.example.uzi.data.models.basic.Uzi
+import com.example.uzi.data.models.basic.UziImage
 import com.example.uzi.data.models.networkResponses.UziNodesResponse
 import com.example.uzi.data.repository.local.CacheFileUtil
 import com.example.uzi.data.network.UziApiService
@@ -241,11 +240,6 @@ class NetworkUziServiceRepository(
     }
 
     override suspend fun getUser(): User {
-        TODO("Not yet implemented")
-    }
-
-
-    override suspend fun getUziById(uziId: String): ReportResponse {
         TODO("Not yet implemented")
     }
 

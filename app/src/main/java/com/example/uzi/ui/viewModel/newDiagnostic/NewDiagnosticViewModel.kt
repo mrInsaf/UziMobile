@@ -4,8 +4,8 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
-import com.example.uzi.data.models.networkResponses.Uzi
-import com.example.uzi.data.models.networkResponses.UziImage
+import com.example.uzi.data.models.basic.Uzi
+import com.example.uzi.data.models.basic.UziImage
 import com.example.uzi.data.repository.UziServiceRepository
 import com.example.uzi.ui.UiEvent
 import kotlinx.coroutines.async

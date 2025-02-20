@@ -7,16 +7,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.uzi.data.models.networkResponses.Formation
-import com.example.uzi.data.models.networkResponses.Tirads
+import com.example.uzi.data.models.basic.Node
 import com.example.uzi.ui.theme.Paddings
 
 @Composable
 fun DiagnosticListItem(
     date: String,
     clinic: String,
-    formations: List<Formation>,
+    formations: List<Node>,
     modifier: Modifier = Modifier
 ) {
     BasicContainer(
@@ -38,7 +36,7 @@ fun DiagnosticListItem(
             formations.forEach() {
                 TiradsContainer(
                     formationClass = it.formationClass,
-                    formationProbability = it.maxTirads,
+                    formationProbability = it.maxTirads.times(100).toInt(),
                 )
             }
         }
@@ -46,22 +44,3 @@ fun DiagnosticListItem(
     }
 }
 
-@Preview
-@Composable
-fun DiagnosticListItemPreview() {
-    DiagnosticListItem(
-        date = "12.12.2024",
-        clinic = "Клиника",
-        formations = List(3) { index ->
-            Formation(
-                ai = index % 2 == 0, // Пример: чередование AI-обнаружения
-                id = "formation_${index + 1}",
-                tirads = Tirads(
-                    tirads_23 = (20..40).random(),
-                    tirads_4 = (10..30).random(),
-                    tirads_5 = (5..15).random()
-                )
-            )
-        }
-    )
-}

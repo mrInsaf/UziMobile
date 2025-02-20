@@ -1,6 +1,6 @@
 package com.example.uzi.data.mock
 
-import com.example.uzi.data.models.networkResponses.SectorPoint
+import com.example.uzi.data.models.basic.SectorPoint
 import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin

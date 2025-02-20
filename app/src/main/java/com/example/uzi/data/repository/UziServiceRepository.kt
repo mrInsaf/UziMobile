@@ -2,11 +2,10 @@ package com.example.uzi.data.repository
 
 import android.net.Uri
 import com.example.uzi.data.models.networkResponses.LoginResponse
-import com.example.uzi.data.models.networkResponses.ReportResponse
 import com.example.uzi.data.models.User
 import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
-import com.example.uzi.data.models.networkResponses.Uzi
-import com.example.uzi.data.models.networkResponses.UziImage
+import com.example.uzi.data.models.basic.Uzi
+import com.example.uzi.data.models.basic.UziImage
 import com.example.uzi.data.models.networkResponses.UziNodesResponse
 import okhttp3.ResponseBody
 
@@ -30,8 +29,6 @@ interface UziServiceRepository {
         patientId: String, // ID пациента
         deviceId: String // ID устройства
     ): String
-
-    suspend fun getUziById(uziId: String): ReportResponse
 
     suspend fun getUziImages(
         uziId: String // ID УЗИ

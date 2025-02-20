@@ -1,4 +1,4 @@
-package com.example.uzi.data.models.networkResponses
+package com.example.uzi.data.models.basic
 
 import kotlinx.serialization.Serializable
 

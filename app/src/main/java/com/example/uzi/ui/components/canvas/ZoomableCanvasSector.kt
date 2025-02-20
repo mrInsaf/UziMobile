@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.IntSize
-import com.example.uzi.data.models.networkResponses.SectorPoint
+import com.example.uzi.data.models.basic.SectorPoint
 
 @Composable
 fun ZoomableCanvasSector(

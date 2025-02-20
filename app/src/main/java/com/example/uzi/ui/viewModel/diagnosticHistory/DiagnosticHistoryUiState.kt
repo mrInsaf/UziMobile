@@ -2,21 +2,13 @@ package com.example.uzi.ui.viewModel.diagnosticHistory
 
 import android.net.Uri
 import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
-import com.example.uzi.data.models.networkResponses.ReportResponse
-import com.example.uzi.data.models.networkResponses.Uzi
-import com.example.uzi.data.models.networkResponses.UziImage
+import com.example.uzi.data.models.basic.Uzi
+import com.example.uzi.data.models.basic.UziImage
 
 
 data class DiagnosticHistoryUiState(
     var uziList: List<Uzi> = emptyList(),
     var currentUziId: String = "",
-
-    var currentResponse: ReportResponse = ReportResponse(
-        formations = null,
-        images = null,
-        segments = null,
-        fakeUzi = null
-    ),
 
     var completedDiagnosticId: String = "",
 
@@ -32,4 +24,4 @@ data class DiagnosticHistoryUiState(
 
     var isRecommendationSheetVisible: Boolean = false,
 
-)
+    )

@@ -1,4 +1,4 @@
-package com.example.uzi.data.models.networkResponses
+package com.example.uzi.data.models.basic
 
 import kotlinx.serialization.Serializable
 
@@ -6,5 +6,4 @@ import kotlinx.serialization.Serializable
 data class SectorPoint(
     val x: Int,
     val y : Int,
-
 )

@@ -1,17 +1,13 @@
 package com.example.uzi.data.repository
 
-import android.content.Context
 import android.net.Uri
 import com.example.uzi.data.mock.MockAuthData
 import com.example.uzi.data.models.User
 import com.example.uzi.data.models.networkResponses.LoginResponse
 import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
-import com.example.uzi.data.models.networkResponses.ReportResponse
-import com.example.uzi.data.models.networkResponses.Uzi
-import com.example.uzi.data.models.networkResponses.UziImage
+import com.example.uzi.data.models.basic.Uzi
+import com.example.uzi.data.models.basic.UziImage
 import com.example.uzi.data.models.networkResponses.UziNodesResponse
-import com.example.uzi.data.repository.local.TokenStorage
-import kotlinx.coroutines.delay
 import okhttp3.ResponseBody
 
 class MockUziServiceRepository(
@@ -60,9 +56,6 @@ class MockUziServiceRepository(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUziById(uziId: String): ReportResponse {
-        TODO("Not yet implemented")
-    }
 
     override suspend fun getUziImages(uziId: String): List<UziImage> {
         TODO("Not yet implemented")

@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.uzi.R
-import com.example.uzi.data.models.networkResponses.SectorPoint
+import com.example.uzi.data.models.basic.SectorPoint
 import com.example.uzi.ui.components.canvas.ZoomableCanvasSector
 
 @Composable

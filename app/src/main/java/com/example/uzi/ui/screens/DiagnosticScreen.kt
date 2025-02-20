@@ -6,7 +6,6 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -44,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.uzi.R
-import com.example.uzi.data.models.networkResponses.SectorPoint
+import com.example.uzi.data.models.basic.SectorPoint
 import com.example.uzi.data.repository.MockUziServiceRepository
 import com.example.uzi.ui.components.bottomSheet.RecommendationBottomSheet
 import com.example.uzi.ui.components.canvas.ZoomableCanvasSectorWithConstraints

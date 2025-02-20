@@ -2,8 +2,8 @@ package com.example.uzi.ui.viewModel.newDiagnostic
 
 import android.net.Uri
 import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
-import com.example.uzi.data.models.networkResponses.Uzi
-import com.example.uzi.data.models.networkResponses.UziImage
+import com.example.uzi.data.models.basic.Uzi
+import com.example.uzi.data.models.basic.UziImage
 
 data class NewDiagnosticUiState(
     var currentScreenIndex: Int = 0,
