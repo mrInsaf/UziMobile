@@ -1,8 +1,8 @@
 package com.example.uzi.ui.viewModel.diagnostic
 
 import android.net.Uri
-import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
-import com.example.uzi.data.models.basic.UziImage
+import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
+import com.mrinsaf.core.data.models.basic.UziImage
 
 
 data class DiagnosticUiState(

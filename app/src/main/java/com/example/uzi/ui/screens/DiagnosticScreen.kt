@@ -43,8 +43,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.uzi.R
-import com.example.uzi.data.models.basic.SectorPoint
-import com.example.uzi.data.repository.MockUziServiceRepository
+import com.mrinsaf.core.data.models.basic.SectorPoint
+import com.mrinsaf.core.data.repository.MockUziServiceRepository
 import com.example.uzi.ui.components.bottomSheet.RecommendationBottomSheet
 import com.example.uzi.ui.components.canvas.ZoomableCanvasSectorWithConstraints
 import com.example.uzi.ui.components.containers.FormationInfoContainer

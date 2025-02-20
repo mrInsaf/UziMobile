@@ -7,7 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.uzi.data.models.basic.Node
+import com.mrinsaf.core.data.models.basic.Node
 import com.example.uzi.ui.theme.Paddings
 
 @Composable

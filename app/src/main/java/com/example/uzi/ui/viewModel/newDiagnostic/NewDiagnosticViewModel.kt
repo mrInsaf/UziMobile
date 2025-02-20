@@ -3,11 +3,12 @@ package com.example.uzi.ui.viewModel.newDiagnostic
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
-import com.example.uzi.data.models.basic.Uzi
-import com.example.uzi.data.models.basic.UziImage
-import com.example.uzi.data.repository.UziServiceRepository
+import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
+import com.mrinsaf.core.data.models.basic.Uzi
+import com.mrinsaf.core.data.models.basic.UziImage
 import com.example.uzi.ui.UiEvent
+import com.mrinsaf.core.data.repository.UziServiceRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -18,8 +19,10 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import javax.inject.Inject
 
-class NewDiagnosticViewModel(
+@HiltViewModel
+class NewDiagnosticViewModel @Inject constructor(
     val repository: UziServiceRepository,
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(NewDiagnosticUiState())
@@ -66,7 +69,7 @@ class NewDiagnosticViewModel(
                 updateUiBeforeDiagnosticStart()
 
 //                val diagnosticId = createDiagnostic()
-                val diagnosticId = "fed84455-0f1b-449e-9b81-69e3dbbf231a"
+                val diagnosticId = "f00941dd-3769-497a-a813-cc457f6053f9"
                 val uziInformation = repository.getUzi(diagnosticId)
                 val uziImages = fetchUziImages(diagnosticId)
                 val downloadedUziUri = downloadAndSaveUzi(diagnosticId)

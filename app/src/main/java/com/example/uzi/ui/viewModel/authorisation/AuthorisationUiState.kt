@@ -8,5 +8,5 @@ data class AuthorisationUiState(
 
     var isAuthorised: Boolean = false,
 
-    var userData: com.mrinsaf.core.data.models.User = com.mrinsaf.core.data.models.User()
+    var userData: User = User()
 )

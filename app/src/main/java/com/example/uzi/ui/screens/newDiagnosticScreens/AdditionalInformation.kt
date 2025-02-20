@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.uzi.data.repository.MockUziServiceRepository
+import com.mrinsaf.core.data.repository.MockUziServiceRepository
 import com.example.uzi.ui.components.fields.BasicFormField
 import com.example.uzi.ui.components.fields.DateFormField
 import com.example.uzi.ui.components.MainButton

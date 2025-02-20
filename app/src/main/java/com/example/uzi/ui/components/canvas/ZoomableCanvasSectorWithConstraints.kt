@@ -8,7 +8,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.dp
-import com.example.uzi.data.models.basic.SectorPoint
+import com.mrinsaf.core.data.models.basic.SectorPoint
 
 @Composable
 fun ZoomableCanvasSectorWithConstraints(

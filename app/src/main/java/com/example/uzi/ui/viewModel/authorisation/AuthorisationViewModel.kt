@@ -4,9 +4,11 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.uzi.data.repository.local.TokenStorage
-import com.example.uzi.data.repository.UziServiceRepository
 import com.example.uzi.ui.UiEvent
+import com.mrinsaf.core.data.repository.UziServiceRepository
+import com.mrinsaf.core.data.repository.local.TokenStorage
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -14,11 +16,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class AuthorisationViewModel(
+@HiltViewModel
+class AuthorisationViewModel @Inject constructor(
     val repository: UziServiceRepository,
-    val context: Context,
+    @ApplicationContext val context: Context,
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(AuthorisationUiState())
     val uiState: StateFlow<AuthorisationUiState>

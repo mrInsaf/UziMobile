@@ -3,6 +3,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "2.1.0"
+    id ("kotlin-kapt")
+
+    id("com.google.dagger.hilt.android") version "2.55" apply true
 }
 
 android {
@@ -43,6 +46,10 @@ android {
 dependencies {
     implementation(project(":core"))
 
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+
     implementation(libs.androidx.datastore.preferences.v100)
 
     // Retrofit
@@ -67,7 +74,6 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.espresso.core)
-    implementation(project(":core"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

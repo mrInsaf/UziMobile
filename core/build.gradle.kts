@@ -1,11 +1,15 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    kotlin("plugin.serialization") version "2.1.0"
+    id ("kotlin-kapt")
+
+    id("com.google.dagger.hilt.android") version "2.55" apply true
 }
 
 android {
     namespace = "com.mrinsaf.core"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -33,6 +37,9 @@ android {
 }
 
 dependencies {
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+
     implementation(libs.androidx.datastore.preferences.v100)
 
     // Retrofit

@@ -1,12 +1,14 @@
 package com.example.uzi.ui.viewModel.registraion
 
 import androidx.lifecycle.ViewModel
-import com.example.uzi.ui.viewModel.authorisation.AuthorisationUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class RegistraionViewModel : ViewModel() {
+@HiltViewModel
+class RegistraionViewModel @Inject constructor() : ViewModel() {
     private var _uiState = MutableStateFlow(RegistrationUiState())
     val uiState: StateFlow<RegistrationUiState>
         get() = _uiState

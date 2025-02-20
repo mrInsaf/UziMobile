@@ -12,12 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.uzi.data.repository.MockUziServiceRepository
 import com.example.uzi.ui.components.canvas.NewDiagnosticProgressBar
 import com.example.uzi.ui.viewModel.newDiagnostic.DiagnosticProcessState
 import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel

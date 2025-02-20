@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.lifecycleScope
@@ -20,12 +21,14 @@ import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
 import com.example.uzi.ui.viewModel.registraion.RegistraionViewModel
 import com.mrinsaf.core.data.network.RetrofitProvider
 import com.mrinsaf.core.data.repository.local.UserInfoStorage
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,16 +37,11 @@ class MainActivity : ComponentActivity() {
 
         val context = this
 
-        val uziApiService = RetrofitProvider.uziApiService
-        val repository: UziServiceRepository = NetworkUziServiceRepository(
-            uziApiService = uziApiService,
-            context = this
-        )
-        val authorisationViewModel = AuthorisationViewModel(repository, context = this)
-        val registrationViewModel = RegistraionViewModel()
-        val newDiagnosticViewModel = NewDiagnosticViewModel(repository = repository)
-        val diagnosticViewModel = DiagnosticViewModel(repository = repository)
-        val diagnosticListViewModel = DiagnosticListViewModel(repository = repository)
+        val authorisationViewModel: AuthorisationViewModel by viewModels()
+        val registrationViewModel: RegistraionViewModel by viewModels()
+        val newDiagnosticViewModel: NewDiagnosticViewModel by viewModels()
+        val diagnosticViewModel: DiagnosticViewModel by viewModels()
+        val diagnosticListViewModel: DiagnosticListViewModel by viewModels()
 
         var patientId: String? = null
 

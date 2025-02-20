@@ -3,15 +3,18 @@ package com.example.uzi.ui.viewModel.diagnostic
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.uzi.data.models.networkResponses.NodesSegmentsResponse
-import com.example.uzi.data.models.basic.UziImage
-import com.example.uzi.data.repository.UziServiceRepository
+import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
+import com.mrinsaf.core.data.models.basic.UziImage
+import com.mrinsaf.core.data.repository.UziServiceRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DiagnosticViewModel(
+@HiltViewModel
+class DiagnosticViewModel @Inject constructor(
     val repository: UziServiceRepository,
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(DiagnosticUiState())

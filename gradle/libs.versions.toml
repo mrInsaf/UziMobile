@@ -6,11 +6,14 @@ androidxDatastorePreferences = "1.1.2"
 coilCompose = "2.4.0"
 datastorePreferences = "1.1.1"
 datastorePreferencesVersion = "1.0.0"
+hiltCompiler = "2.55"
+hiltNavigationCompose = "1.2.0"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+hilt = "2.55"
 kotlinxSerializationJson = "1.6.3"
 kotlinxSerializationJsonVersion = "1.5.1"
 lifecycleRuntimeKtx = "2.8.7"
@@ -29,9 +32,12 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-datastore-preferences-v100 = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferencesVersion" }
 androidx-datastore-preferences-v112 = { module = "androidx.datastore:datastore-preferences", version.ref = "androidxDatastorePreferences" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 beyka-android-tiffbitmapfactory = { module = "io.github.beyka:Android-TiffBitmapFactory", version.ref = "androidTiffbitmapfactoryVersion" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coilCompose" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltCompiler" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -59,4 +65,6 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
