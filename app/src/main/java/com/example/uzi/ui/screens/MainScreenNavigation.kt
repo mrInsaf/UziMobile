@@ -22,7 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.uzi.data.models.User
+import com.mrinsaf.core.data.models.User
 import com.example.uzi.ui.screens.newDiagnosticScreens.NewDiagnosticNavigation
 import com.example.uzi.ui.theme.Paddings
 import com.example.uzi.ui.viewModel.diagnostic.DiagnosticViewModel
@@ -35,7 +35,7 @@ fun MainScreen(
     newDiagnosticViewModel: NewDiagnosticViewModel,
     diagnosticViewModel: DiagnosticViewModel,
     diagnosticListViewModel: DiagnosticListViewModel,
-    userData: User,
+    userData: com.mrinsaf.core.data.models.User,
     patientId: String,
 ) {
     val navController = rememberNavController()

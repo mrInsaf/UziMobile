@@ -1,6 +1,6 @@
 package com.example.uzi.ui.viewModel.authorisation
 
-import com.example.uzi.data.models.User
+import com.mrinsaf.core.data.models.User
 
 data class AuthorisationUiState(
     var authorizationEmail: String = "",
@@ -8,5 +8,5 @@ data class AuthorisationUiState(
 
     var isAuthorised: Boolean = false,
 
-    var userData: User = User()
+    var userData: com.mrinsaf.core.data.models.User = com.mrinsaf.core.data.models.User()
 )
