@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.viewModel.diagnostic
+package com.mrinsaf.diagnostic_details.ui.viewModel
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel

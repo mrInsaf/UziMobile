@@ -13,7 +13,7 @@ import com.example.uzi.ui.MainScreen
 import com.mrinsaf.auth.ui.screens.RegistrationScreen
 import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationUiState
 import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationViewModel
-import com.mrinsaf.core.ui.viewModel.diagnostic.DiagnosticViewModel
+import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
 import com.mrinsaf.core.ui.viewModel.diagnosticList.DiagnosticListViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 import com.mrinsaf.auth.ui.viewModel.registraion.RegistraionViewModel

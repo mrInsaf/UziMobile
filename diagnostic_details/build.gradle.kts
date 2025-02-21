@@ -2,15 +2,14 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    kotlin("plugin.serialization") version "2.1.0"
     id ("kotlin-kapt")
 
     id("com.google.dagger.hilt.android") version "2.55" apply true
 }
 
 android {
-    namespace = "com.mrinsaf.core"
-    compileSdk = 35
+    namespace = "com.mrinsaf.diagnostic_details"
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 24
@@ -38,23 +37,17 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
+
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
-    implementation(libs.androidx.datastore.preferences.v100)
-
-    // Retrofit
-    implementation(libs.retrofit2.kotlinx.serialization.converter)
-    implementation(libs.retrofit)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.logging.interceptor)
-
-    implementation (libs.androidx.datastore.preferences)
-
-    implementation (libs.beyka.android.tiffbitmapfactory)
-
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
+
+    implementation(libs.retrofit)
+
+    implementation (libs.beyka.android.tiffbitmapfactory)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -66,6 +59,9 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.appcompat)
+
+    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     testImplementation(libs.junit)

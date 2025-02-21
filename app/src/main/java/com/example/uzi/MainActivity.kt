@@ -12,11 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.mrinsaf.core.data.repository.local.TokenStorage
 import com.mrinsaf.core.ui.theme.UziTheme
-import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationViewModel
-import com.mrinsaf.core.ui.viewModel.diagnostic.DiagnosticViewModel
+import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
 import com.mrinsaf.core.ui.viewModel.diagnosticList.DiagnosticListViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
-import com.mrinsaf.auth.ui.viewModel.registraion.RegistraionViewModel
 import com.mrinsaf.core.data.repository.local.UserInfoStorage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -37,7 +35,7 @@ class MainActivity : ComponentActivity() {
         val authorisationViewModel: com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationViewModel by viewModels()
         val registrationViewModel: com.mrinsaf.auth.ui.viewModel.registraion.RegistraionViewModel by viewModels()
         val newDiagnosticViewModel: NewDiagnosticViewModel by viewModels()
-        val diagnosticViewModel: DiagnosticViewModel by viewModels()
+        val diagnosticViewModel: com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel by viewModels()
         val diagnosticListViewModel: DiagnosticListViewModel by viewModels()
 
         var patientId: String? = null

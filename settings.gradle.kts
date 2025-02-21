@@ -22,5 +22,6 @@ dependencyResolutionManagement {
 rootProject.name = "uzi"
 include(":app")
 include(":core")
-include(":newDiagnostic")
+include(":new_diagnostic")
 include(":auth")
+include(":diagnostic_details")

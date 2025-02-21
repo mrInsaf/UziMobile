@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.screens
+package com.mrinsaf.diagnostic_details.ui.screens
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
@@ -49,7 +49,7 @@ import com.mrinsaf.core.ui.components.bottomSheet.RecommendationBottomSheet
 import com.mrinsaf.core.ui.components.canvas.ZoomableCanvasSectorWithConstraints
 import com.mrinsaf.core.ui.components.containers.FormationInfoContainer
 import com.mrinsaf.core.ui.theme.Paddings
-import com.mrinsaf.core.ui.viewModel.diagnostic.DiagnosticViewModel
+import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
 import org.beyka.tiffbitmapfactory.TiffBitmapFactory
 
 

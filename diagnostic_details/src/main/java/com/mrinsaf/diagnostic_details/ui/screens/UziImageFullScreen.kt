@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.screens
+package com.mrinsaf.diagnostic_details.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -45,8 +45,9 @@ android {
 
 dependencies {
     implementation(project(":core"))
-    implementation(project(":newDiagnostic"))
     implementation(project(":auth"))
+    implementation(project(":new_diagnostic"))
+    implementation(project(":diagnostic_details"))
 
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.android)
