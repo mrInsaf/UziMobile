@@ -6,16 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
 import com.mrinsaf.core.data.models.basic.Uzi
 import com.mrinsaf.core.data.models.basic.UziImage
-import com.mrinsaf.core.ui.UiEvent
 import com.mrinsaf.core.data.repository.UziServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -28,9 +25,6 @@ class NewDiagnosticViewModel @Inject constructor(
     private var _uiState = MutableStateFlow(NewDiagnosticUiState())
     val uiState: StateFlow<NewDiagnosticUiState>
         get() = _uiState
-
-    private val _uiEvent = MutableSharedFlow<UiEvent>()
-    val uiEvent = _uiEvent.asSharedFlow()
 
     fun onDatePick(newDate: String) {
         println("yooooo")
@@ -182,7 +176,6 @@ class NewDiagnosticViewModel @Inject constructor(
     }
 
     private fun handleHttpException(e: HttpException) {
-        onTokenExpiration()
         _uiState.update {
             it.copy(
                 currentScreenIndex = 0,
@@ -196,9 +189,4 @@ class NewDiagnosticViewModel @Inject constructor(
         println("Ошибка: $e")
     }
 
-    private fun onTokenExpiration() {
-        viewModelScope.launch {
-            _uiEvent.emit(UiEvent.ShowToast("Сессия истекла"))
-        }
-    }
 }

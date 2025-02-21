@@ -21,25 +21,29 @@ class DiagnosticListViewModel @Inject constructor(
 
     fun getPatientUzis(patientId: String) {
         viewModelScope.launch {
-            val uziList = repository.getPatientUzis(patientId)
-            val nodesWithUziIds = mutableListOf<NodesWithUziId>()
-            uziList.forEach { uzi ->
-                val id = uzi.id
-                val nodesResponse = repository.getUziNodes(id)
-                println("nodesResponse: $nodesResponse")
-                nodesWithUziIds.add(
-                    NodesWithUziId(
-                        uziId = id,
-                        nodes = nodesResponse.nodes
+            try {
+                val uziList = repository.getPatientUzis(patientId)
+                val nodesWithUziIds = mutableListOf<NodesWithUziId>()
+                uziList.forEach { uzi ->
+                    val id = uzi.id
+                    val nodesResponse = repository.getUziNodes(id)
+                    println("nodesResponse: $nodesResponse")
+                    nodesWithUziIds.add(
+                        NodesWithUziId(
+                            uziId = id,
+                            nodes = nodesResponse.nodes
+                        )
                     )
-                )
-            }
+                }
 
-            _uiState.update {
-                it.copy(
-                    uziList = uziList,
-                    nodesWithUziId = nodesWithUziIds
-                )
+                _uiState.update {
+                    it.copy(
+                        uziList = uziList,
+                        nodesWithUziId = nodesWithUziIds
+                    )
+                }
+            } catch (e: Exception) {
+                println(e)
             }
         }
     }

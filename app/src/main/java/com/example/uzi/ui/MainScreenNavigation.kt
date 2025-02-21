@@ -75,7 +75,6 @@ fun NavigationGraph(
         startDestination = Screen.Load.route,
         modifier = Modifier.padding(padding)
     ) {
-        println("yo")
         composable(Screen.Load.route) {
             val uiState by newDiagnosticViewModel.uiState.collectAsState()
 
@@ -83,7 +82,7 @@ fun NavigationGraph(
                 newDiagnosticViewModel,
                 onDiagnosticCompleted = {
                     if (uiState.diagnosticProcessState.isSuccess) {
-                        diagnosticViewModel.onUziSelected(
+                        diagnosticViewModel.onDiagnosticCompleted(
                             uziId = uiState.completedDiagnosticId,
                             imagesUris = uiState.downloadedImagesUris,
                             nodesAndSegmentsResponses = uiState.nodesAndSegmentsResponses,
@@ -98,13 +97,14 @@ fun NavigationGraph(
         }
         composable(Screen.Uploaded.route) {
             val uiState by diagnosticListViewModel.uiState.collectAsState()
+            diagnosticViewModel.clearUiState()
             diagnosticListViewModel.getPatientUzis(
                 patientId = patientId
             )
             DiagnosticsListScreen(
                 uziList = uiState.uziList,
                 onDiagnosticListItemClick = { uziId, uziDate ->
-
+                    diagnosticViewModel.onSelectUzi(uziId, uziDate)
                     navController.navigate(Screen.Diagnostic.route)
                 },
                 nodesWithUziIds = uiState.nodesWithUziId,

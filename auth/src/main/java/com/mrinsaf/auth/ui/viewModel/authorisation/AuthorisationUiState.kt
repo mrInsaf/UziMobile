@@ -6,7 +6,9 @@ data class AuthorisationUiState(
     var authorizationEmail: String = "",
     var authorizationPassword: String = "",
 
-    var isAuthorised: Boolean = false,
+    var isAuthorised: Boolean = true,
+
+    var patientId: String? = "",
 
     var userData: User = User()
 )

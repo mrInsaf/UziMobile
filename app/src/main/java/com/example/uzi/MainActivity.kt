@@ -8,13 +8,18 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
+import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationUiState
+import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationViewModel
+import com.mrinsaf.auth.ui.viewModel.registraion.RegistraionViewModel
 import com.mrinsaf.core.data.repository.local.TokenStorage
 import com.mrinsaf.core.ui.theme.UziTheme
 import com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 import com.mrinsaf.core.data.repository.local.UserInfoStorage
+import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -29,43 +34,17 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
 
-        val context = this
-
-        val authorisationViewModel: com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationViewModel by viewModels()
-        val registrationViewModel: com.mrinsaf.auth.ui.viewModel.registraion.RegistraionViewModel by viewModels()
+        val authorisationViewModel: AuthorisationViewModel by viewModels()
+        val registrationViewModel: RegistraionViewModel by viewModels()
         val newDiagnosticViewModel: NewDiagnosticViewModel by viewModels()
-        val diagnosticViewModel: com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel by viewModels()
-        val diagnosticListViewModel: com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel by viewModels()
-
-        var patientId: String? = null
-
-        lifecycleScope.launch {
-            println("Достаю userid")
-            patientId = UserInfoStorage.getUserId(context = context).firstOrNull() ?: ""
-            println("patientId: $patientId")
-
-            if (patientId?.isBlank() == true) {
-                println("Patient ID is empty")
-                UserInfoStorage.saveUserId(context = context, userId = "72881f74-1d10-4d93-9002-5207a83729ed")
-                // TODO поменять на получение настоящего id
-            } else {
-                println("Patient ID: $patientId")
-            }
-        } // TODO Переместить в отдельную функцию
-
-        retrieveTokens()
-
-        authorisationViewModel.observeTokenExpiration(newDiagnosticViewModel.uiEvent)
-        newDiagnosticViewModel.uiEvent
-            .onEach {
-                Toast.makeText(this, "Сессия истекла", Toast.LENGTH_SHORT).show()
-            }
-            .launchIn(lifecycleScope)
+        val diagnosticViewModel: DiagnosticViewModel by viewModels()
+        val diagnosticListViewModel: DiagnosticListViewModel by viewModels()
 
         setContent {
+
             UziTheme(dynamicColor = false) {
                 val navController = rememberNavController()
-                val authorisationUiState by authorisationViewModel.uiState.collectAsState()
+                val authorisationUiState by authorisationViewModel.uiState.collectAsStateWithLifecycle()
 
                 AppNavigation(
                     navController = navController,
@@ -75,23 +54,11 @@ class MainActivity : ComponentActivity() {
                     newDiagnosticViewModel = newDiagnosticViewModel,
                     diagnosticViewModel = diagnosticViewModel,
                     diagnosticListViewModel = diagnosticListViewModel,
-                    patientId = patientId ?: "",
+                    patientId = authorisationUiState.patientId ?: "Unknown patient",
                 )
             }
         }
     }
 
-    private fun retrieveTokens() {
-        lifecycleScope.launch {
-            try {
-                val accessToken = TokenStorage.getAccessToken(this@MainActivity).first()
-                val refreshToken = TokenStorage.getRefreshToken(this@MainActivity).first()
-                println("accessToken: $accessToken")
-                println("refreshToken: $refreshToken")
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
 }
 

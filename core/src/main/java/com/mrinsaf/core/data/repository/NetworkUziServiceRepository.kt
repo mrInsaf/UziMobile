@@ -15,9 +15,16 @@ import com.mrinsaf.core.data.models.basic.UziImage
 import com.mrinsaf.core.data.models.networkResponses.UziNodesResponse
 import com.mrinsaf.core.data.repository.local.CacheFileUtil
 import com.mrinsaf.core.data.network.UziApiService
+import com.mrinsaf.core.ui.UiEvent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -33,6 +40,12 @@ class NetworkUziServiceRepository(
     private val uziApiService: UziApiService,
     private val context: Context
 ): UziServiceRepository {
+
+    private val _uiEvent = MutableSharedFlow<UiEvent>()
+    val uiEvent = _uiEvent.asSharedFlow()
+
+    private val scope = CoroutineScope(Dispatchers.Main.immediate + SupervisorJob())
+
     override suspend fun checkAuthorisation(): Boolean {
         TODO("Not yet implemented")
     }
@@ -54,6 +67,7 @@ class NetworkUziServiceRepository(
     }
 
     override suspend fun refreshToken() {
+        println("Рефрешу токен")
         val refreshToken = TokenStorage.getRefreshToken(context).first()
 
         if (refreshToken != null) {
@@ -203,6 +217,7 @@ class NetworkUziServiceRepository(
 
 
     override suspend fun getPatientUzis(patientId: String): List<Uzi> {
+        println("patientId: $patientId")
         return safeApiCall { accessToken ->
             uziApiService.getPatientUzis(accessToken, patientId)
         }.uzis.map { uzi ->
@@ -275,6 +290,7 @@ class NetworkUziServiceRepository(
             println(e)
             throw e
         }
+        println("real token: $accessToken")
 
         requireNotNull(accessToken) { "Access token is missing" }
 
@@ -298,7 +314,8 @@ class NetworkUziServiceRepository(
                 } catch (refreshException: Exception) {
                     println("Ошибка при обновлении токена: ${refreshException.message}")
                     TokenStorage.clearTokens(context)
-                    throw refreshException
+                    onTokenExpiration()
+                    ""
                 }
 
                 return apiCall(newTokens)
@@ -309,6 +326,13 @@ class NetworkUziServiceRepository(
         } catch (e: Exception) {
             println("Не HTTP ошибка: ${e::class.java.simpleName} - ${e.message}")
             throw e
+        }
+    }
+
+    private fun onTokenExpiration() {
+        println("Все пзц")
+        scope.launch {
+            _uiEvent.emit(UiEvent.ShowToast("Сессия истекла"))
         }
     }
 
