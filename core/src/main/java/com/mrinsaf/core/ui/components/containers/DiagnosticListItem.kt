@@ -8,6 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.mrinsaf.core.data.models.basic.Node
+import com.mrinsaf.core.ui.components.containers.tirads.EmptyTiradsCotainer
+import com.mrinsaf.core.ui.components.containers.tirads.TiradsContainer
 import com.mrinsaf.core.ui.theme.Paddings
 
 @Composable
@@ -38,8 +40,14 @@ fun DiagnosticListItem(
                     TiradsContainer(
                         formationClass = it.formationClass,
                         formationProbability = it.maxTirads.times(100).toInt(),
+                        textStyle = MaterialTheme.typography.bodyLarge
                     )
                 }
+            }
+            else {
+                EmptyTiradsCotainer(
+                    textStyle = MaterialTheme.typography.bodyLarge
+                )
             }
         }
     }

@@ -48,6 +48,7 @@ dependencies {
     implementation(project(":auth"))
     implementation(project(":new_diagnostic"))
     implementation(project(":diagnostic_details"))
+    implementation(project(":diagnostic_list"))
 
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.android)

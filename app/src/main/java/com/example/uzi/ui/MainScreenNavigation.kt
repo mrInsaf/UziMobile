@@ -23,19 +23,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mrinsaf.core.data.models.User
-import com.mrinsaf.diagnostic_details.ui.screens.DiagnosticScreen
-import com.mrinsaf.core.ui.screens.DiagnosticsListScreen
+import com.mrinsaf.diagnostic_list.ui.screens.DiagnosticsListScreen
 import com.mrinsaf.core.ui.screens.ProfileScreen
 import com.mrinsaf.core.ui.theme.Paddings
 import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
-import com.mrinsaf.core.ui.viewModel.diagnosticList.DiagnosticListViewModel
+import com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel
+import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.isSuccess
 
 
 @Composable
 fun MainScreen(
-    newDiagnosticViewModel: com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel,
-    diagnosticViewModel: com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel,
+    newDiagnosticViewModel: NewDiagnosticViewModel,
+    diagnosticViewModel: DiagnosticViewModel,
     diagnosticListViewModel: DiagnosticListViewModel,
     userData: User,
     patientId: String,
@@ -64,8 +64,8 @@ fun MainScreen(
 fun NavigationGraph(
     navController: NavHostController,
     padding: PaddingValues,
-    newDiagnosticViewModel: com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel,
-    diagnosticViewModel: com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel,
+    newDiagnosticViewModel: NewDiagnosticViewModel,
+    diagnosticViewModel: DiagnosticViewModel,
     diagnosticListViewModel: DiagnosticListViewModel,
     userData: User,
     patientId: String

@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.viewModel.diagnosticList
+package com.mrinsaf.diagnostic_list.ui.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,6 +26,7 @@ class DiagnosticListViewModel @Inject constructor(
             uziList.forEach { uzi ->
                 val id = uzi.id
                 val nodesResponse = repository.getUziNodes(id)
+                println("nodesResponse: $nodesResponse")
                 nodesWithUziIds.add(
                     NodesWithUziId(
                         uziId = id,

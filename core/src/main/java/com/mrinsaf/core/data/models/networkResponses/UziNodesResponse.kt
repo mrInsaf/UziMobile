@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UziNodesResponse(
-    val nodes: List<Node>
+    val nodes: List<Node> = emptyList()
 )

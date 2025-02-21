@@ -68,8 +68,8 @@ class NewDiagnosticViewModel @Inject constructor(
             try {
                 updateUiBeforeDiagnosticStart()
 
-//                val diagnosticId = createDiagnostic()
-                val diagnosticId = "f00941dd-3769-497a-a813-cc457f6053f9"
+                val diagnosticId = createDiagnostic()
+//                val diagnosticId = "f00941dd-3769-497a-a813-cc457f6053f9"
                 val uziInformation = repository.getUzi(diagnosticId)
                 val uziImages = fetchUziImages(diagnosticId)
                 val downloadedUziUri = downloadAndSaveUzi(diagnosticId)

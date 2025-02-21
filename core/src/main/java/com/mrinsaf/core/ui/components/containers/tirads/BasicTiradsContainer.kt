@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.components.containers
+package com.mrinsaf.core.ui.components.containers.tirads
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,30 +9,30 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mrinsaf.core.ui.theme.Paddings
 
 @Composable
-fun TiradsContainer(
-    formationClass: Int,
-    formationProbability: Int
+fun BasicTiradsContainer(
+    text: String,
+    textColor: Color,
+    backgroundColor: Color,
+    textStyle: TextStyle = MaterialTheme.typography.titleMedium,
+    modifier: Modifier = Modifier
 ) {
-    val (textColor, backgroundColor) = when (formationClass) {
-        in 1..3 -> Pair(Color(0xFF52c41a), Color(0xFFf6ffed))
-        4 -> Pair(Color(0xFFFFA500), Color(0xFFFFF4E5))
-        5 -> Pair(Color(0xFFf5222d), Color(0xFFfff1f0))
-        else -> Pair(Color.Yellow, Color.Red)
-    }
     Box(
-        modifier = Modifier
+        modifier = modifier
             .background(color = backgroundColor)
             .border(width = 1.dp, color = textColor)
             .padding(Paddings.ExtraSmall)
     ) {
         Text(
-            text = "EU TIRADS $formationClass - $formationProbability%",
-            style = MaterialTheme.typography.titleMedium,
-            color = textColor
+            text = text,
+            style = textStyle,
+            color = textColor,
+            fontWeight = FontWeight.Bold
         )
     }
 }

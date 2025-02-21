@@ -12,8 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.mrinsaf.core.data.repository.local.TokenStorage
 import com.mrinsaf.core.ui.theme.UziTheme
-import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
-import com.mrinsaf.core.ui.viewModel.diagnosticList.DiagnosticListViewModel
+import com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 import com.mrinsaf.core.data.repository.local.UserInfoStorage
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +35,7 @@ class MainActivity : ComponentActivity() {
         val registrationViewModel: com.mrinsaf.auth.ui.viewModel.registraion.RegistraionViewModel by viewModels()
         val newDiagnosticViewModel: NewDiagnosticViewModel by viewModels()
         val diagnosticViewModel: com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel by viewModels()
-        val diagnosticListViewModel: DiagnosticListViewModel by viewModels()
+        val diagnosticListViewModel: com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel by viewModels()
 
         var patientId: String? = null
 

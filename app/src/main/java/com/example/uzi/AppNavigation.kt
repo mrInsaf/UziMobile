@@ -14,7 +14,7 @@ import com.mrinsaf.auth.ui.screens.RegistrationScreen
 import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationUiState
 import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationViewModel
 import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
-import com.mrinsaf.core.ui.viewModel.diagnosticList.DiagnosticListViewModel
+import com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 import com.mrinsaf.auth.ui.viewModel.registraion.RegistraionViewModel
 
@@ -26,7 +26,7 @@ fun AppNavigation(
     registrationViewModel: RegistraionViewModel,
     newDiagnosticViewModel: NewDiagnosticViewModel,
     diagnosticViewModel: DiagnosticViewModel,
-    diagnosticListViewModel: DiagnosticListViewModel,
+    diagnosticListViewModel: com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel,
     patientId: String,
 ) {
     NavHost(

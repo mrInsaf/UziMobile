@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.viewModel.diagnosticList
+package com.mrinsaf.diagnostic_list.ui.viewModel
 
 import com.mrinsaf.core.data.models.basic.NodesWithUziId
 import com.mrinsaf.core.data.models.basic.Uzi

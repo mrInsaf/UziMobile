@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.mrinsaf.core.ui.components.containers.tirads.TiradsContainer
 import com.mrinsaf.core.ui.theme.Paddings
 
 @Composable
