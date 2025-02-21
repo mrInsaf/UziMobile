@@ -15,7 +15,7 @@ import com.mrinsaf.core.ui.theme.UziTheme
 import com.mrinsaf.core.ui.viewModel.authorisation.AuthorisationViewModel
 import com.mrinsaf.core.ui.viewModel.diagnostic.DiagnosticViewModel
 import com.mrinsaf.core.ui.viewModel.diagnosticList.DiagnosticListViewModel
-import com.mrinsaf.core.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
+import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 import com.mrinsaf.core.ui.viewModel.registraion.RegistraionViewModel
 import com.mrinsaf.core.data.repository.local.UserInfoStorage
 import dagger.hilt.android.AndroidEntryPoint

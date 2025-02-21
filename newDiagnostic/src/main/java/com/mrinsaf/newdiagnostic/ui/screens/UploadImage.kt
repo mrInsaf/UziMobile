@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.screens.newDiagnosticScreens
+package com.mrinsaf.newdiagnostic.ui.screens
 
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.mrinsaf.core.data.repository.MockUziServiceRepository
 import com.mrinsaf.core.ui.components.MainButton
 import com.mrinsaf.core.ui.components.UploadImageComponent
-import com.mrinsaf.core.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
+import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 
 @Composable
 fun UploadImage(

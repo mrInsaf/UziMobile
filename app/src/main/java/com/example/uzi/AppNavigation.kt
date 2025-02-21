@@ -9,13 +9,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.mrinsaf.core.ui.screens.AuthorizationScreen
-import com.mrinsaf.core.ui.screens.MainScreen
+import com.example.uzi.ui.MainScreen
 import com.mrinsaf.core.ui.screens.RegistrationScreen
 import com.mrinsaf.core.ui.viewModel.authorisation.AuthorisationUiState
 import com.mrinsaf.core.ui.viewModel.authorisation.AuthorisationViewModel
 import com.mrinsaf.core.ui.viewModel.diagnostic.DiagnosticViewModel
 import com.mrinsaf.core.ui.viewModel.diagnosticList.DiagnosticListViewModel
-import com.mrinsaf.core.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
+import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 import com.mrinsaf.core.ui.viewModel.registraion.RegistraionViewModel
 
 @Composable

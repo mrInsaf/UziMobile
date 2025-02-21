@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.screens.newDiagnosticScreens
+package com.mrinsaf.newdiagnostic.ui.screens
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
@@ -17,8 +17,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mrinsaf.core.ui.components.canvas.NewDiagnosticProgressBar
-import com.mrinsaf.core.ui.viewModel.newDiagnostic.DiagnosticProcessState
-import com.mrinsaf.core.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
+import com.mrinsaf.newdiagnostic.ui.viewModel.DiagnosticProcessState
+import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 
 @Composable
 fun NewDiagnosticNavigation(

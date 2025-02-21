@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.screens.newDiagnosticScreens
+package com.mrinsaf.newdiagnostic.ui.screens
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -18,7 +18,7 @@ import com.mrinsaf.core.ui.components.fields.BasicFormField
 import com.mrinsaf.core.ui.components.fields.DateFormField
 import com.mrinsaf.core.ui.components.MainButton
 import com.mrinsaf.core.ui.components.SaveResultsCheckbox
-import com.mrinsaf.core.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
+import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 
 @Composable
 fun AdditionalInformation(

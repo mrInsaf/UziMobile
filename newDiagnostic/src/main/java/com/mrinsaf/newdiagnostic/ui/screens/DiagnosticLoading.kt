@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.screens.newDiagnosticScreens
+package com.mrinsaf.newdiagnostic.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,9 +20,9 @@ import com.mrinsaf.core.R
 import com.mrinsaf.core.data.repository.MockUziServiceRepository
 import com.mrinsaf.core.ui.components.LoadingAnimation
 import com.mrinsaf.core.ui.components.MainButton
-import com.mrinsaf.core.ui.viewModel.newDiagnostic.DiagnosticProcessState
-import com.mrinsaf.core.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
-import com.mrinsaf.core.ui.viewModel.newDiagnostic.isSuccess
+import com.mrinsaf.newdiagnostic.ui.viewModel.DiagnosticProcessState
+import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
+import com.mrinsaf.newdiagnostic.ui.viewModel.isSuccess
 
 @Composable
 fun DiagnosticLoading(

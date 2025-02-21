@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.screens
+package com.example.uzi.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,16 +23,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mrinsaf.core.data.models.User
-import com.mrinsaf.core.ui.screens.newDiagnosticScreens.NewDiagnosticNavigation
+import com.mrinsaf.core.ui.screens.DiagnosticScreen
+import com.mrinsaf.core.ui.screens.DiagnosticsListScreen
+import com.mrinsaf.core.ui.screens.ProfileScreen
 import com.mrinsaf.core.ui.theme.Paddings
 import com.mrinsaf.core.ui.viewModel.diagnostic.DiagnosticViewModel
 import com.mrinsaf.core.ui.viewModel.diagnosticList.DiagnosticListViewModel
-import com.mrinsaf.core.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
-import com.mrinsaf.core.ui.viewModel.newDiagnostic.isSuccess
+import com.mrinsaf.newdiagnostic.ui.viewModel.isSuccess
+
 
 @Composable
 fun MainScreen(
-    newDiagnosticViewModel: NewDiagnosticViewModel,
+    newDiagnosticViewModel: com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel,
     diagnosticViewModel: DiagnosticViewModel,
     diagnosticListViewModel: DiagnosticListViewModel,
     userData: User,
@@ -62,7 +64,7 @@ fun MainScreen(
 fun NavigationGraph(
     navController: NavHostController,
     padding: PaddingValues,
-    newDiagnosticViewModel: NewDiagnosticViewModel,
+    newDiagnosticViewModel: com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel,
     diagnosticViewModel: DiagnosticViewModel,
     diagnosticListViewModel: DiagnosticListViewModel,
     userData: User,
@@ -77,21 +79,22 @@ fun NavigationGraph(
         composable(Screen.Load.route) {
             val uiState by newDiagnosticViewModel.uiState.collectAsState()
 
-                NewDiagnosticNavigation(
-                    newDiagnosticViewModel,
-                    onDiagnosticCompleted = {
-                        if (uiState.diagnosticProcessState.isSuccess) {
-                            diagnosticViewModel.onUziSelected(
-                                uziId = uiState.completedDiagnosticId,
-                                imagesUris = uiState.downloadedImagesUris,
-                                nodesAndSegmentsResponses = uiState.nodesAndSegmentsResponses,
-                                uziImages = uiState.uziImages,
-                                selectedUziDate = uiState.completedDiagnosticInformation?.createAt ?: "",
-                            )
-                            navController.navigate(Screen.Diagnostic.route)
-                        }
+            com.mrinsaf.newdiagnostic.ui.screens.NewDiagnosticNavigation(
+                newDiagnosticViewModel,
+                onDiagnosticCompleted = {
+                    if (uiState.diagnosticProcessState.isSuccess) {
+                        diagnosticViewModel.onUziSelected(
+                            uziId = uiState.completedDiagnosticId,
+                            imagesUris = uiState.downloadedImagesUris,
+                            nodesAndSegmentsResponses = uiState.nodesAndSegmentsResponses,
+                            uziImages = uiState.uziImages,
+                            selectedUziDate = uiState.completedDiagnosticInformation?.createAt
+                                ?: "",
+                        )
+                        navController.navigate(Screen.Diagnostic.route)
                     }
-                )
+                }
+            )
         }
         composable(Screen.Uploaded.route) {
             val uiState by diagnosticListViewModel.uiState.collectAsState()
