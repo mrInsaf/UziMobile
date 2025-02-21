@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.screens
+package com.mrinsaf.auth.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mrinsaf.core.ui.components.MainButton
 import com.mrinsaf.core.ui.components.fields.RequiredFormField
-import com.mrinsaf.core.ui.viewModel.authorisation.AuthorisationViewModel
+import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationViewModel
 
 @Composable
 fun AuthorizationScreen(

@@ -14,10 +14,11 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mrinsaf.core.ui.screens.passwordRestrictions
+import com.mrinsaf.core.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -103,7 +104,7 @@ fun BasicFormFieldPreview() {
         value = "",
         AdditionalContent = {
             Text(
-                text = passwordRestrictions,
+                text = stringResource(id = R.string.passwordRestrictions),
                 modifier = Modifier
             )
         },
@@ -112,3 +113,4 @@ fun BasicFormFieldPreview() {
 
     }
 }
+

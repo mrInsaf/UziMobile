@@ -8,8 +8,8 @@ plugins {
 }
 
 android {
-    namespace = "com.mrinsaf.newdiagnostic"
-    compileSdk = 35
+    namespace = "com.mrinsaf.auth"
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 24

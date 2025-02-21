@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.screens
+package com.mrinsaf.auth.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mrinsaf.core.ui.components.MainButton
 import com.mrinsaf.core.ui.components.fields.RequiredFormField
-import com.mrinsaf.core.ui.viewModel.registraion.RegistraionViewModel
+import com.mrinsaf.auth.ui.viewModel.registraion.RegistraionViewModel
 
 @Composable
 fun RegistrationScreen(
@@ -110,12 +110,7 @@ fun RegistrationScreen(
     }
 }
 
-val passwordRestrictions = "Пароль должен содержать:\n" +
-        "- Заглавную букву\n" +
-        "- Строчную букву\n" +
-        "- Один специальный символ (- # ! \$ @\n" +
-        "%^&*+1=?,./)\\\n" +
-        "- Минимум 8 знаков"
+
 
 @Preview
 @Composable

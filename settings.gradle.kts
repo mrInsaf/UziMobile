@@ -23,3 +23,4 @@ rootProject.name = "uzi"
 include(":app")
 include(":core")
 include(":newDiagnostic")
+include(":auth")

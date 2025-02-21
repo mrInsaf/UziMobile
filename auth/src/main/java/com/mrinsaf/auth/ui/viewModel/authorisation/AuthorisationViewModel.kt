@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.viewModel.authorisation
+package com.mrinsaf.auth.ui.viewModel.authorisation
 
 import android.content.Context
 import android.widget.Toast

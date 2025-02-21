@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.viewModel.authorisation
+package com.mrinsaf.auth.ui.viewModel.authorisation
 
 import com.mrinsaf.core.data.models.User
 

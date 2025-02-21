@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.viewModel.registraion
+package com.mrinsaf.auth.ui.viewModel.registraion
 
 data class RegistrationUiState(
     val surname: String = "",
