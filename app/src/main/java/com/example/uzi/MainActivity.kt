@@ -11,15 +11,12 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.mrinsaf.core.data.repository.local.TokenStorage
-import com.mrinsaf.core.data.repository.NetworkUziServiceRepository
-import com.mrinsaf.core.data.repository.UziServiceRepository
-import com.example.uzi.ui.theme.UziTheme
-import com.example.uzi.ui.viewModel.authorisation.AuthorisationViewModel
-import com.example.uzi.ui.viewModel.diagnostic.DiagnosticViewModel
-import com.example.uzi.ui.viewModel.diagnosticList.DiagnosticListViewModel
-import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
-import com.example.uzi.ui.viewModel.registraion.RegistraionViewModel
-import com.mrinsaf.core.data.network.RetrofitProvider
+import com.mrinsaf.core.ui.theme.UziTheme
+import com.mrinsaf.core.ui.viewModel.authorisation.AuthorisationViewModel
+import com.mrinsaf.core.ui.viewModel.diagnostic.DiagnosticViewModel
+import com.mrinsaf.core.ui.viewModel.diagnosticList.DiagnosticListViewModel
+import com.mrinsaf.core.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
+import com.mrinsaf.core.ui.viewModel.registraion.RegistraionViewModel
 import com.mrinsaf.core.data.repository.local.UserInfoStorage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -73,7 +70,6 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val authorisationUiState by authorisationViewModel.uiState.collectAsState()
 
-                // Вся навигация вынесена в отдельный composable
                 AppNavigation(
                     navController = navController,
                     authorisationUiState = authorisationUiState,

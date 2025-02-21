@@ -45,12 +45,13 @@ android {
 
 dependencies {
     implementation(project(":core"))
+    implementation(project(":newDiagnostic"))
 
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
 
-    implementation(libs.androidx.datastore.preferences.v100)
+    implementation (libs.androidx.datastore.preferences)
 
     // Retrofit
     implementation(libs.retrofit2.kotlinx.serialization.converter)
@@ -59,7 +60,6 @@ dependencies {
     implementation(libs.logging.interceptor)
 
     implementation (libs.beyka.android.tiffbitmapfactory)
-    implementation (libs.androidx.datastore.preferences)
 
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)

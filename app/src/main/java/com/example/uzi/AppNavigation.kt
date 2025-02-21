@@ -8,15 +8,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.uzi.ui.screens.AuthorizationScreen
-import com.example.uzi.ui.screens.MainScreen
-import com.example.uzi.ui.screens.RegistrationScreen
-import com.example.uzi.ui.viewModel.authorisation.AuthorisationUiState
-import com.example.uzi.ui.viewModel.authorisation.AuthorisationViewModel
-import com.example.uzi.ui.viewModel.diagnostic.DiagnosticViewModel
-import com.example.uzi.ui.viewModel.diagnosticList.DiagnosticListViewModel
-import com.example.uzi.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
-import com.example.uzi.ui.viewModel.registraion.RegistraionViewModel
+import com.mrinsaf.core.ui.screens.AuthorizationScreen
+import com.mrinsaf.core.ui.screens.MainScreen
+import com.mrinsaf.core.ui.screens.RegistrationScreen
+import com.mrinsaf.core.ui.viewModel.authorisation.AuthorisationUiState
+import com.mrinsaf.core.ui.viewModel.authorisation.AuthorisationViewModel
+import com.mrinsaf.core.ui.viewModel.diagnostic.DiagnosticViewModel
+import com.mrinsaf.core.ui.viewModel.diagnosticList.DiagnosticListViewModel
+import com.mrinsaf.core.ui.viewModel.newDiagnostic.NewDiagnosticViewModel
+import com.mrinsaf.core.ui.viewModel.registraion.RegistraionViewModel
 
 @Composable
 fun AppNavigation(
