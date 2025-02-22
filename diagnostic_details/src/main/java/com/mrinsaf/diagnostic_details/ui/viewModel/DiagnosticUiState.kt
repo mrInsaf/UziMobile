@@ -17,7 +17,7 @@ data class DiagnosticUiState(
 
     var uziImages: List<UziImage> = emptyList(),
     var numberOfImages: Int = 0,
-    val uziImagesBmp: List<Bitmap> = emptyList(),
+    val uziImagesBmp: Map<String, Bitmap> = emptyMap(),
 
     var selectedDiagnosticId: String = "",
     var selectedUziDate: String = "",

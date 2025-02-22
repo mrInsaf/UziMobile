@@ -38,7 +38,7 @@ class DiagnosticViewModel @Inject constructor(
         uziId: String,
         imagesUris: Uri,
         uziImages: List<UziImage>,
-        uziImagesBmp: List<Bitmap>,
+        uziImagesBmp: Map<String, Bitmap>,
         nodesAndSegmentsResponses: List<NodesSegmentsResponse>,
         selectedUziDate: String,
     ) {
@@ -71,14 +71,23 @@ class DiagnosticViewModel @Inject constructor(
             viewModelScope.launch {
                 uziImages.forEachIndexed { i, image ->
                     println("скачиваю картинку $i")
-                    val responseBody = repository.downloadUziImage(uziId, image.id)
+                    val imageId = image.id
+
+                    // Пропускаем скачивание, если картинка уже есть в Map
+                    if (_uiState.value.uziImagesBmp.containsKey(imageId)) {
+                        println("Картинка с id $imageId уже скачана, пропускаем")
+                        return@forEachIndexed
+                    }
+
+                    val responseBody = repository.downloadUziImage(uziId, imageId)
                     val bitmap = responseBody.byteStream().use { inputStream ->
                         BitmapFactory.decodeStream(inputStream)
                     }
 
-                    // Обновляем uiState, добавляя новый bitmap к уже существующему списку
                     _uiState.update { currentState ->
-                        currentState.copy(uziImagesBmp = currentState.uziImagesBmp + bitmap)
+                        currentState.copy(
+                            uziImagesBmp = currentState.uziImagesBmp + (imageId to bitmap)
+                        )
                     }
                 }
             }

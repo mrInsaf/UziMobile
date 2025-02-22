@@ -16,7 +16,6 @@ fun ZoomableCanvasSectorWithConstraints(
     pointsList: List<SectorPoint>,
     onFullScreen: () -> Unit // Новый параметр
 ) {
-    println("pointsList: $pointsList")
     ZoomableCanvasSector(
         imageBitmap = imageBitmap,
         pointsList = pointsList,
