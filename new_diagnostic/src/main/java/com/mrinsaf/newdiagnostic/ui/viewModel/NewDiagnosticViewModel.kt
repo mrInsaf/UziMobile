@@ -63,18 +63,29 @@ class NewDiagnosticViewModel @Inject constructor(
                 updateUiBeforeDiagnosticStart()
 
                 val diagnosticId = createDiagnostic()
-//                val diagnosticId = "f00941dd-3769-497a-a813-cc457f6053f9"
+//            val diagnosticId = "f00941dd-3769-497a-a813-cc457f6053f9"
                 val uziInformation = repository.getUzi(diagnosticId)
                 val uziImages = fetchUziImages(diagnosticId)
+
                 uziImages.forEachIndexed { i, image ->
                     println("скачиваю картинку $i")
-                    val responseBody = repository.downloadUziImage(diagnosticId, image.id)
+                    val imageId = image.id
+
+                    // Пропускаем скачивание, если картинка уже есть в Map
+                    if (_uiState.value.uziImagesBmp.containsKey(imageId)) {
+                        println("Картинка с id $imageId уже скачана, пропускаем")
+                        return@forEachIndexed
+                    }
+
+                    val responseBody = repository.downloadUziImage(diagnosticId, imageId)
                     val bitmap = responseBody.byteStream().use { inputStream ->
                         BitmapFactory.decodeStream(inputStream)
                     }
 
                     _uiState.update { currentState ->
-                        currentState.copy(uziImagesBmp = currentState.uziImagesBmp + bitmap)
+                        currentState.copy(
+                            uziImagesBmp = currentState.uziImagesBmp + (imageId to bitmap)
+                        )
                     }
                 }
 

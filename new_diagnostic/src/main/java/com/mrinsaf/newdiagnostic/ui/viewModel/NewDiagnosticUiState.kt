@@ -18,7 +18,7 @@ data class NewDiagnosticUiState(
 
     var diagnosticProcessState: DiagnosticProcessState = DiagnosticProcessState.Idle,
 
-    val uziImagesBmp: List<Bitmap> = emptyList(),
+    val uziImagesBmp: Map<String, Bitmap> = emptyMap(),
 
 //    var isDiagnosticSent: Boolean = false,
 

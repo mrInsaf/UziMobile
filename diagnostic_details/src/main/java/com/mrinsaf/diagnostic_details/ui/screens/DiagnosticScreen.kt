@@ -130,31 +130,35 @@ fun DiagnosticScreen(
                 )
             }
 
+            if (uiState.uziImagesBmp.size > currentPage.value) {
+                val currentImageId = uiState.uziImages.getOrNull(currentPage.value)?.id
 
-            if (uiState.uziImagesBmp.size > currentPage.value){
-                ZoomableCanvasSectorWithConstraints(
-                    imageBitmap = uiState.uziImagesBmp[currentPage.value].asImageBitmap(),
-                    pointsList = if (selectedTabIndex == 1) {
-                        emptyList()
-                    } else {
-                        try {
-                            uiState.selectedUziNodesAndSegments
-                                .flatMap { it.segments } // Собираем все сегменты в один список
-                                .filter { segment ->
-                                    segment.image_id == uiState.uziImages[currentPage.value].id
-                                } // Фильтруем по image_id
-                                .flatMap {
-                                    it.getContorPoints() ?: emptyList()
-                                } // Получаем точки из сегментов
-                        } catch (e: Exception) {
-                            println(e)
-                            throw e
+                currentImageId?.let { imageId ->
+                    uiState.uziImagesBmp[imageId]?.let { bitmap ->
+                        val pointsList = if (selectedTabIndex == 1) {
+                            emptyList()
+                        } else {
+                            try {
+                                uiState.selectedUziNodesAndSegments.asSequence()
+                                    .flatMap { it.segments.asSequence() }
+                                    .filter { it.image_id == imageId }
+                                    .map { it.getContorPoints() }
+                                    .flatten()
+                                    .toList()
+                            } catch (e: Exception) {
+                                println(e)
+                                throw e
+                            }
                         }
-                    },
-                    onFullScreen = { isFullScreenOpen = true },
-                )
-            }
-            else {
+
+                        ZoomableCanvasSectorWithConstraints(
+                            imageBitmap = bitmap.asImageBitmap(),
+                            pointsList = pointsList,
+                            onFullScreen = { isFullScreenOpen = true },
+                        )
+                    }
+                }
+            } else {
                 LoadingAnimation()
             }
 
