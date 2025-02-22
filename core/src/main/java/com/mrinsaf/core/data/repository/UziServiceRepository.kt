@@ -24,7 +24,7 @@ interface UziServiceRepository {
     suspend fun getUser(): com.mrinsaf.core.data.models.User
 
     suspend fun createUzi(
-        uziUris: List<Uri>, // URI УЗИ файла
+        uziUris: Uri, // URI УЗИ файла
         projection: String, // Проекция УЗИ
         patientId: String, // ID пациента
         deviceId: String // ID устройства
@@ -38,7 +38,7 @@ interface UziServiceRepository {
 
     suspend fun downloadUziImage(uziId: String, imageId: String): ResponseBody
 
-    suspend fun saveUziImageAndGetCacheUri(uziId: String, imageId: String): Uri
+//    suspend fun saveUziImageAndGetCacheUri(uziId: String, imageId: String): Uri
 
     suspend fun downloadUziFile(uziId: String): ResponseBody
 

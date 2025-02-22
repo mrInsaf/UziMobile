@@ -46,7 +46,7 @@ class MockUziServiceRepository(
     }
 
     override suspend fun createUzi(
-        uziUris: List<Uri>,
+        uziUris: Uri,
         projection: String,
         patientId: String,
         deviceId: String
@@ -67,9 +67,9 @@ class MockUziServiceRepository(
         TODO("Not yet implemented")
     }
 
-    override suspend fun saveUziImageAndGetCacheUri(uziId: String, imageId: String): Uri {
-        TODO("Not yet implemented")
-    }
+//    override suspend fun saveUziImageAndGetCacheUri(uziId: String, imageId: String): Uri {
+//        TODO("Not yet implemented")
+//    }
 
     override suspend fun downloadUziFile(uziId: String): ResponseBody {
         TODO("Not yet implemented")

@@ -3,9 +3,9 @@ package com.mrinsaf.diagnostic_details.ui.screens
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
-import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.webkit.MimeTypeMap
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -51,6 +51,7 @@ import com.mrinsaf.core.ui.components.containers.FormationInfoContainer
 import com.mrinsaf.core.ui.theme.Paddings
 import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
 import org.beyka.tiffbitmapfactory.TiffBitmapFactory
+import java.io.File
 
 
 @SuppressLint("NewApi")
@@ -60,6 +61,7 @@ fun DiagnosticScreen(
     clinicName: String,
     diagnosticViewModel: DiagnosticViewModel,
 ) {
+    println("DiagnosticScreen")
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -87,14 +89,6 @@ fun DiagnosticScreen(
             style = MaterialTheme.typography.titleMedium,
             color = Color.Black
         )
-        Text(
-            text = clinicName,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Normal,
-            fontSize = 20.sp,
-            color = Color.Black
-        )
-
         Column(
             verticalArrangement = Arrangement.spacedBy(Paddings.Medium)
         ) {
@@ -114,7 +108,8 @@ fun DiagnosticScreen(
             }
 
             val context = LocalContext.current
-            val uziFileUri: Uri = uiState.downloadedImagesUris.first()
+            val uziFileUri = uiState.downloadedImageUri
+
 
             println("imageUri: $uziFileUri")
             println("lol")
@@ -122,129 +117,144 @@ fun DiagnosticScreen(
             val currentPage = remember { mutableStateOf(0) }
             val numberOfDirectories = remember { mutableStateOf(1f) }
             val mimeType = remember { mutableStateOf("") }
-            val bitmap: Bitmap? = uziFileUri.let { uri ->
-                mimeType.value = context.contentResolver.getType(uri) ?: ""
-                println("mimeType: ${mimeType.value}") // Печатаем значение MIME-типа
-                if (mimeType.value == "image/tiff") {
-                    try {
-                        // Сначала читаем метаинформацию
-                        val initialDescriptor = context.contentResolver.openFileDescriptor(uri, "r")
-                        initialDescriptor?.use { descriptor ->
-                            val options = TiffBitmapFactory.Options()
-                            options.inJustDecodeBounds = true
-                            TiffBitmapFactory.decodeFileDescriptor(descriptor.fd, options)
-                            numberOfDirectories.value = options.outDirectoryCount.toFloat()
-                        }
-                        println("numberOfDirectories.value: ${numberOfDirectories.value}")
+            if (uziFileUri != null){
+                val bitmap: Bitmap? = uziFileUri.let { uri ->
+                    println("uri: $uri")
+                    mimeType.value = MimeTypeMap.getSingleton().getMimeTypeFromExtension(uri.path?.substringAfterLast('.')) ?: ""
+                    println("mimeType: ${mimeType.value}") // Печатаем значение MIME-типа
+                    if (mimeType.value == "image/tiff") {
+                        try {
+                            // Сначала читаем метаинформацию
+                            val initialDescriptor =
+                                context.contentResolver.openFileDescriptor(uri, "r")
+                            initialDescriptor?.use { descriptor ->
+                                val options = TiffBitmapFactory.Options()
+                                options.inJustDecodeBounds = true
+                                TiffBitmapFactory.decodeFileDescriptor(descriptor.fd, options)
+                                numberOfDirectories.value = options.outDirectoryCount.toFloat()
+                            }
+                            println("numberOfDirectories.value: ${numberOfDirectories.value}")
 
-                        // Затем декодируем изображение текущей страницы
-                        val pageDescriptor = context.contentResolver.openFileDescriptor(uri, "r")
-                        pageDescriptor?.use { descriptor ->
-                            val options = TiffBitmapFactory.Options()
-                            options.inDirectoryNumber = currentPage.value
-                            options.inJustDecodeBounds = false
-                            TiffBitmapFactory.decodeFileDescriptor(descriptor.fd, options)
+                            // Затем декодируем изображение текущей страницы
+                            val pageDescriptor =
+                                context.contentResolver.openFileDescriptor(uri, "r")
+                            pageDescriptor?.use { descriptor ->
+                                val options = TiffBitmapFactory.Options()
+                                options.inDirectoryNumber = currentPage.value
+                                options.inJustDecodeBounds = false
+                                TiffBitmapFactory.decodeFileDescriptor(descriptor.fd, options)
+                            }
+                        } catch (e: Exception) {
+                            println(e)
+                            null
                         }
-                    } catch (e: Exception) {
-                        println(e)
-                        null
-                    }
-                } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        val source = ImageDecoder.createSource(context.contentResolver, uri)
-                        ImageDecoder.decodeBitmap(source)
                     } else {
-                        MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            val source = ImageDecoder.createSource(context.contentResolver, uri)
+                            ImageDecoder.decodeBitmap(source)
+                        } else {
+                            MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+                        }
                     }
                 }
-            }
+                if (mimeType.value == "image/tiff") {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        var sliderPosition by remember { mutableFloatStateOf(0f) }
 
+                        Slider(
+                            value = sliderPosition,
+                            onValueChange = {
+                                sliderPosition = it
+                                currentPage.value = it.toInt()
+                            },
+                            valueRange = 0f..numberOfDirectories.value - 1
+                        )
 
-            if (mimeType.value == "image/tiff") {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    var sliderPosition by remember { mutableFloatStateOf(0f) }
-
-                    Slider(
-                        value = sliderPosition,
-                        onValueChange = {
-                            sliderPosition = it
-                            currentPage.value = it.toInt()
-                        },
-                        valueRange = 0f..numberOfDirectories.value - 1
-                    )
-
-                    // Отображаем текущую страницу
-                    Text(
-                        text = "Страница: ${currentPage.value + 1}",
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
+                        // Отображаем текущую страницу
+                        Text(
+                            text = "Страница: ${currentPage.value + 1}",
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                    }
                 }
-            }
 
-            ZoomableCanvasSectorWithConstraints(
-                imageBitmap = bitmap?.asImageBitmap() ?: ImageBitmap.imageResource(R.drawable.paint),
-                pointsList = if (selectedTabIndex == 1) {
-                    emptyList()
-                } else {
-                    try {
+                ZoomableCanvasSectorWithConstraints(
+                    imageBitmap = bitmap?.asImageBitmap() ?: ImageBitmap.imageResource(R.drawable.paint),
+                    pointsList = if (selectedTabIndex == 1) {
+                        emptyList()
+                    } else {
+                        try {
+                            uiState.selectedUziNodesAndSegments
+                                .flatMap { it.segments } // Собираем все сегменты в один список
+                                .filter { segment ->
+                                    segment.image_id == uiState.uziImages[currentPage.value].id
+                                } // Фильтруем по image_id
+                                .flatMap { it.getContorPoints() ?: emptyList() } // Получаем точки из сегментов
+                        } catch (e: Exception) {
+                            println(e)
+                            throw e
+                        }
+                    },
+                    onFullScreen = { isFullScreenOpen = true },
+                )
+
+                println("Дошел до нодов")
+                val nodes = uiState.selectedUziNodesAndSegments
+                    .flatMap { it.segments }
+                    .filter { segment ->
+                        segment.image_id == uiState.uziImages[currentPage.value].id
+                    }.mapNotNull { segment ->
                         uiState.selectedUziNodesAndSegments
-                            .flatMap { it.segments } // Собираем все сегменты в один список
-                            .filter { segment ->
-                                segment.image_id == uiState.uziImages[currentPage.value].id
-                            } // Фильтруем по image_id
-                            .flatMap { it.getContorPoints() ?: emptyList() } // Получаем точки из сегментов
-                    } catch (e: Exception) {
-                        println(e)
-                        throw e
+                            .flatMap { it.nodes }
+                            .firstOrNull { node -> node.id == segment.node_id }
                     }
-                },
-                onFullScreen = { isFullScreenOpen = true },
-            )
 
-            val nodes = uiState.selectedUziNodesAndSegments
-                .flatMap { it.segments }
-                .filter { segment ->
-                    segment.image_id == uiState.uziImages[currentPage.value].id
-                }.mapNotNull { segment ->
-                    uiState.selectedUziNodesAndSegments
-                        .flatMap { it.nodes }
-                        .firstOrNull { node -> node.id == segment.node_id }
-                }
-
-            nodes.forEachIndexed { i, formation ->
-                FormationInfoContainer(
-                    formationIndex = i,
-                    formationClass = formation.formationClass,
-                    formationProbability = formation.maxTirads.times(100).toInt(),
-                    formationDescription = stringResource(R.string.shortRecommendationForPatient),
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(20.dp))
-                        .clickable { diagnosticViewModel.openRecommendationBottomSheet() }
-                )
-            }
-            RecommendationBottomSheet(
-                isVisible = uiState.isRecommendationSheetVisible,
-                onDismiss = { diagnosticViewModel.closeRecommendationBottomSheet() }
-            )
-        }
-
-        if (isFullScreenOpen) {
-            Dialog(onDismissRequest = { isFullScreenOpen = false }) {
-                UziImageFullScreen(
-                    imageBitmap = ImageBitmap.imageResource(R.drawable.paint),
-                    pointsList = listOf(
-                        SectorPoint(100, 100),
-                        SectorPoint(200, 100),
-                        SectorPoint(200, 200),
-                        SectorPoint(100, 300)
+                nodes.forEachIndexed { i, formation ->
+                    FormationInfoContainer(
+                        formationIndex = i,
+                        formationClass = formation.formationClass,
+                        formationProbability = formation.maxTirads.times(100).toInt(),
+                        formationDescription = stringResource(R.string.shortRecommendationForPatient),
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(20.dp))
+                            .clickable { diagnosticViewModel.openRecommendationBottomSheet() }
                     )
+                }
+                RecommendationBottomSheet(
+                    isVisible = uiState.isRecommendationSheetVisible,
+                    onDismiss = { diagnosticViewModel.closeRecommendationBottomSheet() }
                 )
             }
-        }
+
+            if (isFullScreenOpen) {
+                Dialog(onDismissRequest = { isFullScreenOpen = false }) {
+                    UziImageFullScreen(
+                        imageBitmap = ImageBitmap.imageResource(R.drawable.paint),
+                        pointsList = listOf(
+                            SectorPoint(100, 100),
+                            SectorPoint(200, 100),
+                            SectorPoint(200, 200),
+                            SectorPoint(100, 300)
+                        )
+                    )
+                }
+            }
+            }
+
+
+
+        Text(
+            text = clinicName,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Normal,
+            fontSize = 20.sp,
+            color = Color.Black
+        )
+
     }
 }
 

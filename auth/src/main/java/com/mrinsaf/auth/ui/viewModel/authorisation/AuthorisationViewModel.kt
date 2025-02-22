@@ -86,7 +86,6 @@ class AuthorisationViewModel @Inject constructor(
                         password = uiState.value.authorizationPassword
                     )
                 } catch (e: Exception) {
-                    println("yo")
                     if (e is retrofit2.HttpException) {
                         val response = e.response() // Получаем ответ с ошибкой
                         val errorBody = response?.errorBody()?.string() // Тело ошибки в виде строки
@@ -121,9 +120,7 @@ class AuthorisationViewModel @Inject constructor(
 
     private fun retrievePatientIdFromStorage() {
         viewModelScope.launch {
-            println("Достаю userid")
             val patientId = UserInfoStorage.getUserId(context = context).firstOrNull()
-            println("patientId: $patientId")
 
             if (patientId?.isBlank() == true) {
                 println("Patient ID is empty")

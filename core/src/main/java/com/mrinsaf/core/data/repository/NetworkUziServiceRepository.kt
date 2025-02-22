@@ -3,18 +3,19 @@ package com.mrinsaf.core.data.repository
 import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.provider.OpenableColumns
 import androidx.annotation.RequiresApi
-import com.mrinsaf.core.data.repository.local.TokenStorage
-import com.mrinsaf.core.data.models.networkRequests.LoginRequest
-import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
 import com.mrinsaf.core.data.models.basic.Uzi
 import com.mrinsaf.core.data.models.basic.UziImage
+import com.mrinsaf.core.data.models.networkRequests.LoginRequest
+import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
 import com.mrinsaf.core.data.models.networkResponses.UziNodesResponse
-import com.mrinsaf.core.data.repository.local.CacheFileUtil
 import com.mrinsaf.core.data.network.UziApiService
+import com.mrinsaf.core.data.repository.local.FileStorage
+import com.mrinsaf.core.data.repository.local.TokenStorage
 import com.mrinsaf.core.ui.UiEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +36,7 @@ import java.io.File
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+
 
 class NetworkUziServiceRepository(
     private val uziApiService: UziApiService,
@@ -85,7 +87,7 @@ class NetworkUziServiceRepository(
     }
 
     override suspend fun createUzi(
-        uziUris: List<Uri>,
+        uziUris: Uri,
         projection: String,
         patientId: String,
         deviceId: String
@@ -93,7 +95,7 @@ class NetworkUziServiceRepository(
         println("я в репозитории")
         return safeApiCall { accessToken ->
             println("получаю юри")
-            val uziFile = File(getRealPathFromURI(context, uziUris.first())) // TODO: Добавить обработку нескольких файлов
+            val uziFile = File(getRealPathFromURI(context, uziUris)) // TODO: Добавить обработку нескольких файлов
             println("получил юри")
             val requestFile = uziFile.asRequestBody("image/*".toMediaTypeOrNull())
             val uziFilePart = MultipartBody.Part.createFormData("file", uziFile.name, requestFile)
@@ -165,17 +167,18 @@ class NetworkUziServiceRepository(
         }
     }
 
-    override suspend fun saveUziImageAndGetCacheUri(uziId: String, imageId: String): Uri {
-        println("Сохраняю картинку $imageId")
-        val responseBody = downloadUziImage(uziId, imageId)
-        val fileName = "$uziId-$imageId.jpg"
-        return CacheFileUtil.saveFileToCache(context, fileName, responseBody)
-            ?: throw Exception("Не удалось сохранить файл в кэш.")
-    }
+//    override suspend fun saveUziImageAndGetCacheUri(uziId: String, imageId: String): Uri {
+//        println("Сохраняю картинку $imageId")
+//        val responseBody = downloadUziImage(uziId, imageId)
+//        val fileName = "$uziId-$imageId.jpg"
+//        return FileStorage.saveFileToStorage(context, fileName, responseBody)
+//            ?: throw Exception("Не удалось сохранить файл в кэш.")
+//    }
 
     override suspend fun downloadUziFile(uziId: String): ResponseBody {
         return retryWithHandling(maxAttempts = 10, delayMillis = 2000L) { accessToken ->
             val response = uziApiService.downloadUzi(accessToken, uziId)
+            println(response.body())
 
             if (response.isSuccessful && response.body() != null) {
                 response.body()!!
@@ -186,26 +189,37 @@ class NetworkUziServiceRepository(
     }
 
     override suspend fun saveUziFileAndGetCacheUri(uziId: String, responseBody: ResponseBody): Uri {
+        // 1. Проверка наличия контента
+        if (responseBody.contentLength() == 0L) {
+            throw Exception("Получен пустой файл")
+        }
+
+        // 2. Определение MIME-типа
         val contentType = responseBody.contentType()?.toString()
             ?: throw Exception("Невозможно определить MIME-тип файла")
 
-        println("contentType: $contentType")
-
+        // 3. Определение расширения
         val extension = when {
-            contentType.contains("tiff", ignoreCase = true) -> "tiff"
-            contentType.contains("png", ignoreCase = true) -> "png"
-            else -> throw Exception("Неизвестный формат файла: $contentType")
+            contentType.contains("tiff", true) -> "tiff"
+            contentType.contains("png", true) -> "png"
+            else -> throw Exception("Неизвестный формат: $contentType")
         }
 
-        println("Определено расширение: $extension")
         val fileName = "$uziId.$extension"
-        println("Сохраняем файл с именем: $fileName")
+        println("fileName: $fileName")
 
-        val file = CacheFileUtil.saveFileToCache(context, fileName, responseBody)
-            ?: throw Exception("Не удалось сохранить УЗИ в кэш")
+        // 4. Сохранение с проверкой записи
+        val fileUri = FileStorage.saveResponseBodyToStorage(context, fileName, responseBody)
+            ?: throw Exception("Ошибка сохранения файла")
 
-        println("Файл успешно сохранен: ${file.path}, размер: ${File(file.path).length()} байт")
-        return file
+        // 5. Валидация результата
+        val cachedFile = File(fileUri.path?.let { Uri.decode(it) } ?: "")
+        if (!cachedFile.exists() || cachedFile.length() == 0L) {
+            cachedFile.delete()
+            throw Exception("Файл не был записан на диск")
+        }
+
+        return fileUri
     }
 
     @SuppressLint("NewApi")
@@ -217,14 +231,14 @@ class NetworkUziServiceRepository(
 
 
     override suspend fun getPatientUzis(patientId: String): List<Uzi> {
-        println("patientId: $patientId")
         return safeApiCall { accessToken ->
             uziApiService.getPatientUzis(accessToken, patientId)
         }.uzis.map { uzi ->
             uzi.copy(
                 createAt = parseDate(uzi.createAt).toString()
             )
-        }.also { println(it) }
+        }
+//            .also { println(it) }
     }
 
     override suspend fun getUziNodes(uziId: String): UziNodesResponse {
@@ -265,8 +279,10 @@ class NetworkUziServiceRepository(
             try {
                 return safeApiCall(apiCall)
             } catch (e: HttpException) {
+                println(e)
                 // Обработка ошибки 403
                 if (e.code() == 403) {
+                    println("Ошибка 403: Доступ запрещен")
                     throw Exception("Ошибка 403: Доступ запрещен.")
                 }
                 println("Попытка ${attempt + 1}: Ошибка - ${e.message()}")
@@ -290,7 +306,6 @@ class NetworkUziServiceRepository(
             println(e)
             throw e
         }
-        println("real token: $accessToken")
 
         requireNotNull(accessToken) { "Access token is missing" }
 

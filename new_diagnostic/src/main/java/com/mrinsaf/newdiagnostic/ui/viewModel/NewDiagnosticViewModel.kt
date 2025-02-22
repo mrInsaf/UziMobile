@@ -27,7 +27,6 @@ class NewDiagnosticViewModel @Inject constructor(
         get() = _uiState
 
     fun onDatePick(newDate: String) {
-        println("yooooo")
         _uiState.update { it.copy(dateOfAdmission = newDate) }
         println(uiState.value.dateOfAdmission)
     }
@@ -52,9 +51,9 @@ class NewDiagnosticViewModel @Inject constructor(
         _uiState.update { it.copy(saveResultsChecked = !saveResultsChecked) }
     }
 
-    fun onPhotoPickResult(uris: List<Uri>) {
-        _uiState.update { it.copy(selectedImageUris = uris) }
-        println("uiState.value.selectedImageUris: ${uiState.value.selectedImageUris}")
+    fun onPhotoPickResult(uris: Uri) {
+        _uiState.update { it.copy(selectedImageUri = uris) }
+        println("uiState.value.selectedImageUris: ${uiState.value.selectedImageUri}")
     }
 
     fun onDiagnosticStart(userId: String = "1") {
@@ -100,8 +99,9 @@ class NewDiagnosticViewModel @Inject constructor(
                 diagnosticProcessState = DiagnosticProcessState.Sending,
             )
         }
+
         val uziId = repository.createUzi(
-            uziUris = uiState.value.selectedImageUris,
+            uziUris = uiState.value.selectedImageUri!!,
             projection = "long",
             patientId = "72881f74-1d10-4d93-9002-5207a83729ed", // TODO: заменить на ID авторизованного пользователя
             deviceId = "1",
@@ -166,7 +166,7 @@ class NewDiagnosticViewModel @Inject constructor(
             state.copy(
                 diagnosticProcessState = DiagnosticProcessState.Success(diagnosticId),
                 completedDiagnosticId = diagnosticId,
-                downloadedImagesUris = uiState.value.selectedImageUris.toMutableList(),
+                downloadedImagesUri = uiState.value.selectedImageUri,
                 uziImages = uziImages,
                 nodesAndSegmentsResponses = uziImageNodesSegments,
                 completedDiagnosticInformation = uziInformation,
@@ -179,7 +179,7 @@ class NewDiagnosticViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 currentScreenIndex = 0,
-                selectedImageUris = emptyList()
+                selectedImageUri = null
             )
         }
         println("Ошибка HTTP: $e")

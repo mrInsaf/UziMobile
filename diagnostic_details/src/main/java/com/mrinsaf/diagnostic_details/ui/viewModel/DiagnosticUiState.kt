@@ -11,7 +11,7 @@ data class DiagnosticUiState(
 
     var selectedUziNodesAndSegments: List<NodesSegmentsResponse> = emptyList(),
 
-    var downloadedImagesUris: MutableList<Uri> = mutableListOf(),
+    var downloadedImageUri: Uri? = null,
 
     var uziImages: List<UziImage> = emptyList(),
 

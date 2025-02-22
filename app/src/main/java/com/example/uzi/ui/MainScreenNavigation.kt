@@ -15,6 +15,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
@@ -26,10 +27,12 @@ import com.mrinsaf.core.data.models.User
 import com.mrinsaf.diagnostic_list.ui.screens.DiagnosticsListScreen
 import com.mrinsaf.core.ui.screens.ProfileScreen
 import com.mrinsaf.core.ui.theme.Paddings
+import com.mrinsaf.diagnostic_details.ui.screens.DiagnosticScreen
 import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
 import com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.isSuccess
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -82,14 +85,17 @@ fun NavigationGraph(
                 newDiagnosticViewModel,
                 onDiagnosticCompleted = {
                     if (uiState.diagnosticProcessState.isSuccess) {
-                        diagnosticViewModel.onDiagnosticCompleted(
-                            uziId = uiState.completedDiagnosticId,
-                            imagesUris = uiState.downloadedImagesUris,
-                            nodesAndSegmentsResponses = uiState.nodesAndSegmentsResponses,
-                            uziImages = uiState.uziImages,
-                            selectedUziDate = uiState.completedDiagnosticInformation?.createAt
-                                ?: "",
-                        )
+                        val downloadedImagesUri = uiState.downloadedImagesUri
+                        if (downloadedImagesUri != null){
+                            diagnosticViewModel.onDiagnosticCompleted(
+                                uziId = uiState.completedDiagnosticId,
+                                imagesUris = downloadedImagesUri,
+                                nodesAndSegmentsResponses = uiState.nodesAndSegmentsResponses,
+                                uziImages = uiState.uziImages,
+                                selectedUziDate = uiState.completedDiagnosticInformation?.createAt
+                                    ?: "",
+                            )
+                        }
                         navController.navigate(Screen.Diagnostic.route)
                     }
                 }
@@ -97,15 +103,19 @@ fun NavigationGraph(
         }
         composable(Screen.Uploaded.route) {
             val uiState by diagnosticListViewModel.uiState.collectAsState()
-            diagnosticViewModel.clearUiState()
+            val coroutineScope = rememberCoroutineScope()
+//            diagnosticViewModel.clearUiState()
             diagnosticListViewModel.getPatientUzis(
                 patientId = patientId
             )
             DiagnosticsListScreen(
                 uziList = uiState.uziList,
                 onDiagnosticListItemClick = { uziId, uziDate ->
-                    diagnosticViewModel.onSelectUzi(uziId, uziDate)
-                    navController.navigate(Screen.Diagnostic.route)
+                    coroutineScope.launch {
+                        diagnosticViewModel.onSelectUzi(uziId, uziDate)
+                        navController.navigate(Screen.Diagnostic.route)
+                    }
+
                 },
                 nodesWithUziIds = uiState.nodesWithUziId,
             )
@@ -120,14 +130,7 @@ fun NavigationGraph(
 
         composable(Screen.Diagnostic.route) {
             val diagnosticHistoryUiState by diagnosticViewModel.uiState.collectAsState()
-//            diagnosticHistoryViewModel.onUziCompleted(
-//                completedDiagnosticId = uiState.completedDiagnosticId,
-//                downloadedImagesUris = uiState.downloadedImagesUris,
-//                nodesAndSegmentsResponses = uiState.nodesAndSegmentsResponses,
-//                uziImages = uiState.uziImages
-//            )
-
-            com.mrinsaf.diagnostic_details.ui.screens.DiagnosticScreen(
+            DiagnosticScreen(
                 diagnosticDate = diagnosticHistoryUiState.selectedUziDate,
                 clinicName = diagnosticHistoryUiState.selectedClinicName ?: "Неизвестная клиника",
                 diagnosticViewModel = diagnosticViewModel

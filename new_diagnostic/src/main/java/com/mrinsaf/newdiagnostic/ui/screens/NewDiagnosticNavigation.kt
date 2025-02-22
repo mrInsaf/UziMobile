@@ -25,7 +25,6 @@ fun NewDiagnosticNavigation(
     newDiagnosticViewModel: NewDiagnosticViewModel,
     onDiagnosticCompleted: () -> Unit,
 ) {
-    println("yo")
     val newDiagnosticUiState = newDiagnosticViewModel.uiState.collectAsState().value
     val navController = rememberNavController()
 

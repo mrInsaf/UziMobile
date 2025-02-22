@@ -40,6 +40,8 @@ class MainActivity : ComponentActivity() {
         val diagnosticViewModel: DiagnosticViewModel by viewModels()
         val diagnosticListViewModel: DiagnosticListViewModel by viewModels()
 
+        retrieveTokens()
+
         setContent {
 
             UziTheme(dynamicColor = false) {
@@ -60,5 +62,17 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun retrieveTokens() {
+        lifecycleScope.launch {
+            try {
+                val accessToken = TokenStorage.getAccessToken(this@MainActivity).first()
+                val refreshToken = TokenStorage.getRefreshToken(this@MainActivity).first()
+                println("accessToken: $accessToken")
+                println("refreshToken: $refreshToken")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
 }
 

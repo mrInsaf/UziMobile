@@ -27,7 +27,6 @@ class DiagnosticListViewModel @Inject constructor(
                 uziList.forEach { uzi ->
                     val id = uzi.id
                     val nodesResponse = repository.getUziNodes(id)
-                    println("nodesResponse: $nodesResponse")
                     nodesWithUziIds.add(
                         NodesWithUziId(
                             uziId = id,

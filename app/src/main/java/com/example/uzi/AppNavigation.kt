@@ -49,7 +49,6 @@ fun AppNavigation(
             )
         }
         composable(route = AuthScreens.MainScreenRoute.route) {
-            println("рисую главный экран")
             MainScreen(
                 newDiagnosticViewModel = newDiagnosticViewModel,
                 userData = authorisationUiState.userData,

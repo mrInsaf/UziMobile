@@ -13,7 +13,7 @@ data class NewDiagnosticUiState(
 
     var saveResultsChecked: Boolean = false,
 
-    var selectedImageUris: List<Uri> = emptyList(),
+    var selectedImageUri: Uri? = null,
 
     var diagnosticProcessState: DiagnosticProcessState = DiagnosticProcessState.Idle,
 
@@ -23,7 +23,7 @@ data class NewDiagnosticUiState(
 
     var completedDiagnosticInformation: Uzi? = null,
 
-    var downloadedImagesUris: MutableList<Uri> = mutableListOf(),
+    var downloadedImagesUri: Uri? = null,
 
     var uziImages: List<UziImage> = emptyList(),
 

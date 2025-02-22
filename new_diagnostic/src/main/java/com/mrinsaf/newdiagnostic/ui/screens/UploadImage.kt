@@ -29,13 +29,12 @@ fun UploadImage(
     newDiagnosticViewModel: NewDiagnosticViewModel,
     modifier: Modifier = Modifier
 ) {
-    println("yo")
     val uiState = newDiagnosticViewModel.uiState.collectAsState()
     val combinedPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument(),
         onResult = { uri ->
             uri?.let {
-                newDiagnosticViewModel.onPhotoPickResult(listOf(it))
+                newDiagnosticViewModel.onPhotoPickResult(it)
             }
         }
     )
@@ -72,7 +71,7 @@ fun UploadImage(
 
         MainButton(
             text = "Начать диагностику",
-            enabled = uiState.value.selectedImageUris.isNotEmpty()
+            enabled = uiState.value.selectedImageUri != null
         ) {
             onStartDiagnosticClick()
         }

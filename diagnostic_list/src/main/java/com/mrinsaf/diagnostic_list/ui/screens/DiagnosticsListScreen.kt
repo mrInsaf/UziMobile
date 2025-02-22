@@ -40,7 +40,6 @@ fun DiagnosticsListScreen(
         LazyColumn {
             items(uziList) { uzi ->
                 val nodes = nodesWithUziIds.find { it.uziId == uzi.id }?.nodes
-                println(nodes)
                 DiagnosticListItem(
                     date = uzi.createAt ?: "Неизвестная дата",
                     clinic = "Неизвестная клиника",
