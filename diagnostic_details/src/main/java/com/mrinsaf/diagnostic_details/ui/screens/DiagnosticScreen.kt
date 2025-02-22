@@ -45,6 +45,7 @@ import androidx.compose.ui.window.Dialog
 import com.mrinsaf.core.R
 import com.mrinsaf.core.data.models.basic.SectorPoint
 import com.mrinsaf.core.data.repository.MockUziServiceRepository
+import com.mrinsaf.core.ui.components.LoadingAnimation
 import com.mrinsaf.core.ui.components.bottomSheet.RecommendationBottomSheet
 import com.mrinsaf.core.ui.components.canvas.ZoomableCanvasSectorWithConstraints
 import com.mrinsaf.core.ui.components.containers.FormationInfoContainer
@@ -61,7 +62,6 @@ fun DiagnosticScreen(
     clinicName: String,
     diagnosticViewModel: DiagnosticViewModel,
 ) {
-    println("DiagnosticScreen")
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -107,83 +107,33 @@ fun DiagnosticScreen(
                 }
             }
 
-            val context = LocalContext.current
-            val uziFileUri = uiState.downloadedImageUri
-
-
-            println("imageUri: $uziFileUri")
-            println("lol")
-
             val currentPage = remember { mutableStateOf(0) }
-            val numberOfDirectories = remember { mutableStateOf(1f) }
-            val mimeType = remember { mutableStateOf("") }
-            if (uziFileUri != null){
-                val bitmap: Bitmap? = uziFileUri.let { uri ->
-                    println("uri: $uri")
-                    mimeType.value = MimeTypeMap.getSingleton().getMimeTypeFromExtension(uri.path?.substringAfterLast('.')) ?: ""
-                    println("mimeType: ${mimeType.value}") // Печатаем значение MIME-типа
-                    if (mimeType.value == "image/tiff") {
-                        try {
-                            // Сначала читаем метаинформацию
-                            val initialDescriptor =
-                                context.contentResolver.openFileDescriptor(uri, "r")
-                            initialDescriptor?.use { descriptor ->
-                                val options = TiffBitmapFactory.Options()
-                                options.inJustDecodeBounds = true
-                                TiffBitmapFactory.decodeFileDescriptor(descriptor.fd, options)
-                                numberOfDirectories.value = options.outDirectoryCount.toFloat()
-                            }
-                            println("numberOfDirectories.value: ${numberOfDirectories.value}")
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                var sliderPosition by remember { mutableFloatStateOf(0f) }
 
-                            // Затем декодируем изображение текущей страницы
-                            val pageDescriptor =
-                                context.contentResolver.openFileDescriptor(uri, "r")
-                            pageDescriptor?.use { descriptor ->
-                                val options = TiffBitmapFactory.Options()
-                                options.inDirectoryNumber = currentPage.value
-                                options.inJustDecodeBounds = false
-                                TiffBitmapFactory.decodeFileDescriptor(descriptor.fd, options)
-                            }
-                        } catch (e: Exception) {
-                            println(e)
-                            null
-                        }
-                    } else {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                            val source = ImageDecoder.createSource(context.contentResolver, uri)
-                            ImageDecoder.decodeBitmap(source)
-                        } else {
-                            MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
-                        }
-                    }
-                }
-                if (mimeType.value == "image/tiff") {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    ) {
-                        var sliderPosition by remember { mutableFloatStateOf(0f) }
+                Slider(
+                    value = sliderPosition,
+                    onValueChange = {
+                        sliderPosition = it
+                        currentPage.value = it.toInt()
+                    },
+                    valueRange = 0f..uiState.numberOfImages.toFloat() - 1
+                )
 
-                        Slider(
-                            value = sliderPosition,
-                            onValueChange = {
-                                sliderPosition = it
-                                currentPage.value = it.toInt()
-                            },
-                            valueRange = 0f..numberOfDirectories.value - 1
-                        )
+                Text(
+                    text = "Страница: ${currentPage.value + 1}",
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
 
-                        // Отображаем текущую страницу
-                        Text(
-                            text = "Страница: ${currentPage.value + 1}",
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
-                        )
-                    }
-                }
 
+            if (uiState.uziImagesBmp.size > currentPage.value){
                 ZoomableCanvasSectorWithConstraints(
-                    imageBitmap = bitmap?.asImageBitmap() ?: ImageBitmap.imageResource(R.drawable.paint),
+                    imageBitmap = uiState.uziImagesBmp[currentPage.value].asImageBitmap(),
                     pointsList = if (selectedTabIndex == 1) {
                         emptyList()
                     } else {
@@ -193,7 +143,9 @@ fun DiagnosticScreen(
                                 .filter { segment ->
                                     segment.image_id == uiState.uziImages[currentPage.value].id
                                 } // Фильтруем по image_id
-                                .flatMap { it.getContorPoints() ?: emptyList() } // Получаем точки из сегментов
+                                .flatMap {
+                                    it.getContorPoints() ?: emptyList()
+                                } // Получаем точки из сегментов
                         } catch (e: Exception) {
                             println(e)
                             throw e
@@ -201,63 +153,64 @@ fun DiagnosticScreen(
                     },
                     onFullScreen = { isFullScreenOpen = true },
                 )
+            }
+            else {
+                LoadingAnimation()
+            }
 
-                println("Дошел до нодов")
-                val nodes = uiState.selectedUziNodesAndSegments
-                    .flatMap { it.segments }
-                    .filter { segment ->
-                        segment.image_id == uiState.uziImages[currentPage.value].id
-                    }.mapNotNull { segment ->
-                        uiState.selectedUziNodesAndSegments
-                            .flatMap { it.nodes }
-                            .firstOrNull { node -> node.id == segment.node_id }
-                    }
-
-                nodes.forEachIndexed { i, formation ->
-                    FormationInfoContainer(
-                        formationIndex = i,
-                        formationClass = formation.formationClass,
-                        formationProbability = formation.maxTirads.times(100).toInt(),
-                        formationDescription = stringResource(R.string.shortRecommendationForPatient),
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(20.dp))
-                            .clickable { diagnosticViewModel.openRecommendationBottomSheet() }
-                    )
+            val nodes = uiState.selectedUziNodesAndSegments
+                .flatMap { it.segments }
+                .filter { segment ->
+                    segment.image_id == uiState.uziImages[currentPage.value].id
+                }.mapNotNull { segment ->
+                    uiState.selectedUziNodesAndSegments
+                        .flatMap { it.nodes }
+                        .firstOrNull { node -> node.id == segment.node_id }
                 }
-                RecommendationBottomSheet(
-                    isVisible = uiState.isRecommendationSheetVisible,
-                    onDismiss = { diagnosticViewModel.closeRecommendationBottomSheet() }
+
+            nodes.forEachIndexed { i, formation ->
+                FormationInfoContainer(
+                    formationIndex = i,
+                    formationClass = formation.formationClass,
+                    formationProbability = formation.maxTirads.times(100).toInt(),
+                    formationDescription = stringResource(R.string.shortRecommendationForPatient),
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(20.dp))
+                        .clickable { diagnosticViewModel.openRecommendationBottomSheet() }
                 )
             }
+            RecommendationBottomSheet(
+                isVisible = uiState.isRecommendationSheetVisible,
+                onDismiss = { diagnosticViewModel.closeRecommendationBottomSheet() }
+            )
+        }
 
-            if (isFullScreenOpen) {
-                Dialog(onDismissRequest = { isFullScreenOpen = false }) {
-                    UziImageFullScreen(
-                        imageBitmap = ImageBitmap.imageResource(R.drawable.paint),
-                        pointsList = listOf(
-                            SectorPoint(100, 100),
-                            SectorPoint(200, 100),
-                            SectorPoint(200, 200),
-                            SectorPoint(100, 300)
-                        )
+        if (isFullScreenOpen) {
+            Dialog(onDismissRequest = { isFullScreenOpen = false }) {
+                UziImageFullScreen(
+                    imageBitmap = ImageBitmap.imageResource(R.drawable.paint),
+                    pointsList = listOf(
+                        SectorPoint(100, 100),
+                        SectorPoint(200, 100),
+                        SectorPoint(200, 200),
+                        SectorPoint(100, 300)
                     )
-                }
+                )
             }
-            }
-
-
-
-        Text(
-            text = clinicName,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Normal,
-            fontSize = 20.sp,
-            color = Color.Black
-        )
-
+        }
     }
-}
 
+
+
+    Text(
+        text = clinicName,
+        style = MaterialTheme.typography.titleMedium,
+        fontWeight = FontWeight.Normal,
+        fontSize = 20.sp,
+        color = Color.Black
+    )
+
+}
 
 @Preview
 @Composable

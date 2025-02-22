@@ -1,5 +1,7 @@
 package com.mrinsaf.diagnostic_details.ui.viewModel
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -61,44 +63,53 @@ class DiagnosticViewModel @Inject constructor(
             val uziImages = repository.getUziImages(uziId)
             println("uziImages получен: ${uziImages.size} элементов")
 
-            println("Вызов repository.downloadUziFile")
-            val uriResponse = repository.downloadUziFile(uziId)
-            println("uriResponse получен: contentLength = ${uriResponse.contentLength()}")
+            val numberOfImages = uziImages.size
 
-            println("Вызов repository.saveUziFileAndGetCacheUri")
-            val downloadedUziUri = repository.saveUziFileAndGetCacheUri(uziId, uriResponse)
-            println("downloadedUziUri получен: $downloadedUziUri")
-
-            println("Переход в Dispatchers.Default для обработки uziImageNodesSegments")
-            withContext(Dispatchers.Default) {
-                val uziImageNodesSegments = uziImages.mapIndexed { index, image ->
-                    async {
-                        println("Запрос getImageNodesAndSegments для image.id: ${image.id} (index $index)")
-                        repository.getImageNodesAndSegments(image.id, true)
+            viewModelScope.launch {
+                uziImages.forEachIndexed { i, image ->
+                    println("скачиваю картинку $i")
+                    val responseBody = repository.downloadUziImage(uziId, image.id)
+                    val bitmap = responseBody.byteStream().use { inputStream ->
+                        BitmapFactory.decodeStream(inputStream)
                     }
-                }.awaitAll()
-                println("uziImageNodesSegments получен: ${uziImageNodesSegments.size} элементов")
 
-                _uiState.update {
-                    println("Обновление selectedUziNodesAndSegments в _uiState")
-                    it.copy(
-                        selectedUziNodesAndSegments = uziImageNodesSegments
-                    )
+                    // Обновляем uiState, добавляя новый bitmap к уже существующему списку
+                    _uiState.update { currentState ->
+                        currentState.copy(uziImagesBmp = currentState.uziImagesBmp + bitmap)
+                    }
                 }
             }
 
+            println("Переход в Dispatchers.Default для обработки uziImageNodesSegments")
+            viewModelScope.launch(Dispatchers.Default) {
+                val uziImageNodesSegments = uziImages.mapIndexed { index, image ->
+                    async {
+                        println("Запрос getImageNodesAndSegments для image.id: ${image.id} (index $index)")
+                        try {
+                            repository.getImageNodesAndSegments(image.id, true)
+                        } catch (e: Exception) {
+                            println(e)
+                            null
+                        }
+                    }
+                }.awaitAll()
+                println("uziImageNodesSegments получен: ${uziImageNodesSegments.size} элементов")
+                _uiState.update {
+                    println("Обновление selectedUziNodesAndSegments в _uiState")
+                    it.copy(selectedUziNodesAndSegments = uziImageNodesSegments.filterNotNull())
+                }
+            }
             println("Обновление оставшихся полей _uiState...")
             _uiState.update {
                 println("currentUziId: $uziId")
-                println("downloadedImageUri: $downloadedUziUri")
                 println("uziImages: ${uziImages.size} элементов")
                 println("selectedUziDate: $uziDate")
 
                 it.copy(
                     currentUziId = uziId,
-                    downloadedImageUri = downloadedUziUri,
                     uziImages = uziImages,
-                    selectedUziDate = uziDate
+                    selectedUziDate = uziDate,
+                    numberOfImages = numberOfImages,
                 )
             }
 

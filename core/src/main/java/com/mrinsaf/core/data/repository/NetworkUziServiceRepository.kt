@@ -290,7 +290,10 @@ class NetworkUziServiceRepository(
                 println("Попытка ${attempt + 1}: Ошибка - ${e.message}")
             }
 
-            delay(delayMillis)
+            if (maxAttempts > 1){
+                println("Ожидаю ....")
+                delay(delayMillis)
+            }
         }
 
         throw Exception("Не удалось выполнить запрос после $maxAttempts попыток.")
