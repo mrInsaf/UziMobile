@@ -1,5 +1,6 @@
 package com.mrinsaf.newdiagnostic.ui.viewModel
 
+import android.graphics.Bitmap
 import android.net.Uri
 import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
 import com.mrinsaf.core.data.models.basic.Uzi
@@ -16,6 +17,8 @@ data class NewDiagnosticUiState(
     var selectedImageUri: Uri? = null,
 
     var diagnosticProcessState: DiagnosticProcessState = DiagnosticProcessState.Idle,
+
+    val uziImagesBmp: List<Bitmap> = emptyList(),
 
 //    var isDiagnosticSent: Boolean = false,
 

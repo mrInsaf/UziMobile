@@ -38,6 +38,7 @@ class DiagnosticViewModel @Inject constructor(
         uziId: String,
         imagesUris: Uri,
         uziImages: List<UziImage>,
+        uziImagesBmp: List<Bitmap>,
         nodesAndSegmentsResponses: List<NodesSegmentsResponse>,
         selectedUziDate: String,
     ) {
@@ -48,8 +49,10 @@ class DiagnosticViewModel @Inject constructor(
                     currentUziId = uziId,
                     downloadedImageUri = imagesUris,
                     uziImages = uziImages,
+                    uziImagesBmp = uziImagesBmp,
                     selectedUziNodesAndSegments = nodesAndSegmentsResponses,
                     selectedUziDate = selectedUziDate,
+                    numberOfImages = uziImages.size,
                 )
             }
         }

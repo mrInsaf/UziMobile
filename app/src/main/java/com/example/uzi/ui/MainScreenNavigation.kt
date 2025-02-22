@@ -30,6 +30,7 @@ import com.mrinsaf.core.ui.theme.Paddings
 import com.mrinsaf.diagnostic_details.ui.screens.DiagnosticScreen
 import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
 import com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel
+import com.mrinsaf.newdiagnostic.ui.screens.NewDiagnosticNavigation
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.isSuccess
 import kotlinx.coroutines.launch
@@ -81,7 +82,7 @@ fun NavigationGraph(
         composable(Screen.Load.route) {
             val uiState by newDiagnosticViewModel.uiState.collectAsState()
 
-            com.mrinsaf.newdiagnostic.ui.screens.NewDiagnosticNavigation(
+            NewDiagnosticNavigation(
                 newDiagnosticViewModel,
                 onDiagnosticCompleted = {
                     if (uiState.diagnosticProcessState.isSuccess) {
@@ -94,6 +95,7 @@ fun NavigationGraph(
                                 uziImages = uiState.uziImages,
                                 selectedUziDate = uiState.completedDiagnosticInformation?.createAt
                                     ?: "",
+                                uziImagesBmp = uiState.uziImagesBmp,
                             )
                         }
                         navController.navigate(Screen.Diagnostic.route)

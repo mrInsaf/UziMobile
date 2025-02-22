@@ -1,5 +1,6 @@
 package com.mrinsaf.newdiagnostic.ui.viewModel
 
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -65,12 +66,22 @@ class NewDiagnosticViewModel @Inject constructor(
 //                val diagnosticId = "f00941dd-3769-497a-a813-cc457f6053f9"
                 val uziInformation = repository.getUzi(diagnosticId)
                 val uziImages = fetchUziImages(diagnosticId)
-                val downloadedUziUri = downloadAndSaveUzi(diagnosticId)
+                uziImages.forEachIndexed { i, image ->
+                    println("скачиваю картинку $i")
+                    val responseBody = repository.downloadUziImage(diagnosticId, image.id)
+                    val bitmap = responseBody.byteStream().use { inputStream ->
+                        BitmapFactory.decodeStream(inputStream)
+                    }
+
+                    _uiState.update { currentState ->
+                        currentState.copy(uziImagesBmp = currentState.uziImagesBmp + bitmap)
+                    }
+                }
 
                 val uziImageNodesSegments = fetchImageNodesSegments(uziImages)
 
                 updateUiAfterDiagnosticCompletion(
-                    diagnosticId, downloadedUziUri, uziImages, uziImageNodesSegments,
+                    diagnosticId, uziImages, uziImageNodesSegments,
                     uziInformation = uziInformation
                 )
 
@@ -88,9 +99,11 @@ class NewDiagnosticViewModel @Inject constructor(
     }
 
     private fun updateUiBeforeDiagnosticStart() {
-        _uiState.update { it.copy(
-            diagnosticProcessState = DiagnosticProcessState.Sending,
-        ) }
+        _uiState.update {
+            it.copy(
+                diagnosticProcessState = DiagnosticProcessState.Sending,
+            )
+        }
     }
 
     private suspend fun createDiagnostic(): String {
@@ -157,7 +170,6 @@ class NewDiagnosticViewModel @Inject constructor(
 
     private fun updateUiAfterDiagnosticCompletion(
         diagnosticId: String,
-        downloadedUziUri: Uri,
         uziImages: List<UziImage>,
         uziImageNodesSegments: List<NodesSegmentsResponse>,
         uziInformation: Uzi?,
