@@ -3,14 +3,18 @@ package com.mrinsaf.diagnostic_list.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +28,7 @@ fun DiagnosticsListScreen(
     uziList: List<Uzi>,
     nodesWithUziIds: List<NodesWithUziId>,
     onDiagnosticListItemClick: (String, String) -> Unit,
+    fetchPatientUzis: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -37,8 +42,15 @@ fun DiagnosticsListScreen(
             color = MaterialTheme.colorScheme.tertiary
         )
         Spacer(Modifier.size(Paddings.Large))
+        Row(modifier = modifier.fillMaxWidth()) {
+            TextButton(
+                onClick = { fetchPatientUzis() }
+            ) {
+                Text("Обновить")
+            }
+        }
         LazyColumn {
-            items(uziList) { uzi ->
+            items(uziList.reversed()) { uzi ->
                 val nodes = nodesWithUziIds.find { it.uziId == uzi.id }?.nodes
                 DiagnosticListItem(
                     date = uzi.createAt ?: "Неизвестная дата",
@@ -62,5 +74,6 @@ fun DiagnosticsListScreenPreview() {
         uziList = emptyList(),
         onDiagnosticListItemClick = { _, _ -> },
         nodesWithUziIds = emptyList(),
+        fetchPatientUzis = {  },
     )
 }

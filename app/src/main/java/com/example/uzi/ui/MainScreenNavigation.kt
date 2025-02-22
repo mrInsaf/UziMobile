@@ -120,6 +120,7 @@ fun NavigationGraph(
 
                 },
                 nodesWithUziIds = uiState.nodesWithUziId,
+                fetchPatientUzis = { diagnosticListViewModel.getPatientUzis(patientId) },
             )
         }
 
