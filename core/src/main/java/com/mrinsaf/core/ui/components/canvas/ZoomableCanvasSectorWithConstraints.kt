@@ -22,6 +22,6 @@ fun ZoomableCanvasSectorWithConstraints(
         modifier = Modifier
             .clip(shape = RoundedCornerShape(20.dp))
             .clipToBounds() // Гарантируем обрезку содержимого за пределами рамок
-            .clickable { onFullScreen() }
+//            .clickable { onFullScreen() }
     )
 }
