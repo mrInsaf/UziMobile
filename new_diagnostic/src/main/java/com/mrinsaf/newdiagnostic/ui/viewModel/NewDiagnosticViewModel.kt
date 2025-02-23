@@ -109,6 +109,15 @@ class NewDiagnosticViewModel @Inject constructor(
         }
     }
 
+    fun returnToUploadScreen() {
+        _uiState.update {
+            it.copy(
+                currentScreenIndex = 0,
+                selectedImageUri = null
+            )
+        }
+    }
+
     private fun updateUiBeforeDiagnosticStart() {
         _uiState.update {
             it.copy(
