@@ -1,6 +1,8 @@
 package com.mrinsaf.newdiagnostic.ui.screens
 
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -27,6 +29,15 @@ fun NewDiagnosticNavigation(
 ) {
     val newDiagnosticUiState = newDiagnosticViewModel.uiState.collectAsState().value
     val navController = rememberNavController()
+
+    val combinedPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument(),
+        onResult = { uri ->
+            uri?.let {
+                newDiagnosticViewModel.onPhotoPickResult(it)
+            }
+        }
+    )
 
     BackHandler(enabled = newDiagnosticUiState.currentScreenIndex > 0) {
         onAndroidBackClick(navController, newDiagnosticViewModel)
@@ -61,7 +72,9 @@ fun NewDiagnosticNavigation(
                     navController = navController,
                     startDestination = NewDiagnosticScreen.ImageLoadRoute.route
                 ) {
+                    println("UploadImage")
                     composable(NewDiagnosticScreen.ImageLoadRoute.route) {
+                        println("yoo")
                         UploadImage(
                             onStartDiagnosticClick = {
                                 navController.navigate(
@@ -77,6 +90,9 @@ fun NewDiagnosticNavigation(
                                     viewModel = newDiagnosticViewModel
                                 )
                             },
+                            onUploadImageClick = {
+                                combinedPickerLauncher.launch(arrayOf("image/*", "image/tiff"))
+                            }
                         )
                     }
 
@@ -108,6 +124,16 @@ fun NewDiagnosticNavigation(
                             modifier = Modifier.padding(padding),
                             viewModel = newDiagnosticViewModel,
                             onDiagnosticCompleted = onDiagnosticCompleted,
+                            onUploadNewDiagnostic = {
+                                try {
+                                    navController.navigate(NewDiagnosticScreen.ImageLoadRoute.route) {
+                                        popUpTo(0)
+                                    }
+                                    newDiagnosticViewModel.returnToUploadScreen()
+                                } catch (e: Exception) {
+                                    println(e)
+                                }
+                            },
                         )
                     }
                 }

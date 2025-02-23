@@ -26,23 +26,19 @@ import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 fun UploadImage(
     onStartDiagnosticClick: () -> Unit,
     onAndroidBackClick: () -> Unit,
+    onUploadImageClick: () -> Unit,
     newDiagnosticViewModel: NewDiagnosticViewModel,
     modifier: Modifier = Modifier
 ) {
     val uiState = newDiagnosticViewModel.uiState.collectAsState()
-    val combinedPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument(),
-        onResult = { uri ->
-            uri?.let {
-                newDiagnosticViewModel.onPhotoPickResult(it)
-            }
-        }
-    )
+
+    println("UploadImage: uiState = $uiState")
 
     BackHandler {
-        println("back")
+        println("UploadImage: BackHandler triggered")
         onAndroidBackClick()
     }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -53,7 +49,6 @@ fun UploadImage(
         Text(
             text = "Загрузка снимка",
             style = MaterialTheme.typography.titleLarge
-//            fontWeight = FontWeight.Bold
         )
         Text(
             text = helpingText,
@@ -64,8 +59,8 @@ fun UploadImage(
         UploadImageComponent(
             modifier = Modifier
                 .clickable {
-                    // Открываем выбор файлов с несколькими типами
-                    combinedPickerLauncher.launch(arrayOf("image/*", "image/tiff"))
+                    println("UploadImage: UploadImageComponent clicked")
+                    onUploadImageClick()
                 }
         )
 
@@ -73,6 +68,7 @@ fun UploadImage(
             text = "Начать диагностику",
             enabled = uiState.value.selectedImageUri != null
         ) {
+            println("UploadImage: MainButton clicked (enabled=${uiState.value.selectedImageUri != null})")
             onStartDiagnosticClick()
         }
     }
@@ -91,5 +87,6 @@ fun UploadImagePreview() {
         newDiagnosticViewModel = NewDiagnosticViewModel(
             repository = MockUziServiceRepository()
         ),
+        onUploadImageClick = {  },
     )
 }

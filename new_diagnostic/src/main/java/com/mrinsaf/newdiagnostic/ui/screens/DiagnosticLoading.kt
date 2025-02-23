@@ -29,6 +29,7 @@ fun DiagnosticLoading(
     viewModel: NewDiagnosticViewModel,
     modifier: Modifier = Modifier,
     onDiagnosticCompleted: () -> Unit,
+    onUploadNewDiagnostic: () -> Unit,
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     Column(
@@ -73,6 +74,18 @@ fun DiagnosticLoading(
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.tertiary
                 )
+                MainButton(
+                    text = "Открыть результат",
+                    enabled = uiState.diagnosticProcessState.isSuccess
+                ) {
+                    onDiagnosticCompleted()
+                }
+
+                MainButton(
+                    text = "Загрузить новый снимок",
+                ) {
+                    onUploadNewDiagnostic()
+                }
             }
             DiagnosticProcessState.Failure -> {
                 Image(
@@ -92,15 +105,13 @@ fun DiagnosticLoading(
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.tertiary
                 )
+
+                MainButton(
+                    text = "Загрузить новый снимок",
+                ) {
+                    onUploadNewDiagnostic()
+                }
             }
-        }
-
-
-        MainButton(
-            text = "Открыть результат",
-            enabled = uiState.diagnosticProcessState.isSuccess
-        ) {
-            onDiagnosticCompleted()
         }
     }
 }
@@ -111,7 +122,8 @@ fun DiagnosticLoadingPreview() {
     DiagnosticLoading(
         viewModel = NewDiagnosticViewModel(MockUziServiceRepository()),
         modifier = Modifier,
-        onDiagnosticCompleted = {}
+        onDiagnosticCompleted = {},
+        onUploadNewDiagnostic = {  }
     )
 }
 
