@@ -20,8 +20,6 @@ data class NewDiagnosticUiState(
 
     val uziImagesBmp: Map<String, Bitmap> = emptyMap(),
 
-//    var isDiagnosticSent: Boolean = false,
-
     var completedDiagnosticId: String = "",
 
     var completedDiagnosticInformation: Uzi? = null,
@@ -31,8 +29,6 @@ data class NewDiagnosticUiState(
     var uziImages: List<UziImage> = emptyList(),
 
     var nodesAndSegmentsResponses: List<NodesSegmentsResponse> = emptyList(),
-
-//    var isDiagnosticFailed: Boolean = false,
 )
 
 sealed class DiagnosticProcessState  {
