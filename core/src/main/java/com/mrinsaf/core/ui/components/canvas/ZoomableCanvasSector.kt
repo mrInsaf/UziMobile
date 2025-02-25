@@ -35,17 +35,6 @@ fun ZoomableCanvasSector(
         modifier = modifier
             .fillMaxWidth()
             .aspectRatio(aspectRatio)
-//            .pointerInput(Unit) {
-//                detectTransformGestures(
-//                    onGesture = { _, _, zoom, _ ->
-//                        if (!isZooming && zoom != 1f) {
-//                            isZooming = true
-//                            onGestureStart() // Сообщаем о начале жеста
-//                        }
-//                        scale *= zoom
-//                    },
-//                )
-//            }
     ) {
         val state = rememberTransformableState { zoomChange, panChange, _ ->
             scale = (scale * zoomChange).coerceIn(1f, 5f)
@@ -82,18 +71,27 @@ fun ZoomableCanvasSector(
                     dstSize = IntSize(canvasWidth, canvasHeight),
                 )
 
+                val scaleX = size.width / imageBitmap.width
+                val scaleY = size.height / imageBitmap.height
+
                 pointsList.forEachIndexed { i, point ->
+                    val scaledX = point.x * scaleX
+                    val scaledY = point.y * scaleY
+
                     drawCircle(
                         color = Color.Red,
-                        center = Offset(point.x.toFloat(), point.y.toFloat()),
-                        radius = 4f / scale
+                        center = Offset(scaledX, scaledY),
+                        radius = 0f
                     )
-                    val nextPoint =
-                        if (i < pointsList.size - 1) pointsList[i + 1] else pointsList[0]
+
+                    val nextPoint = if (i < pointsList.size - 1) pointsList[i + 1] else pointsList[0]
+                    val nextScaledX = nextPoint.x * scaleX
+                    val nextScaledY = nextPoint.y * scaleY
+
                     drawLine(
                         color = Color.Yellow,
-                        start = Offset(point.x.toFloat(), point.y.toFloat()),
-                        end = Offset(nextPoint.x.toFloat(), nextPoint.y.toFloat()),
+                        start = Offset(scaledX, scaledY),
+                        end = Offset(nextScaledX, nextScaledY),
                         strokeWidth = 2f / scale
                     )
                 }

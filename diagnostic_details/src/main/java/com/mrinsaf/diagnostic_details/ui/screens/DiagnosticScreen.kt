@@ -89,6 +89,14 @@ fun DiagnosticScreen(
             style = MaterialTheme.typography.titleMedium,
             color = Color.Black
         )
+        Text(
+            text = clinicName,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Normal,
+            fontSize = 20.sp,
+            color = Color.Black
+        )
+
         Column(
             verticalArrangement = Arrangement.spacedBy(Paddings.Medium)
         ) {
@@ -203,17 +211,6 @@ fun DiagnosticScreen(
             }
         }
     }
-
-
-
-    Text(
-        text = clinicName,
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.Normal,
-        fontSize = 20.sp,
-        color = Color.Black
-    )
-
 }
 
 @Preview
