@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
@@ -18,9 +19,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mrinsaf.core.R
+import com.mrinsaf.core.ui.theme.Paddings
 
 @Composable
 fun UploadImageComponent(
+    fileName: String?,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -29,6 +32,7 @@ fun UploadImageComponent(
         modifier = modifier
             .fillMaxWidth()
             .border(width = 1.dp, color = Color.LightGray)
+            .padding(horizontal = Paddings.Medium)
     ) {
         Spacer(Modifier)
         Icon(
@@ -42,12 +46,21 @@ fun UploadImageComponent(
             textAlign = TextAlign.Center,
             modifier = Modifier.width(250.dp)
         )
-        Text(
-            text = "Выберите файл в формате .png или .tiff",
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.tertiary,
-            modifier = Modifier.width(250.dp)
-        )
+        if (fileName.isNullOrEmpty()) {
+            Text(
+                text = "Выберите файл в формате .png или .tiff",
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.tertiary,
+                modifier = Modifier.width(250.dp)
+            )
+        }
+        else {
+            Text(
+                text = "Выбранный файл: $fileName",
+                textAlign = TextAlign.Center,
+            )
+
+        }
         Spacer(Modifier)
     }
 }

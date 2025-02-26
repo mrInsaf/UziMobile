@@ -61,7 +61,8 @@ fun UploadImage(
                 .clickable {
                     println("UploadImage: UploadImageComponent clicked")
                     onUploadImageClick()
-                }
+                },
+            fileName = uiState.value.selectedImageName
         )
 
         MainButton(
@@ -85,7 +86,8 @@ fun UploadImagePreview() {
         onStartDiagnosticClick = { },
         onAndroidBackClick = {},
         newDiagnosticViewModel = NewDiagnosticViewModel(
-            repository = MockUziServiceRepository()
+            repository = MockUziServiceRepository(),
+            context = TODO()
         ),
         onUploadImageClick = {  },
     )

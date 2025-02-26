@@ -45,7 +45,7 @@ fun DateFormField(
 
     BasicFormField(
         value = selectedDate,
-        onValueChange = onValueChange,  // передаем onValueChange напрямую
+        onValueChange = onValueChange,
         label = label,
         isReadOnly = true,
         trailingIcon = {
@@ -85,6 +85,7 @@ fun DateFormField(
         // Если дата изменилась, вызываем onValueChange
         datePickerState.selectedDateMillis?.let {
             onValueChange(convertMillisToDate(it))
+            showDatePicker = false
         }
     }
 }

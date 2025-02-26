@@ -80,7 +80,8 @@ fun AdditionalInformation(
 fun AdditionalInformationPreview() {
     AdditionalInformation(
         NewDiagnosticViewModel(
-            repository = MockUziServiceRepository()
+            repository = MockUziServiceRepository(),
+            context = TODO()
         ),
         onAndroidBackClick = {}
     ) {

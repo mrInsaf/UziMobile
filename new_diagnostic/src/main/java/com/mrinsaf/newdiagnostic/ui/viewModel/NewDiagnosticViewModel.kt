@@ -1,7 +1,9 @@
 package com.mrinsaf.newdiagnostic.ui.viewModel
 
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.provider.OpenableColumns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
@@ -9,6 +11,8 @@ import com.mrinsaf.core.data.models.basic.Uzi
 import com.mrinsaf.core.data.models.basic.UziImage
 import com.mrinsaf.core.data.repository.UziServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -22,10 +26,13 @@ import javax.inject.Inject
 @HiltViewModel
 class NewDiagnosticViewModel @Inject constructor(
     val repository: UziServiceRepository,
+    @ApplicationContext val context: Context
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(NewDiagnosticUiState())
     val uiState: StateFlow<NewDiagnosticUiState>
         get() = _uiState
+
+    private var uploadDiagnosticJob: Job? = null
 
     fun onDatePick(newDate: String) {
         _uiState.update { it.copy(dateOfAdmission = newDate) }
@@ -52,17 +59,24 @@ class NewDiagnosticViewModel @Inject constructor(
         _uiState.update { it.copy(saveResultsChecked = !saveResultsChecked) }
     }
 
-    fun onPhotoPickResult(uris: Uri) {
-        _uiState.update { it.copy(selectedImageUri = uris) }
-        println("uiState.value.selectedImageUris: ${uiState.value.selectedImageUri}")
+    fun onPhotoPickResult(uri: Uri) {
+        val fileName = getFileName(uri) ?: "Без названия"
+        _uiState.update {
+            it.copy(
+                selectedImageUri = uri,
+                selectedImageName = fileName
+            )
+        }
     }
 
     fun onDiagnosticStart(userId: String = "1") {
-        viewModelScope.launch {
+        uploadDiagnosticJob = viewModelScope.launch {
             try {
                 updateUiBeforeDiagnosticStart()
 
-                val diagnosticId = createDiagnostic()
+                val diagnosticId = createDiagnostic().also {
+                    _uiState.update { it.copy(isUziPosted = true) }
+                }
 //            val diagnosticId = "f00941dd-3769-497a-a813-cc457f6053f9"
                 val uziInformation = repository.getUzi(diagnosticId)
                 val uziImages = fetchUziImages(diagnosticId)
@@ -110,11 +124,15 @@ class NewDiagnosticViewModel @Inject constructor(
     }
 
     fun returnToUploadScreen() {
+        try {
+            uploadDiagnosticJob?.cancel()
+                .also { println("Ожидание результатов узи отменено") }
+        }
+        catch (e: Exception) {
+            println(e)
+        }
         _uiState.update {
-            it.copy(
-                currentScreenIndex = 0,
-                selectedImageUri = null
-            )
+            NewDiagnosticUiState()
         }
     }
 
@@ -186,6 +204,17 @@ class NewDiagnosticViewModel @Inject constructor(
                 throw e
             }
         }
+    }
+
+    private fun getFileName(uri: Uri): String? {
+        var fileName: String? = null
+        context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (cursor.moveToFirst() && nameIndex != -1) {
+                fileName = cursor.getString(nameIndex)
+            }
+        }
+        return fileName
     }
 
     private fun updateUiAfterDiagnosticCompletion(
