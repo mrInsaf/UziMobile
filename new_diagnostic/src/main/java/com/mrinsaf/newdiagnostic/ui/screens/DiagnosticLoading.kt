@@ -40,7 +40,9 @@ fun DiagnosticLoading(
             .background(color = MaterialTheme.colorScheme.background)
     ) {
         when(uiState.diagnosticProcessState) {
-            DiagnosticProcessState.Idle -> TODO()
+            DiagnosticProcessState.Idle -> {
+
+            }
             DiagnosticProcessState.Sending -> {
                 LoadingAnimation()
 
@@ -80,12 +82,6 @@ fun DiagnosticLoading(
                 ) {
                     onDiagnosticCompleted()
                 }
-
-                MainButton(
-                    text = "Загрузить новый снимок",
-                ) {
-                    onUploadNewDiagnostic()
-                }
             }
             DiagnosticProcessState.Failure -> {
                 Image(
@@ -105,13 +101,13 @@ fun DiagnosticLoading(
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.tertiary
                 )
-
-                MainButton(
-                    text = "Загрузить новый снимок",
-                ) {
-                    onUploadNewDiagnostic()
-                }
             }
+        }
+        MainButton(
+            text = "Загрузить новый снимок",
+            enabled = uiState.isUziPosted
+        ) {
+            onUploadNewDiagnostic()
         }
     }
 }
