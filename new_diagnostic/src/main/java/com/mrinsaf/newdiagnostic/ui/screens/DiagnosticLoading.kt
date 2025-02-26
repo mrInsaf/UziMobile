@@ -120,7 +120,10 @@ fun DiagnosticLoading(
 @Composable
 fun DiagnosticLoadingPreview() {
     DiagnosticLoading(
-        viewModel = NewDiagnosticViewModel(MockUziServiceRepository()),
+        viewModel = NewDiagnosticViewModel(
+            MockUziServiceRepository(),
+            context = TODO()
+        ),
         modifier = Modifier,
         onDiagnosticCompleted = {},
         onUploadNewDiagnostic = {  }

@@ -15,6 +15,9 @@ data class NewDiagnosticUiState(
     var saveResultsChecked: Boolean = false,
 
     var selectedImageUri: Uri? = null,
+    var selectedImageName: String? = null,
+
+    var isUziPosted: Boolean = false,
 
     var diagnosticProcessState: DiagnosticProcessState = DiagnosticProcessState.Idle,
 
