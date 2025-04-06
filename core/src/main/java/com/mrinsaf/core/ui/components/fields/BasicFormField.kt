@@ -64,9 +64,11 @@ fun BasicFormField(
 fun BasicFormField(
     value: String,
     label: AnnotatedString,
-    AdditionalContent: (@Composable () -> Unit)? = null,
+    modifier: Modifier = Modifier,
     isReadOnly: Boolean = false,
     trailingIcon: @Composable (() -> Unit)? = null,
+    isError: Boolean = false,
+    AdditionalContent: (@Composable () -> Unit)? = null,
     onValueChange: (String) -> Unit,
 ) {
     Column(
@@ -86,7 +88,8 @@ fun BasicFormField(
             ),
             shape = RoundedCornerShape(8.dp),
             trailingIcon = trailingIcon,
-            modifier = Modifier
+            isError = isError,
+            modifier = modifier
                 .fillMaxWidth()
                 .height(60.dp)
         )
