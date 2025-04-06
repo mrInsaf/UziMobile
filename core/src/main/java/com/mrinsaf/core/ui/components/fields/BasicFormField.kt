@@ -91,7 +91,7 @@ fun BasicFormField(
                 .height(60.dp)
         )
         if (AdditionalContent != null) {
-            Spacer(modifier = Modifier.size(16.dp))
+            Spacer(modifier = Modifier.size(8.dp))
             AdditionalContent()
         }
     }

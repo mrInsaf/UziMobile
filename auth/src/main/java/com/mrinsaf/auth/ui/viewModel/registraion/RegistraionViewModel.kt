@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
+import kotlin.io.path.Path
 
 @HiltViewModel
 class RegistraionViewModel @Inject constructor() : ViewModel() {
@@ -36,4 +37,13 @@ class RegistraionViewModel @Inject constructor() : ViewModel() {
     fun onRepeatPasswordChange(newRepeatPassword: String) {
         _uiState.update { it.copy(repeatPassword = newRepeatPassword) }
     }
+
+    fun onDatePick(selectedDate: String) {
+        _uiState.update { it.copy(dateOfBirth = selectedDate) }
+    }
+
+    fun onPolicyChange(newPolicy: String) {
+        _uiState.update { it.copy(policy = newPolicy) }
+    }
+
 }

@@ -72,8 +72,8 @@ fun AppNavigation(
     }
 }
 
-sealed class AuthScreens(val route: String) {
-    object AuthorisationScreenRoute : AuthScreens("authorise")
-    object RegistrationScreenRoute : AuthScreens("register")
-    object MainScreenRoute : AuthScreens("main")
+enum class AuthScreens(val route: String) {
+    MainScreenRoute("main"),
+    AuthorisationScreenRoute("authorise"),
+    RegistrationScreenRoute("register"),
 }
