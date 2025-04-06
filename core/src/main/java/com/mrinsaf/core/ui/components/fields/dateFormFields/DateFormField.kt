@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.components.fields
+package com.mrinsaf.core.ui.components.fields.dateFormFields
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -22,9 +22,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import com.mrinsaf.core.ui.components.fields.BasicFormField
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -32,13 +34,12 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateFormField(
-    label: String,
+    label: AnnotatedString,
     onValueChange: (String) -> Unit,
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
 
-    // Вычисляем выбранную дату из миллисекунд
     val selectedDate = datePickerState.selectedDateMillis?.let {
         convertMillisToDate(it)
     } ?: ""
@@ -58,7 +59,6 @@ fun DateFormField(
         },
     )
 
-    // Отображаем DatePicker, если showDatePicker = true
     if (showDatePicker) {
         Popup(
             onDismissRequest = { showDatePicker = false },
@@ -93,13 +93,4 @@ fun DateFormField(
 fun convertMillisToDate(millis: Long): String {
     val formatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     return formatter.format(Date(millis))
-}
-
-@Preview
-@Composable
-fun DatePickerDockedPreview() {
-    DateFormField(
-        label = "Дата",
-        onValueChange = {  }
-    )
 }

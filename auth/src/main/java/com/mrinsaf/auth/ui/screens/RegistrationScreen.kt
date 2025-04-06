@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.sp
 import com.mrinsaf.core.ui.components.MainButton
 import com.mrinsaf.core.ui.components.fields.RequiredFormField
 import com.mrinsaf.auth.ui.viewModel.registraion.RegistraionViewModel
+import com.mrinsaf.core.ui.components.fields.dateFormFields.DateFormField
+import com.mrinsaf.core.ui.components.fields.dateFormFields.RequiredDateFormField
 
 @Composable
 fun RegistrationScreen(
@@ -29,6 +31,7 @@ fun RegistrationScreen(
     val registrationUiState = registrationViewModel.uiState.collectAsState().value
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color.White)
@@ -81,6 +84,20 @@ fun RegistrationScreen(
             ) {
                 registrationViewModel.onEmailChange(it)
             }
+
+            RequiredDateFormField(
+                label = "Дата рождения",
+            ) {
+                registrationViewModel.onDatePick(it)
+            }
+
+            RequiredFormField(
+                value = registrationUiState.policy,
+                label = "Полис",
+            ) {
+                registrationViewModel.onPolicyChange(it)
+            }
+
             RequiredFormField(
                 value = registrationUiState.password,
                 label = "Пароль",
@@ -106,6 +123,8 @@ fun RegistrationScreen(
         ) {
             TODO()
         }
+
+        Spacer(modifier = Modifier.size(40.dp))
 
     }
 }
