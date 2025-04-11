@@ -3,7 +3,6 @@ package com.mrinsaf.core.data.repository
 import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.provider.OpenableColumns
@@ -17,6 +16,8 @@ import com.mrinsaf.core.data.network.UziApiService
 import com.mrinsaf.core.data.repository.local.FileStorage
 import com.mrinsaf.core.data.repository.local.TokenStorage
 import com.mrinsaf.core.ui.UiEvent
+import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
+import com.mrinsaf.core.data.models.networkResponses.RegPatientResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -270,6 +271,10 @@ class NetworkUziServiceRepository(
         TODO("Not yet implemented")
     }
 
+    override suspend fun regPatient(request: RegPatientRequest): RegPatientResponse {
+        return uziApiService.regPatient(request).body()!!
+    }
+
     private suspend fun <T> retryWithHandling(
         maxAttempts: Int,
         delayMillis: Long,
@@ -388,4 +393,3 @@ class NetworkUziServiceRepository(
 
     class TokenNotFoundException(message: String) : Exception(message)
 }
-

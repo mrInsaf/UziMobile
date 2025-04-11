@@ -15,15 +15,23 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
+import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
+import com.mrinsaf.core.data.models.networkResponses.LoginResponse
 import retrofit2.http.POST
 import retrofit2.http.Part
+import com.mrinsaf.core.data.models.networkResponses.RegPatientResponse
 import retrofit2.http.Path
 
 interface UziApiService {
+    @POST("reg/patient")
+    suspend fun regPatient(
+        @Body request: RegPatientRequest
+    ): Response<RegPatientResponse>
+
     @POST("auth/login")
     suspend fun login(
         @Body request: LoginRequest
-    ): com.mrinsaf.core.data.models.networkResponses.LoginResponse
+    ): LoginResponse
 
     @POST("auth/refresh")
     suspend fun refreshToken(

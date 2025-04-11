@@ -1,16 +1,29 @@
 package com.mrinsaf.auth.ui.viewModel.registraion
 
+import android.content.Context
 import android.util.Patterns
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
+import com.mrinsaf.core.data.repository.UziServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 import javax.inject.Inject
 import kotlin.io.path.Path
 
 @HiltViewModel
-class RegistraionViewModel @Inject constructor() : ViewModel() {
+class RegistraionViewModel @Inject constructor(
+    val repository: UziServiceRepository,
+    @ApplicationContext val context: Context,
+) : ViewModel() {
     private var _uiState = MutableStateFlow(RegistrationUiState())
     val uiState: StateFlow<RegistrationUiState>
         get() = _uiState
@@ -70,7 +83,45 @@ class RegistraionViewModel @Inject constructor() : ViewModel() {
                 blankFieldsError == null
     }
 
-    // Отдельные методы валидации
+    fun registerPatient() = viewModelScope.launch {
+        val patientData = RegPatientRequest(
+            fullname = "${uiState.value.surname} ${uiState.value.name} ${uiState.value.patronymic}".trim(),
+            policy = uiState.value.policy,
+            birthDate = convertDate(uiState.value.dateOfBirth)!!,
+            email = uiState.value.email,
+            password = uiState.value.password
+        )
+        try {
+            val patientId = repository.regPatient(patientData)
+            println("patientId: $patientId")
+            Toast.makeText(
+                context,
+                "Успешная регистрация",
+                Toast.LENGTH_SHORT
+            ).show()
+        } catch (e: Exception) {
+            println(e)
+            Toast.makeText(
+                context,
+                "Что-то пошло не так",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun convertDate(inputDate: String): String? {
+        val inputFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+        return try {
+            val parsedDate = inputFormat.parse(inputDate)
+            outputFormat.format(parsedDate!!)
+        } catch (e: Exception) {
+            println("Ошибка при парсинге даты рождения: $e")
+            null
+        }
+    }
+
     private fun validateEmail(email: String): String? {
         return if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) "Некорректный email"
         else null

@@ -5,6 +5,8 @@ import com.mrinsaf.core.data.mock.MockAuthData
 import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
 import com.mrinsaf.core.data.models.basic.Uzi
 import com.mrinsaf.core.data.models.basic.UziImage
+import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
+import com.mrinsaf.core.data.models.networkResponses.RegPatientResponse
 import com.mrinsaf.core.data.models.networkResponses.UziNodesResponse
 import okhttp3.ResponseBody
 
@@ -88,6 +90,10 @@ class MockUziServiceRepository(
     }
 
     override suspend fun getUzi(uziId: String): Uzi {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun regPatient(request: RegPatientRequest): RegPatientResponse {
         TODO("Not yet implemented")
     }
 }
