@@ -1,30 +1,23 @@
 package com.example.uzi
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
-import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationUiState
 import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationViewModel
 import com.mrinsaf.auth.ui.viewModel.registraion.RegistraionViewModel
 import com.mrinsaf.core.data.repository.local.TokenStorage
 import com.mrinsaf.core.ui.theme.UziTheme
+import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
 import com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
-import com.mrinsaf.core.data.repository.local.UserInfoStorage
-import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint

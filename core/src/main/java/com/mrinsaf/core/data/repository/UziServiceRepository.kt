@@ -42,8 +42,6 @@ interface UziServiceRepository {
 
     suspend fun downloadUziFile(uziId: String): ResponseBody
 
-    suspend fun saveUziFileAndGetCacheUri(uziId: String, responseBody: ResponseBody): Uri
-
     suspend fun getPatientUzis(patientId: String): List<Uzi>
 
     suspend fun getUziNodes(uziId: String): UziNodesResponse

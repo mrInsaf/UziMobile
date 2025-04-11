@@ -13,7 +13,6 @@ import com.mrinsaf.core.data.models.networkRequests.LoginRequest
 import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
 import com.mrinsaf.core.data.models.networkResponses.UziNodesResponse
 import com.mrinsaf.core.data.network.UziApiService
-import com.mrinsaf.core.data.repository.local.FileStorage
 import com.mrinsaf.core.data.repository.local.TokenStorage
 import com.mrinsaf.core.ui.UiEvent
 import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
@@ -187,40 +186,6 @@ class NetworkUziServiceRepository(
                 throw Exception("Ошибка запроса: ${response.code()} ${response.message()}")
             }
         }
-    }
-
-    override suspend fun saveUziFileAndGetCacheUri(uziId: String, responseBody: ResponseBody): Uri {
-        // 1. Проверка наличия контента
-        if (responseBody.contentLength() == 0L) {
-            throw Exception("Получен пустой файл")
-        }
-
-        // 2. Определение MIME-типа
-        val contentType = responseBody.contentType()?.toString()
-            ?: throw Exception("Невозможно определить MIME-тип файла")
-
-        // 3. Определение расширения
-        val extension = when {
-            contentType.contains("tiff", true) -> "tiff"
-            contentType.contains("png", true) -> "png"
-            else -> throw Exception("Неизвестный формат: $contentType")
-        }
-
-        val fileName = "$uziId.$extension"
-        println("fileName: $fileName")
-
-        // 4. Сохранение с проверкой записи
-        val fileUri = FileStorage.saveResponseBodyToStorage(context, fileName, responseBody)
-            ?: throw Exception("Ошибка сохранения файла")
-
-        // 5. Валидация результата
-        val cachedFile = File(fileUri.path?.let { Uri.decode(it) } ?: "")
-        if (!cachedFile.exists() || cachedFile.length() == 0L) {
-            cachedFile.delete()
-            throw Exception("Файл не был записан на диск")
-        }
-
-        return fileUri
     }
 
     @SuppressLint("NewApi")

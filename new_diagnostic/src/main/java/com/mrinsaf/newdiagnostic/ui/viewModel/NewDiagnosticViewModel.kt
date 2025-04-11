@@ -166,14 +166,6 @@ class NewDiagnosticViewModel @Inject constructor(
         return repository.getUziImages(diagnosticId)
     }
 
-    private suspend fun downloadAndSaveUzi(diagnosticId: String): Uri {
-        val responseBody = repository.downloadUziFile(diagnosticId)
-        println("УЗИ успешно загружено")
-        return repository.saveUziFileAndGetCacheUri(diagnosticId, responseBody).also {
-            println("Сохраненный URI УЗИ: $it")
-        }
-    }
-
     private suspend fun fetchImageNodesSegments(uziImages: List<UziImage>): List<NodesSegmentsResponse> =
         coroutineScope {
             val firstImageNodesSegments = async {

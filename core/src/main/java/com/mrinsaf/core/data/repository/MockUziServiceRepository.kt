@@ -77,10 +77,6 @@ class MockUziServiceRepository(
         TODO("Not yet implemented")
     }
 
-    override suspend fun saveUziFileAndGetCacheUri(uziId: String, responseBody: ResponseBody): Uri {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun getPatientUzis(patientId: String): List<Uzi> {
         TODO("Not yet implemented")
     }
