@@ -28,12 +28,12 @@ interface UziApiService {
         @Body request: RegPatientRequest
     ): Response<RegPatientResponse>
 
-    @POST("auth/login")
+    @POST("login")
     suspend fun login(
         @Body request: LoginRequest
     ): LoginResponse
 
-    @POST("auth/refresh")
+    @POST("refresh")
     suspend fun refreshToken(
         @Header("token") refreshToken: String // Передаем refresh token в заголовке
     ): RefreshResponse
