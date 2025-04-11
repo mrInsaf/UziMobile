@@ -18,6 +18,7 @@ import com.mrinsaf.core.R
 
 @Composable
 fun RequiredFormField(
+    modifier: Modifier = Modifier,
     value: String,
     AdditionalContent: (@Composable () -> Unit)? = null,
     label: String,
@@ -41,29 +42,12 @@ fun RequiredFormField(
         AdditionalContent = AdditionalContent,
         label = annotatedLabel,
         isError = isError || (focusedCount > 2 && value.isBlank()),
-        modifier = Modifier.onFocusChanged { focusState ->
+        modifier = modifier.onFocusChanged { focusState ->
             if (focusedCount < 3) {
                 focusedCount++
             }
         }
     ) {
         onValueChange(it)
-    }
-}
-
-@Preview
-@Composable
-fun RequiredFormFieldPreview() {
-    RequiredFormField(
-        value = "",
-        label =  "Электронная почта",
-        AdditionalContent = {
-            Text(
-                text = stringResource(R.string.passwordRestrictions),
-                modifier = Modifier
-            )
-        }
-    ) {
-
     }
 }

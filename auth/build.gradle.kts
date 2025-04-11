@@ -39,6 +39,8 @@ android {
 dependencies {
     implementation(project(":core"))
 
+    implementation(libs.androidx.foundation.layout)
+
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 

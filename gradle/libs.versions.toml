@@ -6,6 +6,7 @@ androidxDatastorePreferences = "1.1.2"
 coilCompose = "2.4.0"
 datastorePreferences = "1.1.1"
 datastorePreferencesVersion = "1.0.0"
+foundationLayout = "1.8.0-rc03"
 hiltCompiler = "2.55"
 hiltNavigationCompose = "1.2.0"
 kotlin = "2.0.0"
@@ -32,6 +33,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-datastore-preferences-v100 = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferencesVersion" }
 androidx-datastore-preferences-v112 = { module = "androidx.datastore:datastore-preferences", version.ref = "androidxDatastorePreferences" }
+androidx-foundation-layout = { module = "androidx.compose.foundation:foundation-layout", version.ref = "foundationLayout" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 beyka-android-tiffbitmapfactory = { module = "io.github.beyka:Android-TiffBitmapFactory", version.ref = "androidTiffbitmapfactoryVersion" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
