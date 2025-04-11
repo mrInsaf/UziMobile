@@ -1,13 +1,13 @@
 package com.mrinsaf.core.data.repository
 
 import android.net.Uri
-import com.mrinsaf.core.data.models.networkResponses.LoginResponse
-import com.mrinsaf.core.data.models.User
 import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
 import com.mrinsaf.core.data.models.basic.Uzi
 import com.mrinsaf.core.data.models.basic.UziImage
 import com.mrinsaf.core.data.models.networkResponses.UziNodesResponse
 import okhttp3.ResponseBody
+import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
+import com.mrinsaf.core.data.models.networkResponses.RegPatientResponse
 
 interface UziServiceRepository {
     suspend fun checkAuthorisation(): Boolean
@@ -50,4 +50,5 @@ interface UziServiceRepository {
 
     suspend fun getUzi(uziId: String): Uzi
 
+    suspend fun regPatient(request: RegPatientRequest): RegPatientResponse
 }
