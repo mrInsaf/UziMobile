@@ -40,8 +40,6 @@ interface UziServiceRepository {
 
 //    suspend fun saveUziImageAndGetCacheUri(uziId: String, imageId: String): Uri
 
-    suspend fun downloadUziFile(uziId: String): ResponseBody
-
     suspend fun getPatientUzis(patientId: String): List<Uzi>
 
     suspend fun getUziNodes(uziId: String): UziNodesResponse
