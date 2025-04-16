@@ -50,14 +50,14 @@ fun RegistrationScreen(
 ) {
     val registrationUiState = registrationViewModel.uiState.collectAsState().value
 
-    val imeState = rememberImeState()
-    val scrollState = rememberScrollState()
-
-    LaunchedEffect(key1 = imeState.value) {
-        if (imeState.value){
-            scrollState.animateScrollTo(scrollState.maxValue, tween(300))
-        }
-    }
+//    val imeState = rememberImeState()
+//    val scrollState = rememberScrollState()
+//
+//    LaunchedEffect(key1 = imeState.value) {
+//        if (imeState.value){
+//            scrollState.animateScrollTo(scrollState.maxValue, tween(300))
+//        }
+//    }
 
 
     Column(
@@ -66,7 +66,7 @@ fun RegistrationScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color.White)
-            .verticalScroll(scrollState)
+            .verticalScroll(rememberScrollState())
             .imePadding()
             .imeNestedScroll(),
     ) {
