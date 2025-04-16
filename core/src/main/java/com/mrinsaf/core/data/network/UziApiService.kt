@@ -39,55 +39,55 @@ interface UziApiService {
     ): RefreshResponse
 
     @Multipart
-    @POST("uzi/uzis")
+    @POST("uzi")
     suspend fun createUzi(
         @Header("token") accessToken: String, // Токен доступа
         @Part uziFile: MultipartBody.Part, // Файл УЗИ
         @Part("projection") projection: RequestBody, // Проекция УЗИ
-        @Part("patient_id") patientId: RequestBody, // ID пациента
+        @Part("external_id ") externalId: RequestBody, // ID пациента
         @Part("device_id") deviceId: RequestBody // ID устройства
     ): Response<String>
-
-    @GET("uzi/uzis/{id}/images")
-    suspend fun getUziImages(
-        @Header("token") accessToken: String, // Access token в заголовке
-        @Path("id") uziId: String // ID УЗИ в пути
-    ): List<UziImage>?
-
-    @GET("uzi/images/{id}/nodes-segments")
-    suspend fun getImageNodesAndSegments(
-        @Header("token") accessToken: String, // Токен в заголовке
-        @Path("id") imageId: String // ID изображения в URL
-    ): NodesSegmentsResponse
-
-    @GET("download/uzi/{uzi_id}/image/{image_id}")
-    suspend fun downloadUziImage(
-        @Header("token") token: String,
-        @Path("uzi_id") uziId: String,
-        @Path("image_id") imageId: String
-    ): Response<ResponseBody> // ResponseBody для бинарных данных
-
-    @GET("download/uzi/{id}")
-    suspend fun downloadUzi(
-        @Header("token") token: String,
-        @Path("id") uziId: String
-    ): Response<ResponseBody> // ResponseBody для получения бинарных данных
-
-    @GET("uzi/patient/{id}/uzis")
-    suspend fun getPatientUzis(
-        @Header("token") accessToken: String, // Токен доступа
-        @Path("id") patientId: String // ID пациента
-    ): UziListResponse
-
-    @GET("uzi/uzis/{id}/nodes")
-    suspend fun getUziNodes(
-        @Path("id") uziId: String,
-        @Header("token") accessToken: String
-    ): UziNodesResponse
 
     @GET("uzi/uzis/{id}")
     suspend fun getUzi(
         @Header("token") accessToken: String,
         @Path("id") uziId: String
     ): Uzi
+
+    @GET("uzis/external/{id}")
+    suspend fun getUzisByExternalId(
+        @Header("token") accessToken: String, // Токен доступа
+        @Path("id") externalId: String // ID пациента
+    ): UziListResponse
+
+    @GET("uzis/external/{id}")
+    suspend fun getUzisByAuthorId(
+        @Header("token") accessToken: String,
+        @Path("id") authorId: String
+    ): UziListResponse
+
+    @GET("uzi/{id}/images")
+    suspend fun getUziImages(
+        @Header("token") accessToken: String, // Access token в заголовке
+        @Path("id") uziId: String // ID УЗИ в пути
+    ): List<UziImage>?
+
+    @GET("uzi/image/{id}/nodes-segments")
+    suspend fun getImageNodesAndSegments(
+        @Header("token") accessToken: String, // Токен в заголовке
+        @Path("id") imageId: String // ID изображения в URL
+    ): NodesSegmentsResponse
+
+    @GET("uzi/{id}/nodes")
+    suspend fun getUziNodes(
+        @Path("id") uziId: String,
+        @Header("token") accessToken: String
+    ): UziNodesResponse
+
+    @GET("download/{uzi_id}/{image_id}")
+    suspend fun downloadUziImage(
+        @Header("token") token: String,
+        @Path("uzi_id") uziId: String,
+        @Path("image_id") imageId: String
+    ): Response<ResponseBody>
 }

@@ -95,7 +95,7 @@ class NetworkUziServiceRepository(
         println("я в репозитории")
         return safeApiCall { accessToken ->
             println("получаю юри")
-            val uziFile = File(getRealPathFromURI(context, uziUris)) // TODO: Добавить обработку нескольких файлов
+            val uziFile = File(getRealPathFromURI(context, uziUris))
             println("получил юри")
             val requestFile = uziFile.asRequestBody("image/*".toMediaTypeOrNull())
             val uziFilePart = MultipartBody.Part.createFormData("file", uziFile.name, requestFile)
@@ -108,18 +108,16 @@ class NetworkUziServiceRepository(
                 accessToken = accessToken,
                 uziFile = uziFilePart,
                 projection = projectionRequestBody,
-                patientId = patientIdRequestBody,
+                externalId = patientIdRequestBody,
                 deviceId = deviceIdRequestBody
             )
 
             if (response.isSuccessful) {
                 response.body() ?: "Success"
             } else {
-                // Если ошибка 403, выбрасываем HttpException
                 if (response.code() == 403) {
                     throw HttpException(response)
                 }
-                // Для других ошибок выбрасываем обычное исключение
                 throw Exception("Error: ${response.code()} - ${response.message()}")
             }
         }
@@ -175,19 +173,6 @@ class NetworkUziServiceRepository(
 //            ?: throw Exception("Не удалось сохранить файл в кэш.")
 //    }
 
-    override suspend fun downloadUziFile(uziId: String): ResponseBody {
-        return retryWithHandling(maxAttempts = 10, delayMillis = 2000L) { accessToken ->
-            val response = uziApiService.downloadUzi(accessToken, uziId)
-            println(response.body())
-
-            if (response.isSuccessful && response.body() != null) {
-                response.body()!!
-            } else {
-                throw Exception("Ошибка запроса: ${response.code()} ${response.message()}")
-            }
-        }
-    }
-
     @SuppressLint("NewApi")
     private fun parseDate(dateString: String): String {
         val formatter = DateTimeFormatter.ISO_DATE_TIME
@@ -198,7 +183,7 @@ class NetworkUziServiceRepository(
 
     override suspend fun getPatientUzis(patientId: String): List<Uzi> {
         return safeApiCall { accessToken ->
-            uziApiService.getPatientUzis(accessToken, patientId)
+            uziApiService.getUzisByExternalId(accessToken, patientId)
         }.uzis.map { uzi ->
             uzi.copy(
                 createAt = parseDate(uzi.createAt).toString()
