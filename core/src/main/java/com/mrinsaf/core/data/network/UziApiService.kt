@@ -17,6 +17,7 @@ import retrofit2.http.Header
 import retrofit2.http.Multipart
 import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
 import com.mrinsaf.core.data.models.networkResponses.LoginResponse
+import com.mrinsaf.core.data.models.networkResponses.PostUziResponse
 import retrofit2.http.POST
 import retrofit2.http.Part
 import com.mrinsaf.core.data.models.networkResponses.RegPatientResponse
@@ -44,11 +45,11 @@ interface UziApiService {
         @Header("Authorization") accessToken: String, // Токен доступа
         @Part uziFile: MultipartBody.Part, // Файл УЗИ
         @Part("projection") projection: RequestBody, // Проекция УЗИ
-        @Part("external_id ") externalId: RequestBody, // ID пациента
+        @Part("external_id") externalId: RequestBody, // ID пациента
         @Part("device_id") deviceId: RequestBody // ID устройства
-    ): Response<String>
+    ): Response<PostUziResponse>
 
-    @GET("uzi/uzis/{id}")
+    @GET("uzi/{id}")
     suspend fun getUzi(
         @Header("Authorization") accessToken: String,
         @Path("id") uziId: String

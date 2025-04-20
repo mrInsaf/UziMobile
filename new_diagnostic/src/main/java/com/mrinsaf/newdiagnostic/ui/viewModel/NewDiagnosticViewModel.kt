@@ -61,6 +61,7 @@ class NewDiagnosticViewModel @Inject constructor(
 
     fun onPhotoPickResult(uri: Uri) {
         val fileName = getFileName(uri) ?: "Без названия"
+        println(fileName)
         _uiState.update {
             it.copy(
                 selectedImageUri = uri,
@@ -72,52 +73,76 @@ class NewDiagnosticViewModel @Inject constructor(
     fun onDiagnosticStart(userId: String = "1") {
         uploadDiagnosticJob = viewModelScope.launch {
             try {
-                updateUiBeforeDiagnosticStart()
+                println("=== Начало диагностики ===")
 
+                updateUiBeforeDiagnosticStart()
+                println("UI обновлен перед стартом диагностики")
+
+                println("Создание диагностической записи...")
                 val diagnosticId = createDiagnostic().also {
-                    _uiState.update { it.copy(isUziPosted = true) }
+                    println("Diagnostic ID получен: $it")
+                    _uiState.update { state ->
+                        state.copy(isUziPosted = true)
+                    }
                 }
-//            val diagnosticId = "f00941dd-3769-497a-a813-cc457f6053f9"
+
+//                 val diagnosticId = "d5b076a2-2881-43ee-b308-86f686ff9471"
+                println("Используется Diagnostic ID: $diagnosticId")
+
+                println("Получение информации о УЗИ...")
                 val uziInformation = repository.getUzi(diagnosticId)
+                println("Информация о УЗИ получена: $uziInformation")
+
+                println("Получение списка изображений УЗИ...")
                 val uziImages = fetchUziImages(diagnosticId)
+                println("Найдено изображений: ${uziImages.size}")
 
                 uziImages.forEachIndexed { i, image ->
-                    println("скачиваю картинку $i")
-                    val imageId = image.id
+                    println("Обработка изображения $i (ID: ${image.id})")
 
-                    // Пропускаем скачивание, если картинка уже есть в Map
-                    if (_uiState.value.uziImagesBmp.containsKey(imageId)) {
-                        println("Картинка с id $imageId уже скачана, пропускаем")
+                    if (_uiState.value.uziImagesBmp.containsKey(image.id)) {
+                        println("Картинка с ID ${image.id} уже загружена, пропуск")
                         return@forEachIndexed
                     }
 
-                    val responseBody = repository.downloadUziImage(diagnosticId, imageId)
+                    println("Скачивание изображения ${image.id}...")
+                    val responseBody = repository.downloadUziImage(diagnosticId, image.id)
+                    println("Ответ от сервера: ${responseBody.contentType()} (${responseBody.contentLength()} байт)")
+
                     val bitmap = responseBody.byteStream().use { inputStream ->
                         BitmapFactory.decodeStream(inputStream)
                     }
+                    println("Битмап создан: ${bitmap.width}x${bitmap.height} пикселей")
 
                     _uiState.update { currentState ->
                         currentState.copy(
-                            uziImagesBmp = currentState.uziImagesBmp + (imageId to bitmap)
+                            uziImagesBmp = currentState.uziImagesBmp + (image.id to bitmap)
                         )
                     }
+                    println("Изображение ${image.id} добавлено в состояние UI")
                 }
 
+                println("Получение сегментов изображений...")
                 val uziImageNodesSegments = fetchImageNodesSegments(uziImages)
+                println("Сегменты получены: ${uziImageNodesSegments.size} элементов")
 
+                println("Обновление UI после завершения диагностики...")
                 updateUiAfterDiagnosticCompletion(
-                    diagnosticId, uziImages, uziImageNodesSegments,
-                    uziInformation = uziInformation
+                    diagnosticId,
+                    uziImages,
+                    uziImageNodesSegments,
+                    uziInformation
                 )
+                println("=== Диагностика успешно завершена ===")
 
             } catch (e: HttpException) {
+                println("=== Ошибка HTTP: ${e.code()} ${e.message} ===")
+                e.printStackTrace()
                 handleHttpException(e)
+
             } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(
-                        diagnosticProcessState = DiagnosticProcessState.Failure
-                    )
-                }
+                println("=== Неизвестная ошибка: ${e.javaClass.simpleName} ===")
+                e.printStackTrace()
                 handleGeneralException(e)
             }
         }
@@ -232,7 +257,8 @@ class NewDiagnosticViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 currentScreenIndex = 0,
-                selectedImageUri = null
+                selectedImageUri = null,
+                selectedImageName = null,
             )
         }
         println("Ошибка HTTP: $e")

@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 data class Node(
     val id: String,
     val ai: Boolean,
-    val validation: String,
-    val description: String,
+    val validation: String? = null,
+    val description: String? = null,
     @SerialName("uzi_id") val uziId: String,
     @SerialName("tirads_23") val tirads23: Double,
     @SerialName("tirads_4") val tirads4: Double,

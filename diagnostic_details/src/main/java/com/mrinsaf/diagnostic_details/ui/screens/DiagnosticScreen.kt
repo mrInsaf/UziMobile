@@ -150,7 +150,7 @@ fun DiagnosticScreen(
                                 uiState.selectedUziNodesAndSegments.asSequence()
                                     .flatMap { it.segments.asSequence() }
                                     .filter { it.image_id == imageId }
-                                    .map { it.getContorPoints() }
+                                    .map { it.contor }
                                     .flatten()
                                     .toList()
                             } catch (e: Exception) {

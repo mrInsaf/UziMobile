@@ -97,7 +97,7 @@ class NetworkUziServiceRepository(
             println("получаю юри")
             val uziFile = File(getRealPathFromURI(context, uziUris))
             println("получил юри")
-            val requestFile = uziFile.asRequestBody("image/*".toMediaTypeOrNull())
+            val requestFile = uziFile.asRequestBody("image/tiff".toMediaTypeOrNull())
             val uziFilePart = MultipartBody.Part.createFormData("file", uziFile.name, requestFile)
 
             val projectionRequestBody = projection.toRequestBody(MultipartBody.FORM)
@@ -113,7 +113,8 @@ class NetworkUziServiceRepository(
             )
 
             if (response.isSuccessful) {
-                response.body() ?: "Success"
+                println("$response, ${response.body()}")
+                response.body()?.id ?: "Success"
             } else {
                 throw HttpException(response)
             }
