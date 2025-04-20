@@ -4,8 +4,11 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.auth0.jwt.JWT
+import com.auth0.jwt.exceptions.JWTDecodeException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.util.Date
 
 
 object TokenStorage {
@@ -54,6 +57,26 @@ object TokenStorage {
             .map { preferences ->
                 preferences[REFRESH_TOKEN_KEY]
             }
+    }
+
+    fun validateToken(token: String): Boolean {
+        return try {
+            // Декодируем токен
+            val jwt = JWT.decode(token)
+
+            // Проверяем время истечения
+            val expiresAt = jwt.expiresAt
+            if (expiresAt != null && expiresAt.after(Date())) {
+                println("Токен валиден до: $expiresAt")
+                true
+            } else {
+                println("Токен истек!")
+                false
+            }
+        } catch (e: JWTDecodeException) {
+            println("Ошибка декодирования токена: ${e.message}")
+            false
+        }
     }
 
     // Очистка всех токенов
