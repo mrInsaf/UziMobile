@@ -32,8 +32,6 @@ fun UploadImage(
 ) {
     val uiState = newDiagnosticViewModel.uiState.collectAsState()
 
-    println("UploadImage: uiState = $uiState")
-
     BackHandler {
         println("UploadImage: BackHandler triggered")
         onAndroidBackClick()
@@ -69,7 +67,6 @@ fun UploadImage(
             text = "Начать диагностику",
             enabled = uiState.value.selectedImageUri != null
         ) {
-            println("UploadImage: MainButton clicked (enabled=${uiState.value.selectedImageUri != null})")
             onStartDiagnosticClick()
         }
     }

@@ -72,9 +72,7 @@ fun NewDiagnosticNavigation(
                     navController = navController,
                     startDestination = NewDiagnosticScreen.ImageLoadRoute.route
                 ) {
-                    println("UploadImage")
                     composable(NewDiagnosticScreen.ImageLoadRoute.route) {
-                        println("yoo")
                         UploadImage(
                             onStartDiagnosticClick = {
                                 navController.navigate(

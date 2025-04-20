@@ -26,7 +26,7 @@ fun AppNavigation(
     registrationViewModel: RegistraionViewModel,
     newDiagnosticViewModel: NewDiagnosticViewModel,
     diagnosticViewModel: DiagnosticViewModel,
-    diagnosticListViewModel: com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel,
+    diagnosticListViewModel: DiagnosticListViewModel,
     patientId: String,
 ) {
     NavHost(

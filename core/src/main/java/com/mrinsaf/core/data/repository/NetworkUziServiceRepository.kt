@@ -115,10 +115,7 @@ class NetworkUziServiceRepository(
             if (response.isSuccessful) {
                 response.body() ?: "Success"
             } else {
-                if (response.code() == 403) {
-                    throw HttpException(response)
-                }
-                throw Exception("Error: ${response.code()} - ${response.message()}")
+                throw HttpException(response)
             }
         }
     }
@@ -268,38 +265,45 @@ class NetworkUziServiceRepository(
         requireNotNull(accessToken) { "Access token is missing" }
 
         return try {
-            apiCall(accessToken)
+            apiCall("Bearer $accessToken")
         } catch (e: HttpException) {
-            if (e.code() == 401 || e.code() == 403) {
+            val errorBody = e.response()?.errorBody()?.string() ?: "No error body"
+            val errorMessage = errorBody.takeIf { it.isNotBlank() } ?: e.message()
+            println("http ошибка")
+            val isTokenError = when(e.code()) {
+                401 -> true
+                403 -> true
+                500 -> {
+                    errorMessage.contains("token is expired", ignoreCase = true)
+                }
+                else -> false
+            }
+
+            if (isTokenError) {
                 println("Похоже токен истек...")
                 val refreshToken = TokenStorage.getRefreshToken(context).firstOrNull()
-
                 requireNotNull(refreshToken) { "Refresh token is missing" }
 
-                val newTokens = try {
-                    println("Запросил новый токен...")
+                return try {
                     val refreshResponse = uziApiService.refreshToken(refreshToken)
-
                     TokenStorage.saveAccessToken(context, refreshResponse.accessKey)
                     TokenStorage.saveRefreshToken(context, refreshResponse.refreshKey)
-
-                    refreshResponse.accessKey
+                    apiCall("Bearer ${refreshResponse.accessKey}") // ← Повтор с новым токеном
                 } catch (refreshException: Exception) {
-                    println("Ошибка при обновлении токена: ${refreshException.message}")
                     TokenStorage.clearTokens(context)
                     onTokenExpiration()
-                    ""
+                    throw refreshException // ← Пробрасываем ошибку
                 }
-
-                return apiCall(newTokens)
             } else {
-                println("Ошибка запроса: ${e.message}")
+                println("Ошибка запроса: ${e.code()} - ${e.message()}")
                 throw e
             }
         } catch (e: Exception) {
-            println("Не HTTP ошибка: ${e::class.java.simpleName} - ${e.message}")
+            println("Не http ошибка")
+            println("Ошибка: ${e.javaClass.simpleName}")
             throw e
         }
+
     }
 
     private fun onTokenExpiration() {
