@@ -26,11 +26,11 @@ class DiagnosticListViewModel @Inject constructor(
                 val nodesWithUziIds = mutableListOf<NodesWithUziId>()
                 uziList.forEach { uzi ->
                     val id = uzi.id
-                    val nodesResponse = repository.getUziNodes(id)
+                    val nodes = repository.getUziNodes(id)
                     nodesWithUziIds.add(
                         NodesWithUziId(
                             uziId = id,
-                            nodes = nodesResponse.nodes
+                            nodes = nodes
                         )
                     )
                 }
