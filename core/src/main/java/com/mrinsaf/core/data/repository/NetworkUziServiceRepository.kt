@@ -7,11 +7,11 @@ import android.net.Uri
 import android.os.Build
 import android.provider.OpenableColumns
 import androidx.annotation.RequiresApi
+import com.mrinsaf.core.data.models.basic.Node
 import com.mrinsaf.core.data.models.basic.Uzi
 import com.mrinsaf.core.data.models.basic.UziImage
 import com.mrinsaf.core.data.models.networkRequests.LoginRequest
 import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
-import com.mrinsaf.core.data.models.networkResponses.UziNodesResponse
 import com.mrinsaf.core.data.network.UziApiService
 import com.mrinsaf.core.data.repository.local.TokenStorage
 import com.mrinsaf.core.ui.UiEvent
@@ -182,15 +182,14 @@ class NetworkUziServiceRepository(
     override suspend fun getPatientUzis(patientId: String): List<Uzi> {
         return safeApiCall { accessToken ->
             uziApiService.getUzisByExternalId(accessToken, patientId)
-        }.uzis.map { uzi ->
+        }.map { uzi ->
             uzi.copy(
                 createAt = parseDate(uzi.createAt).toString()
             )
         }
-//            .also { println(it) }
     }
 
-    override suspend fun getUziNodes(uziId: String): UziNodesResponse {
+    override suspend fun getUziNodes(uziId: String): List<Node> {
         return safeApiCall { accessToken ->
             uziApiService.getUziNodes(uziId, accessToken)
         }

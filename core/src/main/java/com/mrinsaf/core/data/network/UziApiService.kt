@@ -1,12 +1,12 @@
 package com.mrinsaf.core.data.network
 
+import com.mrinsaf.core.data.models.basic.Node
 import com.mrinsaf.core.data.models.networkRequests.LoginRequest
 import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
 import com.mrinsaf.core.data.models.networkResponses.RefreshResponse
 import com.mrinsaf.core.data.models.basic.Uzi
 import com.mrinsaf.core.data.models.basic.UziImage
 import com.mrinsaf.core.data.models.networkResponses.UziListResponse
-import com.mrinsaf.core.data.models.networkResponses.UziNodesResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -59,7 +59,7 @@ interface UziApiService {
     suspend fun getUzisByExternalId(
         @Header("Authorization") accessToken: String, // Токен доступа
         @Path("id") externalId: String // ID пациента
-    ): UziListResponse
+    ): List<Uzi>
 
     @GET("uzis/external/{id}")
     suspend fun getUzisByAuthorId(
@@ -83,7 +83,7 @@ interface UziApiService {
     suspend fun getUziNodes(
         @Path("id") uziId: String,
         @Header("Authorization") accessToken: String
-    ): UziNodesResponse
+    ): List<Node>
 
     @GET("download/{uzi_id}/{image_id}")
     suspend fun downloadUziImage(

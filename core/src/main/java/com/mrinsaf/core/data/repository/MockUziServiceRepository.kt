@@ -2,12 +2,12 @@ package com.mrinsaf.core.data.repository
 
 import android.net.Uri
 import com.mrinsaf.core.data.mock.MockAuthData
+import com.mrinsaf.core.data.models.basic.Node
 import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
 import com.mrinsaf.core.data.models.basic.Uzi
 import com.mrinsaf.core.data.models.basic.UziImage
 import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
 import com.mrinsaf.core.data.models.networkResponses.RegPatientResponse
-import com.mrinsaf.core.data.models.networkResponses.UziNodesResponse
 import okhttp3.ResponseBody
 
 class MockUziServiceRepository(
@@ -77,7 +77,7 @@ class MockUziServiceRepository(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUziNodes(uziId: String): UziNodesResponse {
+    override suspend fun getUziNodes(uziId: String): List<Node> {
         TODO("Not yet implemented")
     }
 
