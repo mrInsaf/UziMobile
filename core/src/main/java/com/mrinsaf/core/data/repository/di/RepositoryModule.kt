@@ -2,8 +2,11 @@ package com.mrinsaf.core.data.repository.di
 
 import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.mrinsaf.core.data.network.AuthApiService
+import com.mrinsaf.core.data.network.AuthInterceptor
+import com.mrinsaf.core.data.network.TokenAuthenticator
+import com.mrinsaf.core.data.network.TokenRefresher
 import com.mrinsaf.core.data.network.UziApiService
-import com.mrinsaf.core.data.repository.MockUziServiceRepository
 import com.mrinsaf.core.data.repository.NetworkUziServiceRepository
 import com.mrinsaf.core.data.repository.UziServiceRepository
 import dagger.Module
@@ -25,20 +28,77 @@ object RepositoryModule {
 
     private const val BASE_URL = "http://194.226.121.145:8080/api/v1/"
     private val json = Json { ignoreUnknownKeys = true }
-    private val logging = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
+
+    @Provides
+    @Singleton
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
     }
-    private val client = OkHttpClient.Builder()
-        .addInterceptor(logging)
-        .cache(null)
+
+    @Provides
+    @Singleton
+    fun provideAuthInterceptor(@ApplicationContext context: Context): AuthInterceptor {
+        return AuthInterceptor(context)
+    }
+
+    @Provides
+    @Singleton
+    @Named("AuthRetrofit")
+    fun provideAuthRetrofit(
+        loggingInterceptor: HttpLoggingInterceptor
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+        .client(OkHttpClient.Builder().addInterceptor(loggingInterceptor).build())
         .build()
 
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit = Retrofit.Builder()
+    fun provideAuthApiService(
+        @Named("AuthRetrofit") retrofit: Retrofit
+    ): AuthApiService =
+        retrofit.create(AuthApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideTokenRefresher(@ApplicationContext context: Context, apiService: AuthApiService): TokenRefresher {
+        return TokenRefresher(
+            context = context,
+            authApiService = apiService
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideTokenAuthenticator(tokenRefresher: TokenRefresher): TokenAuthenticator {
+        return TokenAuthenticator(tokenRefresher)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor,
+        authInterceptor: AuthInterceptor,
+        tokenAuthenticator: TokenAuthenticator,
+    ): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .addInterceptor(authInterceptor)
+            .authenticator(tokenAuthenticator)
+            .cache(null)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(
+        okHttpClient: OkHttpClient
+    ): Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-        .client(client)
+        .client(okHttpClient)
         .build()
 
     @Provides
@@ -49,8 +109,13 @@ object RepositoryModule {
     @Singleton
     fun provideUziServiceRepository(
         uziApiService: UziApiService,
+        authApiService: AuthApiService,
         @ApplicationContext context: Context
     ): UziServiceRepository =
-        NetworkUziServiceRepository(uziApiService, context)
+        NetworkUziServiceRepository(
+            uziApiService,
+            authApiService,
+            context
+        )
 //        MockUziServiceRepository()
 }
