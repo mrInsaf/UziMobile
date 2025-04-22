@@ -9,8 +9,10 @@ import android.provider.OpenableColumns
 import androidx.annotation.RequiresApi
 import com.mrinsaf.core.data.models.basic.Node
 import com.mrinsaf.core.data.models.basic.Uzi
+import com.mrinsaf.core.data.models.basic.UziDevice
 import com.mrinsaf.core.data.models.basic.UziImage
 import com.mrinsaf.core.data.models.networkRequests.LoginRequest
+import com.mrinsaf.core.data.models.networkRequests.RefreshRequest
 import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
 import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
 import com.mrinsaf.core.data.models.networkResponses.RegPatientResponse
@@ -74,7 +76,7 @@ class NetworkUziServiceRepository(
         val refreshToken = TokenStorage.getRefreshToken(context).first()
 
         if (refreshToken != null) {
-            val response = authApiService.refreshToken(refreshToken)
+            val response = authApiService.refreshToken(RefreshRequest(refreshToken))
 
             response.accessToken.let {
                 TokenStorage.saveAccessToken(context, it)
@@ -218,6 +220,20 @@ class NetworkUziServiceRepository(
 
     override suspend fun regPatient(request: RegPatientRequest): RegPatientResponse {
         return authApiService.regPatient(request).body()!!
+    }
+
+    override suspend fun getUziDevices(): List<UziDevice> {
+        return try {
+            val response = uziApiService.getUziDevices()
+            if (response.isSuccessful) {
+                response.body() ?: emptyList()
+            } else {
+                throw Exception("Ошибка при получении списка устройств: ${response.code()}")
+            }
+        } catch (e: Exception) {
+            println("Ошибка сети: ${e.message}")
+            emptyList()
+        }
     }
 
     private suspend fun <T> retryWithHandling(

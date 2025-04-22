@@ -35,8 +35,6 @@ fun RequiredFormField(
     var wasFocused by remember { mutableStateOf(false) }
     var focusedCount by remember { mutableStateOf(0) }
 
-    println("$label ${focusedCount}")
-
     BasicFormField(
         value = value,
         AdditionalContent = AdditionalContent,

@@ -86,6 +86,20 @@ object RepositoryModule {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor(authInterceptor)
+            .addNetworkInterceptor { chain ->
+                val response = chain.proceed(chain.request())
+                val bodyStr = response.peekBody(Long.MAX_VALUE).string()
+                return@addNetworkInterceptor  if (response.code == 500 && bodyStr.contains("parse token", ignoreCase = true)) {
+                    response
+                        .newBuilder()
+                        .code(401)
+                        .header("WWW-Authenticate", "Bearer")
+                        .message("Unauthorized")
+                        .build()
+                } else {
+                    response
+                }
+            }
             .authenticator(tokenAuthenticator)
             .cache(null)
             .build()
