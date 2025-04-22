@@ -11,12 +11,13 @@ import com.mrinsaf.core.data.models.basic.Node
 import com.mrinsaf.core.data.models.basic.Uzi
 import com.mrinsaf.core.data.models.basic.UziImage
 import com.mrinsaf.core.data.models.networkRequests.LoginRequest
+import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
 import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
+import com.mrinsaf.core.data.models.networkResponses.RegPatientResponse
+import com.mrinsaf.core.data.network.AuthApiService
 import com.mrinsaf.core.data.network.UziApiService
 import com.mrinsaf.core.data.repository.local.TokenStorage
 import com.mrinsaf.core.ui.UiEvent
-import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
-import com.mrinsaf.core.data.models.networkResponses.RegPatientResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -24,7 +25,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -40,6 +40,7 @@ import java.time.format.DateTimeFormatter
 
 class NetworkUziServiceRepository(
     private val uziApiService: UziApiService,
+    private val authApiService: AuthApiService,
     private val context: Context
 ): UziServiceRepository {
 
@@ -53,7 +54,7 @@ class NetworkUziServiceRepository(
     }
 
     override suspend fun submitLogin(email: String, password: String): com.mrinsaf.core.data.models.networkResponses.LoginResponse {
-        val loginResponse = uziApiService.login(
+        val loginResponse = authApiService.login(
             request = LoginRequest(
                 email = email,
                 password = password
@@ -73,12 +74,13 @@ class NetworkUziServiceRepository(
         val refreshToken = TokenStorage.getRefreshToken(context).first()
 
         if (refreshToken != null) {
-            val response = uziApiService.refreshToken(refreshToken)
+            val response = authApiService.refreshToken(refreshToken)
 
-            response.accessKey.let {
+            response.accessToken.let {
                 TokenStorage.saveAccessToken(context, it)
             }
-            response.refreshKey.let {
+
+            response.refreshToken.let {
                 TokenStorage.saveRefreshToken(context, it)
             }
         } else {
@@ -93,7 +95,7 @@ class NetworkUziServiceRepository(
         deviceId: String
     ): String {
         println("я в репозитории")
-        return safeApiCall { accessToken ->
+        return safeApiCall {
             println("получаю юри")
             val uziFile = File(getRealPathFromURI(context, uziUris))
             println("получил юри")
@@ -105,7 +107,6 @@ class NetworkUziServiceRepository(
             val deviceIdRequestBody = deviceId.toRequestBody(MultipartBody.FORM)
             println("отправляю узи через апи ")
             val response = uziApiService.createUzi(
-                accessToken = accessToken,
                 uziFile = uziFilePart,
                 projection = projectionRequestBody,
                 externalId = patientIdRequestBody,
@@ -122,11 +123,8 @@ class NetworkUziServiceRepository(
     }
 
     override suspend fun getUziImages(uziId: String): List<UziImage> {
-        return retryWithHandling(maxAttempts = 50, delayMillis = 5000L) { accessToken ->
-            val result = uziApiService.getUziImages(
-                accessToken = accessToken,
-                uziId = uziId
-            )
+        return retryWithHandling(maxAttempts = 50, delayMillis = 5000L) {
+            val result = uziApiService.getUziImages(uziId = uziId)
 
             if (!result.isNullOrEmpty()) {
                 result
@@ -140,8 +138,8 @@ class NetworkUziServiceRepository(
         val maxAttempts = if (diagnosticCompleted) 1 else 50
         val delayMillis = 5000L
 
-        return retryWithHandling(maxAttempts = maxAttempts, delayMillis = delayMillis) { accessToken ->
-            val response = uziApiService.getImageNodesAndSegments(accessToken, imageId)
+        return retryWithHandling(maxAttempts = maxAttempts, delayMillis = delayMillis) {
+            val response = uziApiService.getImageNodesAndSegments(imageId)
 
             if (response.nodes.isNotEmpty() && response.segments.isNotEmpty()) {
                 response
@@ -152,8 +150,8 @@ class NetworkUziServiceRepository(
     }
 
     override suspend fun downloadUziImage(uziId: String, imageId: String): ResponseBody {
-        return retryWithHandling(maxAttempts = 3, delayMillis = 2000L) { accessToken ->
-            val response = uziApiService.downloadUziImage(accessToken, uziId, imageId)
+        return retryWithHandling(maxAttempts = 3, delayMillis = 2000L) {
+            val response = uziApiService.downloadUziImage(uziId, imageId)
 
             if (response.isSuccessful && response.body() != null) {
                 response.body()!!
@@ -180,8 +178,8 @@ class NetworkUziServiceRepository(
 
 
     override suspend fun getPatientUzis(patientId: String): List<Uzi> {
-        return safeApiCall { accessToken ->
-            uziApiService.getUzisByExternalId(accessToken, patientId)
+        return safeApiCall {
+            uziApiService.getUzisByExternalId(patientId)
         }.map { uzi ->
             uzi.copy(
                 createAt = parseDate(uzi.createAt).toString()
@@ -190,15 +188,15 @@ class NetworkUziServiceRepository(
     }
 
     override suspend fun getUziNodes(uziId: String): List<Node> {
-        return safeApiCall { accessToken ->
-            uziApiService.getUziNodes(uziId, accessToken)
+        return safeApiCall {
+            uziApiService.getUziNodes(uziId)
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getUzi(uziId: String): Uzi {
-        return safeApiCall { token ->
-            val uzi = uziApiService.getUzi(token, uziId)
+        return safeApiCall {
+            val uzi = uziApiService.getUzi(uziId)
             uzi.copy(createAt = formatDate(uzi.createAt)) // Преобразуем дату перед возвратом
         }
     }
@@ -219,13 +217,13 @@ class NetworkUziServiceRepository(
     }
 
     override suspend fun regPatient(request: RegPatientRequest): RegPatientResponse {
-        return uziApiService.regPatient(request).body()!!
+        return authApiService.regPatient(request).body()!!
     }
 
     private suspend fun <T> retryWithHandling(
         maxAttempts: Int,
         delayMillis: Long,
-        apiCall: suspend (String) -> T
+        apiCall: suspend () -> T
     ): T {
         repeat(maxAttempts) { attempt ->
             try {
@@ -253,51 +251,13 @@ class NetworkUziServiceRepository(
 
 
     private suspend fun <T> safeApiCall(
-        apiCall: suspend (String) -> T
+        apiCall: suspend () -> T
     ): T {
-        val accessToken = try {
-            TokenStorage.getAccessToken(context).firstOrNull()
-        } catch (e: Exception) {
-            println(e)
-            throw e
-        }
-
-        requireNotNull(accessToken) { "Access token is missing" }
-
         return try {
-            apiCall("Bearer $accessToken")
+            apiCall()
         } catch (e: HttpException) {
-            val errorBody = e.response()?.errorBody()?.string() ?: "No error body"
-            val errorMessage = errorBody.takeIf { it.isNotBlank() } ?: e.message()
             println("http ошибка")
-            val isTokenError = when(e.code()) {
-                401 -> true
-                403 -> true
-                500 -> {
-                    errorMessage.contains("token is expired", ignoreCase = true)
-                }
-                else -> false
-            }
-
-            if (isTokenError) {
-                println("Похоже токен истек...")
-                val refreshToken = TokenStorage.getRefreshToken(context).firstOrNull()
-                requireNotNull(refreshToken) { "Refresh token is missing" }
-
-                return try {
-                    val refreshResponse = uziApiService.refreshToken(refreshToken)
-                    TokenStorage.saveAccessToken(context, refreshResponse.accessKey)
-                    TokenStorage.saveRefreshToken(context, refreshResponse.refreshKey)
-                    apiCall("Bearer ${refreshResponse.accessKey}") // ← Повтор с новым токеном
-                } catch (refreshException: Exception) {
-                    TokenStorage.clearTokens(context)
-                    onTokenExpiration()
-                    throw refreshException // ← Пробрасываем ошибку
-                }
-            } else {
-                println("Ошибка запроса: ${e.code()} - ${e.message()}")
-                throw e
-            }
+            throw e
         } catch (e: Exception) {
             println("Не http ошибка")
             println("Ошибка: ${e.javaClass.simpleName}")
