@@ -1,6 +1,7 @@
 package com.mrinsaf.core.data.network
 
 import com.mrinsaf.core.data.models.networkRequests.LoginRequest
+import com.mrinsaf.core.data.models.networkRequests.RefreshRequest
 import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
 import com.mrinsaf.core.data.models.networkResponses.LoginResponse
 import com.mrinsaf.core.data.models.networkResponses.RefreshResponse
@@ -22,6 +23,6 @@ interface AuthApiService {
 
     @POST("refresh")
     suspend fun refreshToken(
-        @Body refreshToken: String
+        @Body refreshToken: RefreshRequest
     ): RefreshResponse
 }
