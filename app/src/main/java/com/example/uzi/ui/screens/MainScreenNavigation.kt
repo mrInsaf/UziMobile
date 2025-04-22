@@ -1,4 +1,4 @@
-package com.example.uzi.ui
+package com.example.uzi.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
