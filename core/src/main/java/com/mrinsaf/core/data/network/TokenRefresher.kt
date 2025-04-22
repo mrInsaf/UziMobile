@@ -1,6 +1,7 @@
 package com.mrinsaf.core.data.network
 
 import android.content.Context
+import com.mrinsaf.core.data.models.networkRequests.RefreshRequest
 import com.mrinsaf.core.data.models.networkResponses.RefreshResponse
 import com.mrinsaf.core.data.repository.local.TokenStorage
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -14,7 +15,7 @@ class TokenRefresher @Inject constructor(
     suspend fun refreshTokens(): RefreshResponse? {
         val refreshToken = TokenStorage.getRefreshToken(context).firstOrNull() ?: return null
         return try {
-            val response = authApiService.refreshToken(refreshToken)
+            val response = authApiService.refreshToken(RefreshRequest(refreshToken))
             TokenStorage.saveAccessToken(context, response.accessToken)
             TokenStorage.saveRefreshToken(context, response.refreshToken)
             response
