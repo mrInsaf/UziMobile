@@ -13,17 +13,12 @@ class TokenAuthenticator @Inject constructor(
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? = runBlocking(Dispatchers.IO) {
-        if (response.code !in listOf(401, 403, 500)) return@runBlocking null
+        println("yyoooo")
+        if (response.code != 401) return@runBlocking null
 
-        val isTokenError = if (response.code == 500) {
-            response.peekBody(Long.MAX_VALUE).string().contains("token is expired", ignoreCase = true)
-        } else {
-            true
-        }
-
-        if (!isTokenError) return@runBlocking null
-
+        println("Внимание! Пользователь не авторизован")
         val newTokens = tokenRefresher.refreshTokens() ?: return@runBlocking null
+        println("Получил новые токены: $newTokens")
 
         return@runBlocking response.request.newBuilder()
             .header("Authorization", "Bearer ${newTokens.accessToken}")
