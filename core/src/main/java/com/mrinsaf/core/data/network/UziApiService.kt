@@ -2,6 +2,7 @@ package com.mrinsaf.core.data.network
 
 import com.mrinsaf.core.data.models.basic.Node
 import com.mrinsaf.core.data.models.basic.Uzi
+import com.mrinsaf.core.data.models.basic.UziDevice
 import com.mrinsaf.core.data.models.basic.UziImage
 import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
 import com.mrinsaf.core.data.models.networkResponses.PostUziResponse
@@ -61,4 +62,7 @@ interface UziApiService {
         @Path("uzi_id") uziId: String,
         @Path("image_id") imageId: String
     ): Response<ResponseBody>
+
+    @GET("uzi/devices")
+    suspend fun getUziDevices(): Response<List<UziDevice>>
 }

@@ -1,9 +1,11 @@
 package com.mrinsaf.core.data.repository
 
 import android.net.Uri
+import com.mrinsaf.core.data.models.User
 import com.mrinsaf.core.data.models.basic.Node
 import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
 import com.mrinsaf.core.data.models.basic.Uzi
+import com.mrinsaf.core.data.models.basic.UziDevice
 import com.mrinsaf.core.data.models.basic.UziImage
 import okhttp3.ResponseBody
 import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
@@ -21,7 +23,7 @@ interface UziServiceRepository {
 
     suspend fun submitLogout(): Boolean
 
-    suspend fun getUser(): com.mrinsaf.core.data.models.User
+    suspend fun getUser(): User
 
     suspend fun createUzi(
         uziUris: Uri, // URI УЗИ файла
@@ -47,4 +49,6 @@ interface UziServiceRepository {
     suspend fun getUzi(uziId: String): Uzi
 
     suspend fun regPatient(request: RegPatientRequest): RegPatientResponse
+
+    suspend fun getUziDevices(): List<UziDevice>
 }
