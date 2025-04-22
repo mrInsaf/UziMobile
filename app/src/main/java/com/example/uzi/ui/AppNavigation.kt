@@ -1,4 +1,4 @@
-package com.example.uzi
+package com.example.uzi.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.material3.MaterialTheme
@@ -9,7 +9,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.mrinsaf.auth.ui.screens.AuthorizationScreen
-import com.example.uzi.ui.MainScreen
 import com.mrinsaf.auth.ui.screens.RegistrationScreen
 import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationUiState
 import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationViewModel

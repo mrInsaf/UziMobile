@@ -1,4 +1,4 @@
-package com.example.uzi
+package com.example.uzi.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -6,24 +6,28 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationViewModel
 import com.mrinsaf.auth.ui.viewModel.registraion.RegistraionViewModel
-import com.mrinsaf.core.data.repository.local.TokenStorage
 import com.mrinsaf.core.ui.theme.UziTheme
 import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
 import com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splash = installSplashScreen()
+
         super.onCreate(savedInstanceState)
+
+        var isReady = false
+
+        splash.setKeepOnScreenCondition { isReady }
+
 
         enableEdgeToEdge()
 
@@ -32,8 +36,6 @@ class MainActivity : ComponentActivity() {
         val newDiagnosticViewModel: NewDiagnosticViewModel by viewModels()
         val diagnosticViewModel: DiagnosticViewModel by viewModels()
         val diagnosticListViewModel: DiagnosticListViewModel by viewModels()
-
-        retrieveTokens()
 
         setContent {
 
@@ -51,19 +53,6 @@ class MainActivity : ComponentActivity() {
                     diagnosticListViewModel = diagnosticListViewModel,
                     patientId = authorisationUiState.patientId ?: "Unknown patient",
                 )
-            }
-        }
-    }
-
-    private fun retrieveTokens() {
-        lifecycleScope.launch {
-            try {
-                val accessToken = TokenStorage.getAccessToken(this@MainActivity).first()
-                val refreshToken = TokenStorage.getRefreshToken(this@MainActivity).first()
-                println("accessToken: $accessToken")
-                println("refreshToken: $refreshToken")
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
