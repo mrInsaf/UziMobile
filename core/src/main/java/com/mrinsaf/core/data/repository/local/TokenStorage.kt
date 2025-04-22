@@ -7,6 +7,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.auth0.jwt.JWT
 import com.auth0.jwt.exceptions.JWTDecodeException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import java.util.Date
 
@@ -14,10 +15,6 @@ import java.util.Date
 object TokenStorage {
     private val Context.tokenDataStore by preferencesDataStore(name = "token_data_store").also {
         println("Создается DataStore для файла: token_data_store")
-    }
-
-    init {
-        println("Создаю TokenStorage")
     }
 
     // Ключи для хранения токенов
@@ -59,25 +56,6 @@ object TokenStorage {
             }
     }
 
-    fun validateToken(token: String): Boolean {
-        return try {
-            // Декодируем токен
-            val jwt = JWT.decode(token)
-
-            // Проверяем время истечения
-            val expiresAt = jwt.expiresAt
-            if (expiresAt != null && expiresAt.after(Date())) {
-                println("Токен валиден до: $expiresAt")
-                true
-            } else {
-                println("Токен истек!")
-                false
-            }
-        } catch (e: JWTDecodeException) {
-            println("Ошибка декодирования токена: ${e.message}")
-            false
-        }
-    }
 
     // Очистка всех токенов
     suspend fun clearTokens(context: Context) {
