@@ -50,6 +50,8 @@ dependencies {
     implementation(project(":diagnostic_details"))
     implementation(project(":diagnostic_list"))
 
+    implementation ("androidx.core:core-splashscreen:1.0.1")
+
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)

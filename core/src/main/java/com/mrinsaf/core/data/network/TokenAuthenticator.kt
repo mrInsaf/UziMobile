@@ -13,7 +13,6 @@ class TokenAuthenticator @Inject constructor(
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? = runBlocking(Dispatchers.IO) {
-        println("yyoooo")
         if (response.code != 401) return@runBlocking null
 
         println("Внимание! Пользователь не авторизован")

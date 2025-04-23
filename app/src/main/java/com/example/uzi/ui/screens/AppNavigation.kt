@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.uzi.ui.AuthScreens
 import com.mrinsaf.auth.ui.screens.AuthorizationScreen
 import com.mrinsaf.auth.ui.screens.RegistrationScreen
 import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationUiState
@@ -20,6 +21,7 @@ import com.mrinsaf.auth.ui.viewModel.registraion.RegistraionViewModel
 @Composable
 fun AppNavigation(
     navController: NavHostController,
+    startDestination: String,
     authorisationUiState: AuthorisationUiState,
     authorisationViewModel: AuthorisationViewModel,
     registrationViewModel: RegistraionViewModel,
@@ -30,24 +32,24 @@ fun AppNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = AuthScreens.AuthorisationScreenRoute.route,
+        startDestination = startDestination,
         modifier = Modifier.background(MaterialTheme.colorScheme.background)
     ) {
-        composable(route = AuthScreens.AuthorisationScreenRoute.route) {
+        composable(route = AuthScreens.AuthorisationScreen.route) {
             AuthorizationScreen(
                 authorisationViewModel = authorisationViewModel,
                 onSubmitLoginButtonClick = { authorisationViewModel.onSubmitLogin() },
                 onRegistrationButtonClick = {
-                    navController.navigate(AuthScreens.RegistrationScreenRoute.route)
+                    navController.navigate(AuthScreens.RegistrationScreen.route)
                 },
             )
         }
-        composable(route = AuthScreens.RegistrationScreenRoute.route) {
+        composable(route = AuthScreens.RegistrationScreen.route) {
             RegistrationScreen(
                 registrationViewModel = registrationViewModel
             )
         }
-        composable(route = AuthScreens.MainScreenRoute.route) {
+        composable(route = AuthScreens.MainScreen.route) {
             MainScreen(
                 newDiagnosticViewModel = newDiagnosticViewModel,
                 userData = authorisationUiState.userData,
@@ -56,23 +58,8 @@ fun AppNavigation(
                 patientId = patientId
             )
         }
+        composable(route = AuthScreens.SplashScreen.route) { Unit }
     }
 
-    // Навигация в зависимости от состояния авторизации
-    LaunchedEffect(authorisationUiState.isAuthorised) {
-        println("Проверяю авторизацию")
-        if (authorisationUiState.isAuthorised) {
-            navController.navigate(AuthScreens.MainScreenRoute.route) {
-                popUpTo(0)
-            }
-        } else {
-            navController.navigate(AuthScreens.AuthorisationScreenRoute.route)
-        }
-    }
 }
 
-enum class AuthScreens(val route: String) {
-    MainScreenRoute("main"),
-    AuthorisationScreenRoute("authorise"),
-    RegistrationScreenRoute("register"),
-}
