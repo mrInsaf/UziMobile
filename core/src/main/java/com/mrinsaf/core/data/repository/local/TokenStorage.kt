@@ -7,8 +7,11 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.auth0.jwt.JWT
 import com.auth0.jwt.exceptions.JWTDecodeException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import java.util.Date
 
 
@@ -17,15 +20,32 @@ object TokenStorage {
         println("Создается DataStore для файла: token_data_store")
     }
 
-    // Ключи для хранения токенов
     private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
     private val REFRESH_TOKEN_KEY = stringPreferencesKey("refresh_token")
 
-    // Сохранение access token
+    private val _accessToken = MutableStateFlow<String?>(null)
+    val accessToken: StateFlow<String?> = _accessToken
+
+    private val _refreshToken = MutableStateFlow<String?>(null)
+    val refreshToken: StateFlow<String?> = _refreshToken
+
+    fun initialize(context: Context) {
+        runBlocking {
+            _accessToken.value = context.tokenDataStore.data
+                .map { it[ACCESS_TOKEN_KEY] }
+                .firstOrNull()
+
+            _refreshToken.value = context.tokenDataStore.data
+                .map { it[REFRESH_TOKEN_KEY] }
+                .firstOrNull()
+        }
+    }
+
     suspend fun saveAccessToken(context: Context, token: String) {
         context.tokenDataStore.edit { preferences ->
             preferences[ACCESS_TOKEN_KEY] = token
         }
+        _accessToken.value = token // Обновляем StateFlow
     }
 
     // Сохранение refresh token
@@ -33,29 +53,8 @@ object TokenStorage {
         context.tokenDataStore.edit { preferences ->
             preferences[REFRESH_TOKEN_KEY] = token
         }
+        _refreshToken.value = token // Обновляем StateFlow
     }
-
-    // Извлечение access token
-    fun getAccessToken(context: Context): Flow<String?> {
-        try {
-            return context.tokenDataStore.data
-                .map { preferences ->
-                    preferences[ACCESS_TOKEN_KEY]
-                }
-        } catch (e: Exception) {
-            println(e)
-            throw e
-        }
-    }
-
-    // Извлечение refresh token
-    fun getRefreshToken(context: Context): Flow<String?> {
-        return context.tokenDataStore.data
-            .map { preferences ->
-                preferences[REFRESH_TOKEN_KEY]
-            }
-    }
-
 
     // Очистка всех токенов
     suspend fun clearTokens(context: Context) {
@@ -63,5 +62,7 @@ object TokenStorage {
             preferences.remove(ACCESS_TOKEN_KEY)
             preferences.remove(REFRESH_TOKEN_KEY)
         }
+        _accessToken.value = null // Сбрасываем StateFlow
+        _refreshToken.value = null
     }
 }

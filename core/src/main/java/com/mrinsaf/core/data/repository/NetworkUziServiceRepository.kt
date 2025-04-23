@@ -73,7 +73,7 @@ class NetworkUziServiceRepository(
 
     override suspend fun refreshToken() {
         println("Рефрешу токен")
-        val refreshToken = TokenStorage.getRefreshToken(context).first()
+        val refreshToken = TokenStorage.refreshToken.value
 
         if (refreshToken != null) {
             val response = authApiService.refreshToken(RefreshRequest(refreshToken))

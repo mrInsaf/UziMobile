@@ -13,7 +13,7 @@ class TokenRefresher @Inject constructor(
     private val authApiService: AuthApiService
 ) {
     suspend fun refreshTokens(): RefreshResponse? {
-        val refreshToken = TokenStorage.getRefreshToken(context).firstOrNull() ?: return null
+        val refreshToken = TokenStorage.refreshToken.value ?: return null
         return try {
             val response = authApiService.refreshToken(RefreshRequest(refreshToken))
             TokenStorage.saveAccessToken(context, response.accessToken)

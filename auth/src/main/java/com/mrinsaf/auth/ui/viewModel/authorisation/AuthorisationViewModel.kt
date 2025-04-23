@@ -35,8 +35,8 @@ class AuthorisationViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             // Проверка наличия токенов в DataStore
-            val accessToken = TokenStorage.getAccessToken(context).firstOrNull()
-            val refreshToken = TokenStorage.getRefreshToken(context).firstOrNull()
+            val accessToken = TokenStorage.accessToken.value
+            val refreshToken = TokenStorage.refreshToken.value
 
             // Если оба токена существуют, считаем, что пользователь авторизован
             _uiState.update { 

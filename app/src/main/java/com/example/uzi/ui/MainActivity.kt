@@ -34,9 +34,7 @@ class MainActivity : ComponentActivity() {
 
         splash.setKeepOnScreenCondition { isReady }
 
-        lifecycleScope.launch {
-            println(TokenStorage.getAccessToken(this@MainActivity).firstOrNull())
-        }
+        println(TokenStorage.accessToken.value)
 
 
         enableEdgeToEdge()
