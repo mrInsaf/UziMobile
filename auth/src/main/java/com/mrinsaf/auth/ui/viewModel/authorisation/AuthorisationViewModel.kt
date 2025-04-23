@@ -32,39 +32,19 @@ class AuthorisationViewModel @Inject constructor(
     val uiState: StateFlow<AuthorisationUiState>
         get() = _uiState
 
+    var authState = MutableStateFlow<AuthState>(AuthState.Loading)
+        private set
+
     init {
         viewModelScope.launch {
-            // Проверка наличия токенов в DataStore
-            val accessToken = TokenStorage.accessToken.value
-            val refreshToken = TokenStorage.refreshToken.value
-
-            // Если оба токена существуют, считаем, что пользователь авторизован
-            _uiState.update { 
-                it.copy(isAuthorised = !accessToken.isNullOrEmpty() && !refreshToken.isNullOrEmpty())
-            }
-            retrievePatientIdFromStorage()
-
-            if (repository is NetworkUziServiceRepository) {
-                repository.uiEvent
-                    .onEach { event ->
-                        when (event) {
-                            is UiEvent.ShowToast -> {
-                                onTokenExpired()
-                                Toast.makeText(context, "Сессия истекла", Toast.LENGTH_SHORT).show()
-                                println("Получено событие из репозитория: ${event.message}")
-                            }
-                            is UiEvent.ShowError -> {
-                                println("Произошла ошибка какая то...")
-                            }
-                        }
-                    }
-                    .launchIn(viewModelScope)
-            }
+            val isAuthorized = repository.getUziDevices().isNotEmpty()
+            authState.value = if (isAuthorized) AuthState.Authorized else AuthState.Unauthorized
         }
+        retrievePatientIdFromStorage()
     }
 
     private fun onTokenExpired() {
-        _uiState.update { it.copy(isAuthorised = false) }
+        authState.value = AuthState.Unauthorized
     }
 
     fun onAuthorizationEmailChange(newEmail: String) {
@@ -102,16 +82,7 @@ class AuthorisationViewModel @Inject constructor(
             println("loginResponse: $loginResponse")
 
             if (loginResponse != null) {
-//                val userData = async {
-//                    repository.getUser()
-//                }.await()
-
-                _uiState.update {
-                    it.copy(
-                        isAuthorised = true,
-//                        userData = userData
-                    )
-                }
+                authState.value = AuthState.Authorized
             } else {
                 Toast.makeText(context, "Неверные почта или пароль", Toast.LENGTH_LONG).show()
             }
@@ -137,5 +108,10 @@ class AuthorisationViewModel @Inject constructor(
         }
     }
 
+    enum class AuthState {
+        Loading,
+        Authorized,
+        Unauthorized,
+    }
 
 }
