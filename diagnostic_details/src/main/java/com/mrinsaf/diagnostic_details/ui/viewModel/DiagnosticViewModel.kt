@@ -58,7 +58,7 @@ class DiagnosticViewModel @Inject constructor(
         }
     }
 
-    suspend fun onSelectUzi(uziId: String, uziDate: String) {
+    fun onSelectUzi(uziId: String, uziDate: String) = viewModelScope.launch {
         try {
             println("onSelectUzi стартовал для uziId: $uziId, uziDate: $uziDate")
 

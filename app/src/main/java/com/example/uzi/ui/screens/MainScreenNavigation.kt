@@ -105,7 +105,6 @@ fun NavigationGraph(
         }
         composable(Screen.Uploaded.route) {
             val uiState by diagnosticListViewModel.uiState.collectAsState()
-            val coroutineScope = rememberCoroutineScope()
 //            diagnosticViewModel.clearUiState()
             diagnosticListViewModel.getPatientUzis(
                 patientId = patientId
@@ -113,10 +112,8 @@ fun NavigationGraph(
             DiagnosticsListScreen(
                 uziList = uiState.uziList,
                 onDiagnosticListItemClick = { uziId, uziDate ->
-                    coroutineScope.launch {
-                        diagnosticViewModel.onSelectUzi(uziId, uziDate)
-                        navController.navigate(Screen.Diagnostic.route)
-                    }
+                    diagnosticViewModel.onSelectUzi(uziId, uziDate)
+                    navController.navigate(Screen.Diagnostic.route)
 
                 },
                 nodesWithUziIds = uiState.nodesWithUziId,
