@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
 import com.mrinsaf.core.data.models.basic.UziImage
 import com.mrinsaf.core.data.repository.UziServiceRepository
-import com.mrinsaf.core.ui.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -29,10 +28,6 @@ class DiagnosticViewModel @Inject constructor(
     private var _uiState = MutableStateFlow(DiagnosticUiState())
     val uiState: StateFlow<DiagnosticUiState>
         get() = _uiState
-
-    private val _uiEvent = MutableSharedFlow<UiEvent>()
-    val uiEvent = _uiEvent.asSharedFlow()
-
 
     fun onDiagnosticCompleted(
         uziId: String,
@@ -147,13 +142,6 @@ class DiagnosticViewModel @Inject constructor(
     fun closeRecommendationBottomSheet() {
         _uiState.update {
             it.copy(isRecommendationSheetVisible = false)
-        }
-    }
-
-
-    private fun onTokenExpiration() {
-        viewModelScope.launch {
-            _uiEvent.emit(UiEvent.ShowToast("Сессия истекла"))
         }
     }
 }

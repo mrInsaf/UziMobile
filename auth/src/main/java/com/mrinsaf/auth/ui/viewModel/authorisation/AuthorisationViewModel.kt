@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.mrinsaf.core.data.repository.NetworkUziServiceRepository
-import com.mrinsaf.core.ui.UiEvent
 import com.mrinsaf.core.data.repository.UziServiceRepository
 import com.mrinsaf.core.data.repository.local.TokenStorage
 import com.mrinsaf.core.data.repository.local.UserInfoStorage

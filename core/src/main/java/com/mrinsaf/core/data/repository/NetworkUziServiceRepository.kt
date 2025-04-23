@@ -19,15 +19,7 @@ import com.mrinsaf.core.data.models.networkResponses.RegPatientResponse
 import com.mrinsaf.core.data.network.AuthApiService
 import com.mrinsaf.core.data.network.UziApiService
 import com.mrinsaf.core.data.repository.local.TokenStorage
-import com.mrinsaf.core.ui.UiEvent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -45,12 +37,6 @@ class NetworkUziServiceRepository(
     private val authApiService: AuthApiService,
     private val context: Context
 ): UziServiceRepository {
-
-    private val _uiEvent = MutableSharedFlow<UiEvent>()
-    val uiEvent = _uiEvent.asSharedFlow()
-
-    private val scope = CoroutineScope(Dispatchers.Main.immediate + SupervisorJob())
-
     override suspend fun checkAuthorisation(): Boolean {
         TODO("Not yet implemented")
     }
@@ -280,13 +266,6 @@ class NetworkUziServiceRepository(
             throw e
         }
 
-    }
-
-    private fun onTokenExpiration() {
-        println("Все пзц")
-        scope.launch {
-            _uiEvent.emit(UiEvent.ShowToast("Сессия истекла"))
-        }
     }
 
     private fun getRealPathFromURI(context: Context, uri: Uri): String? {
