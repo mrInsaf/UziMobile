@@ -98,5 +98,17 @@ fun AppNavigation(
             authorisationViewModel.onTokenExpired()
         }
     }
+
+    LaunchedEffect(Unit) {
+        registrationViewModel.registrationSuccess.collect {
+            Toast.makeText(
+                context,
+                "Успешная регистрация",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            navController.navigate(AuthScreens.AuthorisationScreen.route)
+        }
+    }
 }
 

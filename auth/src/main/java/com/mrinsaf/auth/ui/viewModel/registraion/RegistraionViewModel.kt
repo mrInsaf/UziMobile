@@ -10,7 +10,9 @@ import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
 import com.mrinsaf.core.data.repository.UziServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -27,6 +29,9 @@ class RegistraionViewModel @Inject constructor(
     private var _uiState = MutableStateFlow(RegistrationUiState())
     val uiState: StateFlow<RegistrationUiState>
         get() = _uiState
+
+    private val _registrationSuccess = MutableSharedFlow<Unit>()
+    val registrationSuccess: SharedFlow<Unit> = _registrationSuccess
 
     fun onSurnameChange(newSurname: String) {
         _uiState.update { it.copy(surname = newSurname) }
@@ -94,11 +99,8 @@ class RegistraionViewModel @Inject constructor(
         try {
             val patientId = repository.regPatient(patientData)
             println("patientId: $patientId")
-            Toast.makeText(
-                context,
-                "Успешная регистрация",
-                Toast.LENGTH_SHORT
-            ).show()
+            _registrationSuccess.emit(Unit)
+
         } catch (e: Exception) {
             println(e)
             Toast.makeText(
