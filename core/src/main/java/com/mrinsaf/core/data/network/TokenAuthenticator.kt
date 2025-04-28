@@ -16,9 +16,14 @@ class TokenAuthenticator @Inject constructor(
         if (response.code != 401) return@runBlocking null
 
         println("Внимание! Пользователь не авторизован")
-        val newTokens = tokenRefresher.refreshTokens() ?: return@runBlocking null
-        println("Получил новые токены: $newTokens")
+        val newTokens = tokenRefresher.refreshTokens()
+        if (newTokens == null) {
+            println("Токены не обновлены, требуется авторизация")
+            AuthEventBus.emitAuthRequired()
+            return@runBlocking null
+        }
 
+        println("Получил новые токены: $newTokens")
         return@runBlocking response.request.newBuilder()
             .header("Authorization", "Bearer ${newTokens.accessToken}")
             .build()
