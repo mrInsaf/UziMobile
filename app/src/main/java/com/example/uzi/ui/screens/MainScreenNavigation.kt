@@ -32,6 +32,9 @@ import com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel
 import com.mrinsaf.newdiagnostic.ui.screens.NewDiagnosticNavigation
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.isSuccess
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -109,9 +112,10 @@ fun NavigationGraph(
             DiagnosticsListScreen(
                 uziList = uiState.uziList,
                 onDiagnosticListItemClick = { uziId, uziDate ->
-                    diagnosticViewModel.onSelectUzi(uziId, uziDate)
-                    navController.navigate(Screen.Diagnostic.route)
-
+                     CoroutineScope(Dispatchers.Main).launch {
+                        diagnosticViewModel.onSelectUzi(uziId, uziDate)
+                        navController.navigate(Screen.Diagnostic.route)
+                    }
                 },
                 nodesWithUziIds = uiState.nodesWithUziId,
                 fetchPatientUzis = { diagnosticListViewModel.getPatientUzis(patientId) },
@@ -126,10 +130,10 @@ fun NavigationGraph(
         }
 
         composable(Screen.Diagnostic.route) {
-            val diagnosticHistoryUiState by diagnosticViewModel.uiState.collectAsState()
+            val diagnosticDetailsUiState by diagnosticViewModel.uiState.collectAsState()
             DiagnosticScreen(
-                diagnosticDate = diagnosticHistoryUiState.selectedUziDate,
-                clinicName = diagnosticHistoryUiState.selectedClinicName ?: "Неизвестная клиника",
+                diagnosticDate = diagnosticDetailsUiState.selectedUziDate,
+                clinicName = diagnosticDetailsUiState.selectedClinicName ?: "Неизвестная клиника",
                 diagnosticViewModel = diagnosticViewModel
             )
         }
