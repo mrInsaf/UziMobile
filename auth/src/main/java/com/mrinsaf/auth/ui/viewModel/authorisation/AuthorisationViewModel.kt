@@ -42,7 +42,7 @@ class AuthorisationViewModel @Inject constructor(
         retrievePatientIdFromStorage()
     }
 
-    private fun onTokenExpired() {
+    fun onTokenExpired() {
         authState.value = AuthState.Unauthorized
     }
 
@@ -54,36 +54,25 @@ class AuthorisationViewModel @Inject constructor(
         _uiState.update { it.copy(authorizationPassword = newPassword) }
     }
 
-    fun onSubmitLogin() {
-        viewModelScope.launch {
-            val isAuthorisedResponse = async {
-                try {
-                    println("email: ${uiState.value.authorizationEmail}")
-                    println("pwd: ${uiState.value.authorizationPassword}")
-                    repository.submitLogin(
-                        email = uiState.value.authorizationEmail,
-                        password = uiState.value.authorizationPassword
-                    )
-                } catch (e: Exception) {
-                    if (e is retrofit2.HttpException) {
-                        val response = e.response() // Получаем ответ с ошибкой
-                        val errorBody = response?.errorBody()?.string() // Тело ошибки в виде строки
-                        println("Ошибка HTTP: ${e.code()} - ${e.message()}")
-                        println("Тело ошибки: $errorBody")
-                    } else {
-                        println("Ошибка при попытке логинa: $e")
-                    }
-                    null
-                }
-            }
-
-            val loginResponse = isAuthorisedResponse.await()
-            println("loginResponse: $loginResponse")
-
-            if (loginResponse != null) {
-                authState.value = AuthState.Authorized
-            } else {
+    suspend fun onSubmitLogin() {
+        try {
+            println("email: ${uiState.value.authorizationEmail}")
+            println("pwd: ${uiState.value.authorizationPassword}")
+            repository.submitLogin(
+                email = uiState.value.authorizationEmail,
+                password = uiState.value.authorizationPassword
+            )
+            authState.value = AuthState.Authorized
+        } catch (e: Exception) {
+            if (e is retrofit2.HttpException) {
+                val response = e.response() // Получаем ответ с ошибкой
+                val errorBody = response?.errorBody()?.string() // Тело ошибки в виде строки
                 Toast.makeText(context, "Неверные почта или пароль", Toast.LENGTH_LONG).show()
+                println("Ошибка HTTP: ${e.code()} - ${e.message()}")
+                println("Тело ошибки: $errorBody")
+            } else {
+                println("Ошибка при попытке логинa: $e")
+                Toast.makeText(context, "Произошла ошибка при авторизации", Toast.LENGTH_LONG).show()
             }
         }
     }
