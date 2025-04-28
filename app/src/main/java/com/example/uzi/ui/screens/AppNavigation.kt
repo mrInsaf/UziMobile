@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,6 +21,9 @@ import com.mrinsaf.core.data.network.AuthEventBus
 import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
 import com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun AppNavigation(
@@ -34,6 +38,8 @@ fun AppNavigation(
     patientId: String,
 ) {
     val context = LocalContext.current
+
+    val authState = authorisationViewModel.authState.collectAsStateWithLifecycle()
     NavHost(
         navController = navController,
         startDestination = startDestination,
@@ -43,8 +49,9 @@ fun AppNavigation(
             AuthorizationScreen(
                 authorisationViewModel = authorisationViewModel,
                 onSubmitLoginButtonClick = {
-                    authorisationViewModel.onSubmitLogin()
-                    navController.navigate(AuthScreens.MainScreen.route)
+                    CoroutineScope(Dispatchers.Main).launch {
+                        authorisationViewModel.onSubmitLogin()
+                    }
                 },
                 onRegistrationButtonClick = {
                     navController.navigate(AuthScreens.RegistrationScreen.route)
@@ -68,15 +75,27 @@ fun AppNavigation(
         composable(route = AuthScreens.SplashScreen.route) { Unit }
 
     }
+
+    LaunchedEffect(authState.value) {
+        when(authState.value) {
+            AuthorisationViewModel.AuthState.Authorized -> navController.navigate(AuthScreens.MainScreen.route)
+            AuthorisationViewModel.AuthState.Unauthorized -> {
+                Toast.makeText(
+                    context,
+                    "Сессия истекла...",
+                    Toast.LENGTH_SHORT
+                ).show()
+                println("перехожу на экран авторизации")
+                navController.navigate(AuthScreens.AuthorisationScreen.route)
+            }
+            AuthorisationViewModel.AuthState.Loading -> Unit
+        }
+    }
+
     LaunchedEffect(Unit) {
         AuthEventBus.authRequired.collect {
             println("Получено событие: требуется авторизация")
-            Toast.makeText(
-                context,
-                "Сессия истекла...",
-                Toast.LENGTH_SHORT
-            ).show()
-            navController.navigate(AuthScreens.AuthorisationScreen.route)
+            authorisationViewModel.onTokenExpired()
         }
     }
 }
