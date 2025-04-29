@@ -14,6 +14,8 @@ import androidx.navigation.compose.composable
 import com.example.uzi.ui.AuthScreens
 import com.mrinsaf.auth.ui.screens.AuthorizationScreen
 import com.mrinsaf.auth.ui.screens.RegistrationScreen
+import com.mrinsaf.auth.ui.screens.errorScreens.ApiIsDownScreen
+import com.mrinsaf.auth.ui.screens.splashScreen.SplashScreen
 import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationUiState
 import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationViewModel
 import com.mrinsaf.auth.ui.viewModel.registraion.RegistraionViewModel
@@ -72,22 +74,38 @@ fun AppNavigation(
                 patientId = patientId
             )
         }
-        composable(route = AuthScreens.SplashScreen.route) { Unit }
+        composable(route = AuthScreens.SplashScreen.route) {
+            SplashScreen()
+        }
+
+        composable(route = AuthScreens.ApiIsDownScreen.route) {
+            ApiIsDownScreen()
+        }
 
     }
 
     LaunchedEffect(authState.value) {
-        when(authState.value) {
-            AuthorisationViewModel.AuthState.Authorized -> navController.navigate(AuthScreens.MainScreen.route)
-            AuthorisationViewModel.AuthState.Unauthorized -> {
-                Toast.makeText(
-                    context,
-                    "Сессия истекла...",
-                    Toast.LENGTH_SHORT
-                ).show()
-                println("перехожу на экран авторизации")
-                navController.navigate(AuthScreens.AuthorisationScreen.route)
+        when (val state = authState.value) {
+            is AuthorisationViewModel.AuthState.Authorized ->
+                navController.navigate(AuthScreens.MainScreen.route)
+
+            is AuthorisationViewModel.AuthState.Error -> {
+                when (state) {
+                    is AuthorisationViewModel.AuthState.Error.Unauthorized -> {
+                        Toast.makeText(
+                            context,
+                            "Сессия истекла...",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        println("перехожу на экран авторизации")
+                        navController.navigate(AuthScreens.AuthorisationScreen.route)
+                    }
+                    is AuthorisationViewModel.AuthState.Error.ApiIsDown -> {
+                        navController.navigate(AuthScreens.ApiIsDownScreen.route)
+                    }
+                }
             }
+
             AuthorisationViewModel.AuthState.Loading -> Unit
         }
     }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="connection_problems">Проблемы с подключением к серверу, \nвозможно сервер сейчас не доступен</string>
+    <string name="connecting_to_server">Соединяюсь с сервером</string>
+</resources>

@@ -149,14 +149,6 @@ class NetworkUziServiceRepository(
         }
     }
 
-//    override suspend fun saveUziImageAndGetCacheUri(uziId: String, imageId: String): Uri {
-//        println("Сохраняю картинку $imageId")
-//        val responseBody = downloadUziImage(uziId, imageId)
-//        val fileName = "$uziId-$imageId.jpg"
-//        return FileStorage.saveFileToStorage(context, fileName, responseBody)
-//            ?: throw Exception("Не удалось сохранить файл в кэш.")
-//    }
-
     @SuppressLint("NewApi")
     private fun parseDate(dateString: String): String {
         val formatter = DateTimeFormatter.ISO_DATE_TIME
@@ -218,7 +210,7 @@ class NetworkUziServiceRepository(
             }
         } catch (e: Exception) {
             println("Ошибка сети: ${e.message}")
-            emptyList()
+            throw e
         }
     }
 

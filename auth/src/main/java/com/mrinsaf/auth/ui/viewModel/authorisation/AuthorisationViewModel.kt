@@ -36,14 +36,24 @@ class AuthorisationViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val isAuthorized = repository.getUziDevices().isNotEmpty()
-            authState.value = if (isAuthorized) AuthState.Authorized else AuthState.Unauthorized
+            try {
+                val isAuthorized = repository.getUziDevices().isNotEmpty()
+                authState.value = if (isAuthorized) AuthState.Authorized else AuthState.Error.Unauthorized
+            }
+            catch (e: Exception) {
+                when {
+                    e.message?.contains("does not exist") == true -> authState.value = AuthState.Error.ApiIsDown
+                    e.message?.contains("Failed to connect to") == true -> authState.value = AuthState.Error.ApiIsDown
+                    e.message?.contains("timeout") == true -> authState.value = AuthState.Error.ApiIsDown
+                    e.message?.contains("Read timed out") == true -> authState.value = AuthState.Error.ApiIsDown
+                }
+            }
         }
         retrievePatientIdFromStorage()
     }
 
     fun onTokenExpired() {
-        authState.value = AuthState.Unauthorized
+        authState.value = AuthState.Error.Unauthorized
     }
 
     fun onAuthorizationEmailChange(newEmail: String) {
@@ -96,10 +106,13 @@ class AuthorisationViewModel @Inject constructor(
         }
     }
 
-    enum class AuthState {
-        Loading,
-        Authorized,
-        Unauthorized,
+    sealed class AuthState {
+        object Loading: AuthState()
+        object Authorized: AuthState()
+        sealed class Error: AuthState() {
+            object Unauthorized: Error()
+            object ApiIsDown: Error()
+        }
     }
 
 }

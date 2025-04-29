@@ -5,4 +5,6 @@ enum class AuthScreens(val route: String) {
     MainScreen("main"),
     AuthorisationScreen("authorise"),
     RegistrationScreen("register"),
+
+    ApiIsDownScreen("api_is_down")
 }
