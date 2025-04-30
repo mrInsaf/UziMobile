@@ -91,6 +91,17 @@ class NewDiagnosticViewModel @Inject constructor(
 
                 println("Получение информации о УЗИ...")
                 val uziInformation = repository.getUzi(diagnosticId)
+
+                if (uziInformation == null) {
+                    println("Информация о УЗИ не получена. Отмена диагностики.")
+                    _uiState.update {
+                        it.copy(
+                            diagnosticProcessState = DiagnosticProcessState.Failure,
+                        )
+                    }
+                    return@launch
+                }
+
                 println("Информация о УЗИ получена: $uziInformation")
 
                 println("Получение списка изображений УЗИ...")
@@ -193,17 +204,11 @@ class NewDiagnosticViewModel @Inject constructor(
 
     private suspend fun fetchImageNodesSegments(uziImages: List<UziImage>): List<NodesSegmentsResponse> =
         coroutineScope {
-            val firstImageNodesSegments = async {
-                repository.getImageNodesAndSegments(uziImages.first().id, false)
-            }.await()
-
-            println("Успешно получил сегменты первого снимка: $firstImageNodesSegments")
-
-            val remainingImageNodesSegments = uziImages.drop(1).map { image ->
+            val remainingImageNodesSegments = uziImages.map { image ->
                 async { fetchImageNodesForSingleImage(image) }
             }.awaitAll()
 
-            listOf(firstImageNodesSegments) + remainingImageNodesSegments.filterNotNull()
+            remainingImageNodesSegments.filterNotNull()
         }
 
 
@@ -254,6 +259,12 @@ class NewDiagnosticViewModel @Inject constructor(
     }
 
     private fun handleHttpException(e: HttpException) {
+        try {
+            uploadDiagnosticJob?.cancel()
+            println("Остановил корутину загрузки узи")
+        } catch (e: Exception) {
+            println("Ошибка при остановке корутины $e")
+        }
         _uiState.update {
             it.copy(
                 currentScreenIndex = 0,
@@ -266,6 +277,12 @@ class NewDiagnosticViewModel @Inject constructor(
     }
 
     private fun handleGeneralException(e: Exception) {
+        try {
+            uploadDiagnosticJob?.cancel()
+            println("Остановил корутину загрузки узи")
+        } catch (e: Exception) {
+            println("Ошибка при остановке корутины $e")
+        }
         _uiState.update {
             it.copy(
                 diagnosticProcessState = DiagnosticProcessState.Failure,
