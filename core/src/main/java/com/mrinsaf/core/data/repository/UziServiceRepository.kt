@@ -46,7 +46,7 @@ interface UziServiceRepository {
 
     suspend fun getUziNodes(uziId: String): List<Node>
 
-    suspend fun getUzi(uziId: String): Uzi
+    suspend fun getUzi(uziId: String): Uzi?
 
     suspend fun regPatient(request: RegPatientRequest): RegPatientResponse
 
