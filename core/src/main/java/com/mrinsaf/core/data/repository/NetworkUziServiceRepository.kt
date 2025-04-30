@@ -203,11 +203,7 @@ class NetworkUziServiceRepository(
     override suspend fun getUziDevices(): List<UziDevice> {
         return try {
             val response = uziApiService.getUziDevices()
-            if (response.isSuccessful) {
-                response.body() ?: emptyList()
-            } else {
-                throw Exception("Ошибка при получении списка устройств: ${response.code()}")
-            }
+            response.body() ?: emptyList()
         } catch (e: Exception) {
             println("Ошибка сети: ${e.message}")
             throw e
