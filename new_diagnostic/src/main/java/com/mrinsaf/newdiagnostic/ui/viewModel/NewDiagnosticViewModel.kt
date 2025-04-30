@@ -259,12 +259,18 @@ class NewDiagnosticViewModel @Inject constructor(
                 currentScreenIndex = 0,
                 selectedImageUri = null,
                 selectedImageName = null,
+                diagnosticProcessState = DiagnosticProcessState.Failure
             )
         }
         println("Ошибка HTTP: $e")
     }
 
     private fun handleGeneralException(e: Exception) {
+        _uiState.update {
+            it.copy(
+                diagnosticProcessState = DiagnosticProcessState.Failure,
+            )
+        }
         println("Ошибка: $e")
     }
 

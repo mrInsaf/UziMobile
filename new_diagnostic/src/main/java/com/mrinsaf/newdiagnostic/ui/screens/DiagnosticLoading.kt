@@ -105,7 +105,7 @@ fun DiagnosticLoading(
         }
         MainButton(
             text = "Загрузить новый снимок",
-            enabled = uiState.isUziPosted
+            enabled = uiState.isUziPosted || uiState.diagnosticProcessState is DiagnosticProcessState.Failure
         ) {
             onUploadNewDiagnostic()
         }
