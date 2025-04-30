@@ -174,11 +174,25 @@ class NetworkUziServiceRepository(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun getUzi(uziId: String): Uzi {
-        return safeApiCall {
-            val uzi = uziApiService.getUzi(uziId)
-            uzi.copy(createAt = formatDate(uzi.createAt)) // Преобразуем дату перед возвратом
+    override suspend fun getUzi(uziId: String): Uzi? {
+        println()
+        println("Отслеживаю создание узи")
+        repeat(50) {
+            val uziInfo = safeApiCall {
+                val uzi = uziApiService.getUzi(uziId)
+                uzi.copy(createAt = formatDate(uzi.createAt)) // Преобразуем дату перед возвратом
+            }
+
+            println("Статус узи: ${uziInfo.status}")
+
+            if (uziInfo.status != "completed") {
+                delay(5000L)
+            }
+            else {
+                return uziInfo
+            }
         }
+        return null
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

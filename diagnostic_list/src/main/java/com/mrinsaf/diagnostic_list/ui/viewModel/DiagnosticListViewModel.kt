@@ -5,6 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.mrinsaf.core.data.models.basic.NodesWithUziId
 import com.mrinsaf.core.data.repository.UziServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -23,17 +27,27 @@ class DiagnosticListViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val uziList = repository.getPatientUzis(patientId)
-                val nodesWithUziIds = mutableListOf<NodesWithUziId>()
+                val nodesWithUziIdsDeferred = mutableListOf<Deferred<NodesWithUziId?>>()
+
+                // Создаем отдельную корутину для каждой диагностики
                 uziList.forEach { uzi ->
-                    val id = uzi.id
-                    val nodes = repository.getUziNodes(id)
-                    nodesWithUziIds.add(
-                        NodesWithUziId(
-                            uziId = id,
-                            nodes = nodes
-                        )
-                    )
+                    val deferred = async(Dispatchers.IO) {
+                        try {
+                            val id = uzi.id
+                            val nodes = repository.getUziNodes(id)
+                            NodesWithUziId(
+                                uziId = id,
+                                nodes = nodes
+                            )
+                        } catch (e: Exception) {
+                            println("Ошибка при получении узлов для UZI ID=${uzi.id}: ${e.message}")
+                            null // Возвращаем null, если произошла ошибка
+                        }
+                    }
+                    nodesWithUziIdsDeferred.add(deferred)
                 }
+
+                val nodesWithUziIds = nodesWithUziIdsDeferred.awaitAll().filterNotNull()
 
                 _uiState.update {
                     it.copy(
@@ -42,7 +56,7 @@ class DiagnosticListViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                println(e)
+                println("Ошибка при получении списка UZI: ${e.message}")
             }
         }
     }
