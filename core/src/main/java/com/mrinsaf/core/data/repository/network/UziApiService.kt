@@ -1,4 +1,4 @@
-package com.mrinsaf.core.data.network
+package com.mrinsaf.core.data.repository.network
 
 import com.mrinsaf.core.data.models.basic.Node
 import com.mrinsaf.core.data.models.basic.Uzi

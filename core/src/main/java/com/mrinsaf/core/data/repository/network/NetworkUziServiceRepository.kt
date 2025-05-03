@@ -1,4 +1,4 @@
-package com.mrinsaf.core.data.repository
+package com.mrinsaf.core.data.repository.network
 
 import android.annotation.SuppressLint
 import android.content.ContentResolver
@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.OpenableColumns
 import androidx.annotation.RequiresApi
+import com.mrinsaf.core.data.models.User
 import com.mrinsaf.core.data.models.basic.Node
 import com.mrinsaf.core.data.models.basic.Uzi
 import com.mrinsaf.core.data.models.basic.UziDevice
@@ -14,10 +15,9 @@ import com.mrinsaf.core.data.models.basic.UziImage
 import com.mrinsaf.core.data.models.networkRequests.LoginRequest
 import com.mrinsaf.core.data.models.networkRequests.RefreshRequest
 import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
+import com.mrinsaf.core.data.models.networkResponses.LoginResponse
 import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
 import com.mrinsaf.core.data.models.networkResponses.RegPatientResponse
-import com.mrinsaf.core.data.network.AuthApiService
-import com.mrinsaf.core.data.network.UziApiService
 import com.mrinsaf.core.data.repository.local.TokenStorage
 import kotlinx.coroutines.delay
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -41,7 +41,7 @@ class NetworkUziServiceRepository(
         TODO("Not yet implemented")
     }
 
-    override suspend fun submitLogin(email: String, password: String): com.mrinsaf.core.data.models.networkResponses.LoginResponse {
+    override suspend fun submitLogin(email: String, password: String): LoginResponse {
         val loginResponse = authApiService.login(
             request = LoginRequest(
                 email = email,
@@ -206,7 +206,7 @@ class NetworkUziServiceRepository(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUser(): com.mrinsaf.core.data.models.User {
+    override suspend fun getUser(): User {
         TODO("Not yet implemented")
     }
 

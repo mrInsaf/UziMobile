@@ -1,4 +1,4 @@
-package com.mrinsaf.core.data.network
+package com.mrinsaf.core.data.repository.network
 
 import com.mrinsaf.core.data.models.networkRequests.LoginRequest
 import com.mrinsaf.core.data.models.networkRequests.RefreshRequest

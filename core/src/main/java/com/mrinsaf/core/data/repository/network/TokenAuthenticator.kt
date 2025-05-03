@@ -1,4 +1,4 @@
-package com.mrinsaf.core.data.network
+package com.mrinsaf.core.data.repository.network
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
