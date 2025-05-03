@@ -21,6 +21,20 @@ object UserInfoStorage {
         }
     }
 
+    suspend fun saveDecodedUserIdFromToken(context: Context) {
+        val accessToken = TokenStorage.accessToken.value
+        accessToken?.let { token ->
+            try {
+                val decodedUserId = JwtDecoder.getTokenId(token)
+                println("decoded userId: $decodedUserId")
+                saveUserId(context, decodedUserId)
+            }
+            catch (e: Exception) {
+                println("Не удалось декодировать или сохранить user id: $e")
+            }
+        }
+    }
+
     fun getUserId(context: Context): Flow<String> {
         return context.applicationContext.userInfoDataStore.data
             .map { preferences -> preferences[USER_ID_KEY] ?: "" }
