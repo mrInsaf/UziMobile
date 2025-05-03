@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mrinsaf.core.R
-import com.mrinsaf.core.data.repository.MockUziServiceRepository
+import com.mrinsaf.core.data.repository.network.MockUziServiceRepository
 import com.mrinsaf.core.ui.components.LoadingAnimation
 import com.mrinsaf.core.ui.components.MainButton
 import com.mrinsaf.newdiagnostic.ui.viewModel.DiagnosticProcessState

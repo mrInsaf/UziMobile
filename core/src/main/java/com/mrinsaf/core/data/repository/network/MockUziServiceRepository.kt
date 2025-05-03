@@ -1,13 +1,15 @@
-package com.mrinsaf.core.data.repository
+package com.mrinsaf.core.data.repository.network
 
 import android.net.Uri
 import com.mrinsaf.core.data.mock.MockAuthData
+import com.mrinsaf.core.data.models.User
 import com.mrinsaf.core.data.models.basic.Node
 import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
 import com.mrinsaf.core.data.models.basic.Uzi
 import com.mrinsaf.core.data.models.basic.UziDevice
 import com.mrinsaf.core.data.models.basic.UziImage
 import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
+import com.mrinsaf.core.data.models.networkResponses.LoginResponse
 import com.mrinsaf.core.data.models.networkResponses.RegPatientResponse
 import okhttp3.ResponseBody
 
@@ -21,7 +23,7 @@ class MockUziServiceRepository(
         TODO("Not yet implemented")
     }
 
-    override suspend fun submitLogin(email: String, password: String): com.mrinsaf.core.data.models.networkResponses.LoginResponse {
+    override suspend fun submitLogin(email: String, password: String): LoginResponse {
 //        return if (email == mockAuthData.email && password == mockAuthData.password) {
 //            LoginResponse(
 //                accessToken = "mock_access_token_123",
@@ -44,7 +46,7 @@ class MockUziServiceRepository(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUser(): com.mrinsaf.core.data.models.User {
+    override suspend fun getUser(): User {
         TODO("Not yet implemented")
     }
 

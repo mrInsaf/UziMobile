@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
 import com.mrinsaf.core.data.models.basic.Uzi
 import com.mrinsaf.core.data.models.basic.UziImage
-import com.mrinsaf.core.data.repository.UziServiceRepository
+import com.mrinsaf.core.data.repository.network.UziServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job

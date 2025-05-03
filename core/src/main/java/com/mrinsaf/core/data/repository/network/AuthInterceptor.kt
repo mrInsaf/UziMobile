@@ -1,4 +1,4 @@
-package com.mrinsaf.core.data.network
+package com.mrinsaf.core.data.repository.network
 
 import android.content.Context
 import com.mrinsaf.core.data.repository.local.TokenStorage

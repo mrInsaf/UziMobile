@@ -2,13 +2,13 @@ package com.mrinsaf.core.data.repository.di
 
 import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.mrinsaf.core.data.network.AuthApiService
-import com.mrinsaf.core.data.network.AuthInterceptor
-import com.mrinsaf.core.data.network.TokenAuthenticator
-import com.mrinsaf.core.data.network.TokenRefresher
-import com.mrinsaf.core.data.network.UziApiService
-import com.mrinsaf.core.data.repository.NetworkUziServiceRepository
-import com.mrinsaf.core.data.repository.UziServiceRepository
+import com.mrinsaf.core.data.repository.network.AuthApiService
+import com.mrinsaf.core.data.repository.network.AuthInterceptor
+import com.mrinsaf.core.data.repository.network.TokenAuthenticator
+import com.mrinsaf.core.data.repository.network.TokenRefresher
+import com.mrinsaf.core.data.repository.network.UziApiService
+import com.mrinsaf.core.data.repository.network.NetworkUziServiceRepository
+import com.mrinsaf.core.data.repository.network.UziServiceRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,7 +24,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RepositoryModule {
+object NetworkRepositoryModule {
 
     private const val BASE_URL = "http://194.226.121.145:8080/api/v1/"
     private val json = Json { ignoreUnknownKeys = true }

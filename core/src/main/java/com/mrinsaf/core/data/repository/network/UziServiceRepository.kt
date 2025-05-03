@@ -1,4 +1,4 @@
-package com.mrinsaf.core.data.repository
+package com.mrinsaf.core.data.repository.network
 
 import android.net.Uri
 import com.mrinsaf.core.data.models.User
@@ -9,6 +9,7 @@ import com.mrinsaf.core.data.models.basic.UziDevice
 import com.mrinsaf.core.data.models.basic.UziImage
 import okhttp3.ResponseBody
 import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
+import com.mrinsaf.core.data.models.networkResponses.LoginResponse
 import com.mrinsaf.core.data.models.networkResponses.RegPatientResponse
 
 interface UziServiceRepository {
@@ -17,7 +18,7 @@ interface UziServiceRepository {
     suspend fun submitLogin(
         email: String,
         password: String,
-    ): com.mrinsaf.core.data.models.networkResponses.LoginResponse
+    ): LoginResponse
 
     suspend fun refreshToken(): Unit
 

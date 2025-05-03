@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.mrinsaf.core.data.repository.MockUziServiceRepository
+import com.mrinsaf.core.data.repository.network.MockUziServiceRepository
 import com.mrinsaf.core.ui.components.fields.BasicFormField
 import com.mrinsaf.core.ui.components.fields.dateFormFields.DateFormField
 import com.mrinsaf.core.ui.components.MainButton

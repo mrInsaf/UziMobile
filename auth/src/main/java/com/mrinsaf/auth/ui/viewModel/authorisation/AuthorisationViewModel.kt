@@ -3,21 +3,14 @@ package com.mrinsaf.auth.ui.viewModel.authorisation
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import com.mrinsaf.core.data.repository.NetworkUziServiceRepository
-import com.mrinsaf.core.data.repository.UziServiceRepository
-import com.mrinsaf.core.data.repository.local.TokenStorage
+import com.mrinsaf.core.data.repository.network.UziServiceRepository
 import com.mrinsaf.core.data.repository.local.UserInfoStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -99,8 +92,7 @@ class AuthorisationViewModel @Inject constructor(
 
             if (patientId?.isBlank() == true) {
                 println("Patient ID is empty")
-                UserInfoStorage.saveUserId(context = context, userId = "72881f74-1d10-4d93-9002-5207a83729ed")
-                // TODO поменять на получение настоящего id
+                UserInfoStorage.saveDecodedUserIdFromToken(context)
             } else {
                 println("Patient ID: $patientId")
             }
