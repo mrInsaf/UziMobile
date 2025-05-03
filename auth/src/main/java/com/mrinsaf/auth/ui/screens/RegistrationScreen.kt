@@ -50,16 +50,6 @@ fun RegistrationScreen(
 ) {
     val registrationUiState = registrationViewModel.uiState.collectAsState().value
 
-//    val imeState = rememberImeState()
-//    val scrollState = rememberScrollState()
-//
-//    LaunchedEffect(key1 = imeState.value) {
-//        if (imeState.value){
-//            scrollState.animateScrollTo(scrollState.maxValue, tween(300))
-//        }
-//    }
-
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,

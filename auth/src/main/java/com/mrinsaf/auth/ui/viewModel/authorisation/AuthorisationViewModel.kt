@@ -75,11 +75,17 @@ class AuthorisationViewModel @Inject constructor(
             authState.value = AuthState.Authorized
         } catch (e: Exception) {
             if (e is retrofit2.HttpException) {
-                val response = e.response() // Получаем ответ с ошибкой
-                val errorBody = response?.errorBody()?.string() // Тело ошибки в виде строки
-                Toast.makeText(context, "Неверные почта или пароль", Toast.LENGTH_LONG).show()
+                val response = e.response()
+                val errorBody = response?.errorBody()?.string()
                 println("Ошибка HTTP: ${e.code()} - ${e.message()}")
                 println("Тело ошибки: $errorBody")
+                if (errorBody != null && errorBody.contains("email: not found")) {
+                    Toast.makeText(context, "Пользователь не найден", Toast.LENGTH_LONG).show()
+                }
+                else {
+                    Toast.makeText(context, "Неверные почта или пароль", Toast.LENGTH_LONG).show()
+                }
+
             } else {
                 println("Ошибка при попытке логинa: $e")
                 Toast.makeText(context, "Произошла ошибка при авторизации", Toast.LENGTH_LONG).show()
