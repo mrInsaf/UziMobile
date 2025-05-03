@@ -6,9 +6,10 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
 import com.mrinsaf.core.data.models.basic.Uzi
 import com.mrinsaf.core.data.models.basic.UziImage
+import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
+import com.mrinsaf.core.data.repository.local.UserInfoStorage
 import com.mrinsaf.core.data.repository.network.UziServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -18,6 +19,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -187,10 +189,12 @@ class NewDiagnosticViewModel @Inject constructor(
             )
         }
 
+        val patientId = UserInfoStorage.getUserId(context).first()
+
         val uziId = repository.createUzi(
             uziUris = uiState.value.selectedImageUri!!,
             projection = "long",
-            patientId = "72881f74-1d10-4d93-9002-5207a83729ed", // TODO: заменить на ID авторизованного пользователя
+            patientId = patientId,
             deviceId = "1",
         ).also {
             println("diagnosticId: $it")
