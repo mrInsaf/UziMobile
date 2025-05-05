@@ -1,4 +1,4 @@
-package com.mrinsaf.core.ui.screens
+package com.mrinsaf.profile.ui.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,18 +8,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrinsaf.core.ui.components.fields.ProfileField
+import com.mrinsaf.profile.ui.viewModel.ProfileViewModel
 
 @Composable
 fun ProfileScreen(
-    userName: String,
-    userEmail: String,
+    profileViewModel: ProfileViewModel,
 ) {
+    val uiState = profileViewModel.uiState.collectAsStateWithLifecycle()
     Column(
         horizontalAlignment = Alignment.Start,
         modifier = Modifier
             .fillMaxWidth()
-//            .padding(horizontal = 12.dp)
     ) {
         Text(
             text = "Профиль",
@@ -29,22 +30,13 @@ fun ProfileScreen(
 
         ProfileField(
             title = "ФИО",
-            content = userName,
+            content = uiState.value.user?.fullName ?: "Ошибка",
         )
 
         ProfileField(
             title = "Электронная почта",
-            content = userEmail,
+            content = uiState.value.user?.email ?: "Ошибка",
         )
 
     }
-}
-
-@Preview
-@Composable
-fun ProfileScreenPreview() {
-    ProfileScreen(
-        userName = "Иванов Иван Иванович",
-        userEmail = "ivanov@mail.ru"
-    )
 }

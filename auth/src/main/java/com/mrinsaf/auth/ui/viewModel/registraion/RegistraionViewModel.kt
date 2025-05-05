@@ -103,7 +103,7 @@ class RegistraionViewModel @Inject constructor(
             _registrationSuccess.emit(Unit)
 
         } catch (e: Exception) {
-            println(e)
+            println(e.printStackTrace())
             Toast.makeText(
                 context,
                 "Что-то пошло не так",

@@ -1,5 +1,6 @@
 package com.mrinsaf.core.data.repository.network
 
+import com.mrinsaf.core.data.models.User
 import com.mrinsaf.core.data.models.basic.Node
 import com.mrinsaf.core.data.models.basic.Uzi
 import com.mrinsaf.core.data.models.basic.UziDevice
@@ -65,4 +66,9 @@ interface UziApiService {
 
     @GET("uzi/devices")
     suspend fun getUziDevices(): Response<List<UziDevice>>
+
+    @GET("med/patient/{id}")
+    suspend fun getPatient(
+        @Path("id") patientId: String
+    ): User
 }
