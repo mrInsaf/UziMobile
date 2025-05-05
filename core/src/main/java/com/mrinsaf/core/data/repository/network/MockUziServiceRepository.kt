@@ -46,7 +46,7 @@ class MockUziServiceRepository(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUser(): User {
+    override suspend fun getPatient(patientId: String): User {
         TODO("Not yet implemented")
     }
 

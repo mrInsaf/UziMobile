@@ -206,8 +206,8 @@ class NetworkUziServiceRepository(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUser(): User {
-        TODO("Not yet implemented")
+    override suspend fun getPatient(patientId: String): User {
+        return uziApiService.getPatient(patientId)
     }
 
     override suspend fun regPatient(request: RegPatientRequest): RegPatientResponse {

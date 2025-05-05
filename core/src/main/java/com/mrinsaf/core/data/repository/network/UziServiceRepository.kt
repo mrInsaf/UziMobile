@@ -24,7 +24,7 @@ interface UziServiceRepository {
 
     suspend fun submitLogout(): Boolean
 
-    suspend fun getUser(): User
+    suspend fun getPatient(patientId: String): User
 
     suspend fun createUzi(
         uziUris: Uri, // URI УЗИ файла

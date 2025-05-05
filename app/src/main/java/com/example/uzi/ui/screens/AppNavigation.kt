@@ -23,6 +23,7 @@ import com.mrinsaf.core.data.repository.network.AuthEventBus
 import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
 import com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
+import com.mrinsaf.profile.ui.viewModel.ProfileViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,12 +32,12 @@ import kotlinx.coroutines.launch
 fun AppNavigation(
     navController: NavHostController,
     startDestination: String,
-    authorisationUiState: AuthorisationUiState,
     authorisationViewModel: AuthorisationViewModel,
     registrationViewModel: RegistraionViewModel,
     newDiagnosticViewModel: NewDiagnosticViewModel,
     diagnosticViewModel: DiagnosticViewModel,
     diagnosticListViewModel: DiagnosticListViewModel,
+    profileViewModel: ProfileViewModel,
     patientId: String,
 ) {
     val context = LocalContext.current
@@ -68,10 +69,10 @@ fun AppNavigation(
         composable(route = AuthScreens.MainScreen.route) {
             MainScreen(
                 newDiagnosticViewModel = newDiagnosticViewModel,
-                userData = authorisationUiState.userData,
                 diagnosticViewModel = diagnosticViewModel,
                 diagnosticListViewModel = diagnosticListViewModel,
-                patientId = patientId
+                patientId = patientId,
+                profileViewModel = profileViewModel
             )
         }
         composable(route = AuthScreens.SplashScreen.route) {

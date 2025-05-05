@@ -22,8 +22,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.mrinsaf.core.data.models.User
-import com.mrinsaf.core.ui.screens.ProfileScreen
 import com.mrinsaf.core.ui.theme.Paddings
 import com.mrinsaf.diagnostic_details.ui.screens.DiagnosticScreen
 import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
@@ -32,6 +30,8 @@ import com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel
 import com.mrinsaf.newdiagnostic.ui.screens.NewDiagnosticNavigation
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.isSuccess
+import com.mrinsaf.profile.ui.screens.ProfileScreen
+import com.mrinsaf.profile.ui.viewModel.ProfileViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,7 +42,7 @@ fun MainScreen(
     newDiagnosticViewModel: NewDiagnosticViewModel,
     diagnosticViewModel: DiagnosticViewModel,
     diagnosticListViewModel: DiagnosticListViewModel,
-    userData: User,
+    profileViewModel: ProfileViewModel,
     patientId: String,
 ) {
     val navController = rememberNavController()
@@ -59,7 +59,7 @@ fun MainScreen(
             newDiagnosticViewModel = newDiagnosticViewModel,
             diagnosticViewModel = diagnosticViewModel,
             diagnosticListViewModel = diagnosticListViewModel,
-            userData = userData,
+            profileViewModel = profileViewModel,
             patientId = patientId
         )
     }
@@ -72,7 +72,7 @@ fun NavigationGraph(
     newDiagnosticViewModel: NewDiagnosticViewModel,
     diagnosticViewModel: DiagnosticViewModel,
     diagnosticListViewModel: DiagnosticListViewModel,
-    userData: User,
+    profileViewModel: ProfileViewModel,
     patientId: String
 ) {
     NavHost(
@@ -124,8 +124,7 @@ fun NavigationGraph(
 
         composable(Screen.Account.route) {
             ProfileScreen(
-                userName = userData.userName,
-                userEmail = userData.userEmail,
+                profileViewModel = profileViewModel,
             )
         }
 
