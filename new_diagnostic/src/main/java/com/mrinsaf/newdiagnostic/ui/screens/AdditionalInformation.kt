@@ -58,12 +58,6 @@ fun AdditionalInformation(
             label = "Клиника",
         )
 
-        SaveResultsCheckbox(
-            isChecked = newDiagnosticUiState.saveResultsChecked
-        ) {
-            newDiagnosticViewModel.onSaveResultsCheck()
-        }
-
         MainButton(
             text = "Далее"
         ) {
