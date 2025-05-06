@@ -65,6 +65,7 @@ class AuthorisationViewModel @Inject constructor(
                 password = uiState.value.authorizationPassword
             )
             authState.value = AuthState.Authorized
+            updatePatientIdFromStorage()
         } catch (e: Exception) {
             if (e is retrofit2.HttpException) {
                 val response = e.response()
