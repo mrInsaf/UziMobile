@@ -10,7 +10,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -42,7 +41,7 @@ class AuthorisationViewModel @Inject constructor(
                 }
             }
         }
-        retrievePatientIdFromStorage()
+        updatePatientIdFromStorage()
     }
 
     fun onTokenExpired() {
@@ -86,16 +85,11 @@ class AuthorisationViewModel @Inject constructor(
         }
     }
 
-    private fun retrievePatientIdFromStorage() {
+    private fun updatePatientIdFromStorage() {
         viewModelScope.launch {
-            val patientId = UserInfoStorage.getUserId(context = context).firstOrNull()
+            println("updating patient id")
+            val patientId = UserInfoStorage.saveDecodedUserIdFromToken(context)
 
-            if (patientId?.isBlank() == true) {
-                println("Patient ID is empty")
-                UserInfoStorage.saveDecodedUserIdFromToken(context)
-            } else {
-                println("Patient ID: $patientId")
-            }
             _uiState.update {
                 it.copy(
                     patientId = patientId

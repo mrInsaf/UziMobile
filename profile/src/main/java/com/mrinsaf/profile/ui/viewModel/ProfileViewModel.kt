@@ -23,18 +23,17 @@ class ProfileViewModel @Inject constructor(
     val uiState: StateFlow<ProfileUiState>
         get() = _uiState
 
-    init {
-        viewModelScope.launch {
-            try {
-                val userId = UserInfoStorage.getUserId(context).first()
-                val userInfo = repository.getPatient(userId)
-                println(userInfo)
+    suspend fun loadUserInfo() {
+        println("Достаю информацию о пользователе")
+        try {
+            val userId = UserInfoStorage.getUserId(context).first()
+            val userInfo = repository.getPatient(userId)
+            println(userInfo)
 
-                _uiState.update { it.copy(userInfo) }
-            }
-            catch (e: Exception) {
-                println("Ошибка при получении информации о пользователе $e")
-            }
+            _uiState.update { it.copy(userInfo) }
+        }
+        catch (e: Exception) {
+            println("Ошибка при получении информации о пользователе $e")
         }
     }
 }

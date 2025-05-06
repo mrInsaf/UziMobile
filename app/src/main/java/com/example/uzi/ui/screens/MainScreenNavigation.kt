@@ -88,7 +88,7 @@ fun NavigationGraph(
                 onDiagnosticCompleted = {
                     if (uiState.diagnosticProcessState.isSuccess) {
                         val downloadedImagesUri = uiState.downloadedImagesUri
-                        if (downloadedImagesUri != null){
+                        if (downloadedImagesUri != null) {
                             diagnosticViewModel.onDiagnosticCompleted(
                                 uziId = uiState.completedDiagnosticId,
                                 imagesUris = downloadedImagesUri,
@@ -101,7 +101,8 @@ fun NavigationGraph(
                         }
                         navController.navigate(Screen.Diagnostic.route)
                     }
-                }
+                },
+                patientId = patientId
             )
         }
         composable(Screen.Uploaded.route) {

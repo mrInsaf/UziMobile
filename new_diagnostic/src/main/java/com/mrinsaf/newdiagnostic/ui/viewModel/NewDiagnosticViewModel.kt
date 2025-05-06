@@ -72,7 +72,7 @@ class NewDiagnosticViewModel @Inject constructor(
         }
     }
 
-    fun onDiagnosticStart(userId: String = "1") {
+    fun onDiagnosticStart(patientId: String) {
         uploadDiagnosticJob = viewModelScope.launch {
             try {
                 println("=== Начало диагностики ===")
@@ -81,7 +81,7 @@ class NewDiagnosticViewModel @Inject constructor(
                 println("UI обновлен перед стартом диагностики")
 
                 println("Создание диагностической записи...")
-                val diagnosticId = createDiagnostic().also {
+                val diagnosticId = createDiagnostic(patientId).also {
                     println("Diagnostic ID получен: $it")
                     _uiState.update { state ->
                         state.copy(isUziPosted = true)
@@ -182,14 +182,12 @@ class NewDiagnosticViewModel @Inject constructor(
         }
     }
 
-    private suspend fun createDiagnostic(): String {
+    private suspend fun createDiagnostic(patientId: String): String {
         _uiState.update {
             it.copy(
                 diagnosticProcessState = DiagnosticProcessState.Sending,
             )
         }
-
-        val patientId = UserInfoStorage.getUserId(context).first()
 
         val uziId = repository.createUzi(
             uziUris = uiState.value.selectedImageUri!!,
