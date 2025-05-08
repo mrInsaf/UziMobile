@@ -9,18 +9,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun MainButton(
     text: String,
     enabled: Boolean = true,
+    containerColor: Color = MaterialTheme.colorScheme.secondary,
     onClick: () -> Unit,
 ) {
     Button(
         onClick = onClick,
         shape = RoundedCornerShape(8.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+        colors = ButtonDefaults.buttonColors(containerColor = containerColor),
         enabled = enabled,
         modifier = Modifier
             .fillMaxWidth(0.8f)

@@ -2,7 +2,6 @@ package com.mrinsaf.profile.ui.viewModel
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.mrinsaf.core.data.repository.local.UserInfoStorage
 import com.mrinsaf.core.data.repository.network.UziServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,7 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
