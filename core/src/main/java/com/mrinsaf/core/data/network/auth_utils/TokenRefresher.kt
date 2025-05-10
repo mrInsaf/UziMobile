@@ -1,8 +1,8 @@
-package com.mrinsaf.auth.data.repository
+package com.mrinsaf.core.data.network.auth_utils
 
 import android.content.Context
-import com.mrinsaf.auth.data.model.network_requests.RefreshRequest
-import com.mrinsaf.auth.data.model.network_responses.RefreshResponse
+import com.mrinsaf.core.data.model.network_request.RefreshRequest
+import com.mrinsaf.core.data.model.network_responses.RefreshResponse
 import com.mrinsaf.core.data.network.AuthApiService
 import com.mrinsaf.core.data.repository.local.TokenStorage
 import dagger.hilt.android.qualifiers.ApplicationContext

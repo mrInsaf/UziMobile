@@ -1,11 +1,11 @@
 package com.mrinsaf.core.data.network
 
-import com.mrinsaf.core.data.model.networkRequests.LoginRequest
-import com.mrinsaf.core.data.model.networkRequests.RefreshRequest
-import com.mrinsaf.core.data.model.networkRequests.RegPatientRequest
-import com.mrinsaf.core.data.model.networkResponses.LoginResponse
-import com.mrinsaf.core.data.model.networkResponses.RefreshResponse
-import com.mrinsaf.core.data.model.networkResponses.RegPatientResponse
+import com.mrinsaf.core.data.model.network_request.LoginRequest
+import com.mrinsaf.core.data.model.network_request.RefreshRequest
+import com.mrinsaf.core.data.model.network_request.RegPatientRequest
+import com.mrinsaf.core.data.model.network_responses.LoginResponse
+import com.mrinsaf.core.data.model.network_responses.RefreshResponse
+import com.mrinsaf.core.data.model.network_responses.RegPatientResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST

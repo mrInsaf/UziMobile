@@ -1,8 +1,8 @@
 package com.mrinsaf.auth.domain
 
-import com.mrinsaf.auth.data.model.network_requests.RegPatientRequest
-import com.mrinsaf.auth.data.model.network_responses.LoginResponse
-import com.mrinsaf.auth.data.model.network_responses.RegPatientResponse
+import com.mrinsaf.core.data.model.network_request.RegPatientRequest
+import com.mrinsaf.core.data.model.network_responses.LoginResponse
+import com.mrinsaf.core.data.model.network_responses.RegPatientResponse
 
 interface AuthRepository {
     suspend fun submitLogin(

@@ -1,4 +1,4 @@
-package com.mrinsaf.auth.data.model.network_requests
+package com.mrinsaf.core.data.model.network_request
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

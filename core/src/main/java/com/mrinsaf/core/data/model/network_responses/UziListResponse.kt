@@ -1,4 +1,4 @@
-package com.mrinsaf.core.data.model.networkResponses
+package com.mrinsaf.core.data.model.network_responses
 
 
 import com.mrinsaf.core.domain.model.basic.Uzi

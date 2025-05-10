@@ -5,9 +5,9 @@ import com.mrinsaf.core.domain.model.basic.Node
 import com.mrinsaf.core.domain.model.basic.Uzi
 import com.mrinsaf.core.domain.model.basic.UziDevice
 import com.mrinsaf.core.domain.model.basic.UziImage
-import com.mrinsaf.core.data.model.networkResponses.NodesSegmentsResponse
-import com.mrinsaf.core.data.model.networkResponses.PostUziResponse
-import com.mrinsaf.core.data.model.networkResponses.UziListResponse
+import com.mrinsaf.core.data.model.network_responses.NodesSegmentsResponse
+import com.mrinsaf.core.data.model.network_responses.PostUziResponse
+import com.mrinsaf.core.data.model.network_responses.UziListResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody

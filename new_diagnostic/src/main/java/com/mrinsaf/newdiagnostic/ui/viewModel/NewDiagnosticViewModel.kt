@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrinsaf.core.domain.model.basic.Uzi
 import com.mrinsaf.core.domain.model.basic.UziImage
-import com.mrinsaf.core.data.model.networkResponses.NodesSegmentsResponse
+import com.mrinsaf.core.data.model.network_responses.NodesSegmentsResponse
 import com.mrinsaf.core.domain.repository.UziServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
