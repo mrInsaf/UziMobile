@@ -2,14 +2,10 @@ package com.mrinsaf.core.data.di
 
 import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.mrinsaf.core.data.network.AuthApiService
-import com.mrinsaf.core.data.repository.auth.AuthInterceptor
-import com.mrinsaf.core.data.repository.auth.AuthRepositoryImpl
-import com.mrinsaf.core.data.repository.auth.TokenAuthenticator
-import com.mrinsaf.core.data.repository.auth.TokenRefresher
 import com.mrinsaf.core.data.network.UziApiService
+import com.mrinsaf.core.data.repository.auth.AuthInterceptor
+import com.mrinsaf.core.data.repository.auth.TokenAuthenticator
 import com.mrinsaf.core.data.repository.network.NetworkUziServiceRepository
-import com.mrinsaf.core.domain.repository.AuthRepository
 import com.mrinsaf.core.domain.repository.UziServiceRepository
 import dagger.Module
 import dagger.Provides
@@ -21,7 +17,6 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module

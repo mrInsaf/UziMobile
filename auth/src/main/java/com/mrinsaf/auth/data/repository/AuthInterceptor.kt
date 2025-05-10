@@ -1,4 +1,4 @@
-package com.mrinsaf.core.data.repository.auth
+package com.mrinsaf.auth.data.repository
 
 import android.content.Context
 import com.mrinsaf.core.data.repository.local.TokenStorage

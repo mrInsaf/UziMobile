@@ -1,16 +1,13 @@
-package com.mrinsaf.core.data.di
+package com.mrinsaf.auth.data.di
 
 import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.mrinsaf.auth.data.repository.AuthInterceptor
+import com.mrinsaf.auth.data.repository.AuthRepositoryImpl
+import com.mrinsaf.auth.data.repository.TokenAuthenticator
+import com.mrinsaf.auth.data.repository.TokenRefresher
+import com.mrinsaf.auth.domain.AuthRepository
 import com.mrinsaf.core.data.network.AuthApiService
-import com.mrinsaf.core.data.repository.auth.AuthInterceptor
-import com.mrinsaf.core.data.repository.auth.AuthRepositoryImpl
-import com.mrinsaf.core.data.repository.auth.TokenAuthenticator
-import com.mrinsaf.core.data.repository.auth.TokenRefresher
-import com.mrinsaf.core.data.network.UziApiService
-import com.mrinsaf.core.data.repository.network.NetworkUziServiceRepository
-import com.mrinsaf.core.domain.repository.AuthRepository
-import com.mrinsaf.core.domain.repository.UziServiceRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

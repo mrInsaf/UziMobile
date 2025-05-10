@@ -5,10 +5,9 @@ import android.util.Patterns
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrinsaf.core.data.model.networkRequests.RegPatientRequest
-import com.mrinsaf.core.domain.repository.UziServiceRepository
+import com.mrinsaf.auth.data.model.network_requests.RegPatientRequest
 import com.mrinsaf.core.data.repository.local.UserInfoStorage
-import com.mrinsaf.core.domain.repository.AuthRepository
+import com.mrinsaf.auth.domain.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
