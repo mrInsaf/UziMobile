@@ -1,4 +1,4 @@
-package com.mrinsaf.core.data.repository.network
+package com.mrinsaf.core.data.network
 
 import com.mrinsaf.core.domain.model.User
 import com.mrinsaf.core.domain.model.basic.Node

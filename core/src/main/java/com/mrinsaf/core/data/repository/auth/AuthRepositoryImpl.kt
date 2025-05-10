@@ -1,4 +1,4 @@
-package com.mrinsaf.core.data.repository.network
+package com.mrinsaf.core.data.repository.auth
 
 import android.content.Context
 import com.mrinsaf.core.data.model.networkRequests.LoginRequest
@@ -6,6 +6,7 @@ import com.mrinsaf.core.data.model.networkRequests.RefreshRequest
 import com.mrinsaf.core.data.model.networkRequests.RegPatientRequest
 import com.mrinsaf.core.data.model.networkResponses.LoginResponse
 import com.mrinsaf.core.data.model.networkResponses.RegPatientResponse
+import com.mrinsaf.core.data.network.AuthApiService
 import com.mrinsaf.core.data.repository.local.TokenStorage
 import com.mrinsaf.core.data.repository.network.NetworkUziServiceRepository.TokenNotFoundException
 import com.mrinsaf.core.domain.repository.AuthRepository

@@ -14,11 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.mrinsaf.core.data.repository.network.MockUziServiceRepository
+import com.mrinsaf.core.data.repository.mock.MockUziServiceRepository
 import com.mrinsaf.core.presentation.ui.components.fields.BasicFormField
 import com.mrinsaf.core.presentation.ui.components.fields.dateFormFields.DateFormField
 import com.mrinsaf.core.presentation.ui.components.MainButton
-import com.mrinsaf.core.presentation.ui.components.SaveResultsCheckbox
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 
 @Composable

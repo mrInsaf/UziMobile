@@ -16,10 +16,9 @@ import com.mrinsaf.auth.ui.screens.AuthorizationScreen
 import com.mrinsaf.auth.ui.screens.RegistrationScreen
 import com.mrinsaf.auth.ui.screens.errorScreens.ApiIsDownScreen
 import com.mrinsaf.auth.ui.screens.splashScreen.SplashScreen
-import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationUiState
 import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationViewModel
 import com.mrinsaf.auth.ui.viewModel.registraion.RegistraionViewModel
-import com.mrinsaf.core.data.repository.network.AuthEventBus
+import com.mrinsaf.core.data.repository.auth.AuthEventBus
 import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
 import com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel

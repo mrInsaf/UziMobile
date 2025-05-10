@@ -1,4 +1,4 @@
-package com.mrinsaf.core.data.repository.network
+package com.mrinsaf.core.data.repository.auth
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
