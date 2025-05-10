@@ -11,7 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.uzi.ui.screens.AppNavigation
 import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationViewModel
 import com.mrinsaf.auth.ui.viewModel.registraion.RegistraionViewModel
-import com.mrinsaf.core.ui.theme.UziTheme
+import com.mrinsaf.core.presentation.ui.theme.UziTheme
 import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
 import com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel

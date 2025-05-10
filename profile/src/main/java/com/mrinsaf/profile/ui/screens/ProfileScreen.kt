@@ -12,8 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mrinsaf.core.ui.components.MainButton
-import com.mrinsaf.core.ui.components.fields.ProfileField
+import com.mrinsaf.core.presentation.ui.components.MainButton
+import com.mrinsaf.core.presentation.ui.components.fields.ProfileField
 import com.mrinsaf.profile.ui.viewModel.ProfileViewModel
 
 @Composable

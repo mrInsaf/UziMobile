@@ -16,8 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mrinsaf.core.ui.components.MainButton
-import com.mrinsaf.core.ui.components.fields.RequiredFormField
+import com.mrinsaf.core.presentation.ui.components.MainButton
+import com.mrinsaf.core.presentation.ui.components.fields.RequiredFormField
 import com.mrinsaf.auth.ui.viewModel.authorisation.AuthorisationViewModel
 
 @Composable

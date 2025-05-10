@@ -2,8 +2,8 @@ package com.mrinsaf.diagnostic_list.ui.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrinsaf.core.data.models.basic.NodesWithUziId
-import com.mrinsaf.core.data.repository.network.UziServiceRepository
+import com.mrinsaf.core.domain.model.basic.NodesWithUziId
+import com.mrinsaf.core.domain.repository.UziServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers

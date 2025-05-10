@@ -6,11 +6,10 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrinsaf.core.data.models.basic.Uzi
-import com.mrinsaf.core.data.models.basic.UziImage
-import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
-import com.mrinsaf.core.data.repository.local.UserInfoStorage
-import com.mrinsaf.core.data.repository.network.UziServiceRepository
+import com.mrinsaf.core.domain.model.basic.Uzi
+import com.mrinsaf.core.domain.model.basic.UziImage
+import com.mrinsaf.core.data.model.network_responses.NodesSegmentsResponse
+import com.mrinsaf.core.domain.repository.UziServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
@@ -19,7 +18,6 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
