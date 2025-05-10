@@ -2,9 +2,9 @@ package com.mrinsaf.newdiagnostic.ui.viewModel
 
 import android.graphics.Bitmap
 import android.net.Uri
-import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
-import com.mrinsaf.core.data.models.basic.Uzi
-import com.mrinsaf.core.data.models.basic.UziImage
+import com.mrinsaf.core.data.model.networkResponses.NodesSegmentsResponse
+import com.mrinsaf.core.domain.model.basic.Uzi
+import com.mrinsaf.core.domain.model.basic.UziImage
 
 data class NewDiagnosticUiState(
     var currentScreenIndex: Int = 0,

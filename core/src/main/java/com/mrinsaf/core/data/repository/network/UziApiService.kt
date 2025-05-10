@@ -1,13 +1,13 @@
 package com.mrinsaf.core.data.repository.network
 
-import com.mrinsaf.core.data.models.User
-import com.mrinsaf.core.data.models.basic.Node
-import com.mrinsaf.core.data.models.basic.Uzi
-import com.mrinsaf.core.data.models.basic.UziDevice
-import com.mrinsaf.core.data.models.basic.UziImage
-import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
-import com.mrinsaf.core.data.models.networkResponses.PostUziResponse
-import com.mrinsaf.core.data.models.networkResponses.UziListResponse
+import com.mrinsaf.core.domain.model.User
+import com.mrinsaf.core.domain.model.basic.Node
+import com.mrinsaf.core.domain.model.basic.Uzi
+import com.mrinsaf.core.domain.model.basic.UziDevice
+import com.mrinsaf.core.domain.model.basic.UziImage
+import com.mrinsaf.core.data.model.networkResponses.NodesSegmentsResponse
+import com.mrinsaf.core.data.model.networkResponses.PostUziResponse
+import com.mrinsaf.core.data.model.networkResponses.UziListResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody

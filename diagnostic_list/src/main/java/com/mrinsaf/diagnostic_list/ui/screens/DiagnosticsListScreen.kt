@@ -17,10 +17,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.mrinsaf.core.data.models.basic.NodesWithUziId
-import com.mrinsaf.core.data.models.basic.Uzi
-import com.mrinsaf.core.ui.components.containers.DiagnosticListItem
-import com.mrinsaf.core.ui.theme.Paddings
+import com.mrinsaf.core.domain.model.basic.NodesWithUziId
+import com.mrinsaf.core.domain.model.basic.Uzi
+import com.mrinsaf.core.presentation.ui.components.containers.DiagnosticListItem
+import com.mrinsaf.core.presentation.ui.theme.Paddings
 
 @Composable
 fun DiagnosticsListScreen(

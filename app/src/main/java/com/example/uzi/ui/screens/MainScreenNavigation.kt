@@ -22,7 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.mrinsaf.core.ui.theme.Paddings
+import com.mrinsaf.core.presentation.ui.theme.Paddings
 import com.mrinsaf.diagnostic_details.ui.screens.DiagnosticScreen
 import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
 import com.mrinsaf.diagnostic_list.ui.screens.DiagnosticsListScreen

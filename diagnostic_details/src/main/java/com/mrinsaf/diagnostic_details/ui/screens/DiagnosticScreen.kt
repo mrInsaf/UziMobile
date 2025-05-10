@@ -37,13 +37,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.mrinsaf.core.R
-import com.mrinsaf.core.data.models.basic.SectorPoint
+import com.mrinsaf.core.domain.model.basic.SectorPoint
 import com.mrinsaf.core.data.repository.network.MockUziServiceRepository
-import com.mrinsaf.core.ui.components.LoadingAnimation
-import com.mrinsaf.core.ui.components.bottomSheet.RecommendationBottomSheet
-import com.mrinsaf.core.ui.components.canvas.ZoomableCanvasSectorWithConstraints
-import com.mrinsaf.core.ui.components.containers.FormationInfoContainer
-import com.mrinsaf.core.ui.theme.Paddings
+import com.mrinsaf.core.presentation.ui.components.LoadingAnimation
+import com.mrinsaf.core.presentation.ui.components.bottomSheet.RecommendationBottomSheet
+import com.mrinsaf.core.presentation.ui.components.canvas.ZoomableCanvasSectorWithConstraints
+import com.mrinsaf.core.presentation.ui.components.containers.FormationInfoContainer
+import com.mrinsaf.core.presentation.ui.theme.Paddings
 import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
 
 

@@ -18,7 +18,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mrinsaf.core.ui.components.canvas.NewDiagnosticProgressBar
+import com.mrinsaf.core.presentation.ui.components.canvas.NewDiagnosticProgressBar
 import com.mrinsaf.newdiagnostic.ui.viewModel.DiagnosticProcessState
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 

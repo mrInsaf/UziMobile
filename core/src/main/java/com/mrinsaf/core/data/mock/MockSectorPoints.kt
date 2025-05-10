@@ -1,6 +1,6 @@
 package com.mrinsaf.core.data.mock
 
-import com.mrinsaf.core.data.models.basic.SectorPoint
+import com.mrinsaf.core.domain.model.basic.SectorPoint
 import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin

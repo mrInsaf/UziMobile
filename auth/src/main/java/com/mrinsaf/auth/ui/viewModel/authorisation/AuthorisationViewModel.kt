@@ -4,8 +4,9 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrinsaf.core.data.repository.network.UziServiceRepository
+import com.mrinsaf.core.domain.repository.UziServiceRepository
 import com.mrinsaf.core.data.repository.local.UserInfoStorage
+import com.mrinsaf.core.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,8 +17,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthorisationViewModel @Inject constructor(
-    val repository: UziServiceRepository,
-    @ApplicationContext val context: Context,
+    val authRepository: AuthRepository,
+    private val uziServiceRepository: UziServiceRepository,
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(AuthorisationUiState())
     val uiState: StateFlow<AuthorisationUiState>
@@ -29,7 +31,7 @@ class AuthorisationViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             try {
-                val isAuthorized = repository.getUziDevices().isNotEmpty()
+                val isAuthorized = uziServiceRepository.getUziDevices().isNotEmpty()
                 authState.value = if (isAuthorized) AuthState.Authorized else AuthState.Error.Unauthorized
             }
             catch (e: Exception) {
@@ -60,7 +62,7 @@ class AuthorisationViewModel @Inject constructor(
         try {
             println("email: ${uiState.value.authorizationEmail}")
             println("pwd: ${uiState.value.authorizationPassword}")
-            repository.submitLogin(
+            authRepository.submitLogin(
                 email = uiState.value.authorizationEmail,
                 password = uiState.value.authorizationPassword
             )

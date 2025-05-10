@@ -9,8 +9,8 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.mrinsaf.core.R
-import com.mrinsaf.core.data.models.basic.SectorPoint
-import com.mrinsaf.core.ui.components.canvas.ZoomableCanvasSector
+import com.mrinsaf.core.domain.model.basic.SectorPoint
+import com.mrinsaf.core.presentation.ui.components.canvas.ZoomableCanvasSector
 
 @Composable
 fun UziImageFullScreen(

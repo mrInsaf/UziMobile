@@ -5,9 +5,10 @@ import android.util.Patterns
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
-import com.mrinsaf.core.data.repository.network.UziServiceRepository
+import com.mrinsaf.core.data.model.networkRequests.RegPatientRequest
+import com.mrinsaf.core.domain.repository.UziServiceRepository
 import com.mrinsaf.core.data.repository.local.UserInfoStorage
+import com.mrinsaf.core.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,7 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegistraionViewModel @Inject constructor(
-    val repository: UziServiceRepository,
+    val authRepository: AuthRepository,
     @ApplicationContext val context: Context,
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(RegistrationUiState())
@@ -96,7 +97,7 @@ class RegistraionViewModel @Inject constructor(
             password = uiState.value.password
         )
         try {
-            val patientId = repository.regPatient(patientData)
+            val patientId = authRepository.registerPatient(patientData)
             println("patientId: $patientId")
 
             UserInfoStorage.saveUserId(context, patientId.id)

@@ -1,8 +1,8 @@
 package com.mrinsaf.core.data.repository.network
 
 import android.content.Context
-import com.mrinsaf.core.data.models.networkRequests.RefreshRequest
-import com.mrinsaf.core.data.models.networkResponses.RefreshResponse
+import com.mrinsaf.core.data.model.networkRequests.RefreshRequest
+import com.mrinsaf.core.data.model.networkResponses.RefreshResponse
 import com.mrinsaf.core.data.repository.local.TokenStorage
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject

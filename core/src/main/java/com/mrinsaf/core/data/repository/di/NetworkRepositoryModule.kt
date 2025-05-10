@@ -4,11 +4,13 @@ import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.mrinsaf.core.data.repository.network.AuthApiService
 import com.mrinsaf.core.data.repository.network.AuthInterceptor
+import com.mrinsaf.core.data.repository.network.AuthRepositoryImpl
 import com.mrinsaf.core.data.repository.network.TokenAuthenticator
 import com.mrinsaf.core.data.repository.network.TokenRefresher
 import com.mrinsaf.core.data.repository.network.UziApiService
 import com.mrinsaf.core.data.repository.network.NetworkUziServiceRepository
-import com.mrinsaf.core.data.repository.network.UziServiceRepository
+import com.mrinsaf.core.domain.repository.AuthRepository
+import com.mrinsaf.core.domain.repository.UziServiceRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -123,13 +125,20 @@ object NetworkRepositoryModule {
     @Singleton
     fun provideUziServiceRepository(
         uziApiService: UziApiService,
-        authApiService: AuthApiService,
         @ApplicationContext context: Context
     ): UziServiceRepository =
         NetworkUziServiceRepository(
             uziApiService,
-            authApiService,
             context
         )
-//        MockUziServiceRepository()
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(
+        authApiService: AuthApiService,
+        @ApplicationContext context: Context
+    ): AuthRepository = AuthRepositoryImpl(
+        context,
+        authApiService,
+    )
 }

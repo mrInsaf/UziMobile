@@ -7,18 +7,19 @@ import android.net.Uri
 import android.os.Build
 import android.provider.OpenableColumns
 import androidx.annotation.RequiresApi
-import com.mrinsaf.core.data.models.User
-import com.mrinsaf.core.data.models.basic.Node
-import com.mrinsaf.core.data.models.basic.Uzi
-import com.mrinsaf.core.data.models.basic.UziDevice
-import com.mrinsaf.core.data.models.basic.UziImage
-import com.mrinsaf.core.data.models.networkRequests.LoginRequest
-import com.mrinsaf.core.data.models.networkRequests.RefreshRequest
-import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
-import com.mrinsaf.core.data.models.networkResponses.LoginResponse
-import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
-import com.mrinsaf.core.data.models.networkResponses.RegPatientResponse
+import com.mrinsaf.core.domain.model.User
+import com.mrinsaf.core.domain.model.basic.Node
+import com.mrinsaf.core.domain.model.basic.Uzi
+import com.mrinsaf.core.domain.model.basic.UziDevice
+import com.mrinsaf.core.domain.model.basic.UziImage
+import com.mrinsaf.core.data.model.networkRequests.LoginRequest
+import com.mrinsaf.core.data.model.networkRequests.RefreshRequest
+import com.mrinsaf.core.data.model.networkRequests.RegPatientRequest
+import com.mrinsaf.core.data.model.networkResponses.LoginResponse
+import com.mrinsaf.core.data.model.networkResponses.NodesSegmentsResponse
+import com.mrinsaf.core.data.model.networkResponses.RegPatientResponse
 import com.mrinsaf.core.data.repository.local.TokenStorage
+import com.mrinsaf.core.domain.repository.UziServiceRepository
 import kotlinx.coroutines.delay
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -34,47 +35,12 @@ import java.time.format.DateTimeFormatter
 
 class NetworkUziServiceRepository(
     private val uziApiService: UziApiService,
-    private val authApiService: AuthApiService,
     private val context: Context
 ): UziServiceRepository {
-    override suspend fun checkAuthorisation(): Boolean {
-        TODO("Not yet implemented")
+    override suspend fun getPatient(patientId: String): User {
+        return uziApiService.getPatient(patientId)
     }
 
-    override suspend fun submitLogin(email: String, password: String): LoginResponse {
-        val loginResponse = authApiService.login(
-            request = LoginRequest(
-                email = email,
-                password = password
-            )
-        )
-        loginResponse.accessToken.let {
-            TokenStorage.saveAccessToken(context, it)
-        }
-        loginResponse.refreshToken.let {
-            TokenStorage.saveRefreshToken(context, it)
-        }
-        return loginResponse
-    }
-
-    override suspend fun refreshToken() {
-        println("Рефрешу токен")
-        val refreshToken = TokenStorage.refreshToken.value
-
-        if (refreshToken != null) {
-            val response = authApiService.refreshToken(RefreshRequest(refreshToken))
-
-            response.accessToken.let {
-                TokenStorage.saveAccessToken(context, it)
-            }
-
-            response.refreshToken.let {
-                TokenStorage.saveRefreshToken(context, it)
-            }
-        } else {
-            throw TokenNotFoundException("Refresh token not found")
-        }
-    }
 
     override suspend fun createUzi(
         uziUris: Uri,
@@ -199,19 +165,6 @@ class NetworkUziServiceRepository(
     private fun formatDate(isoDate: String): String {
         return LocalDate.parse(isoDate.substringBefore("T"))
             .format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-    }
-
-
-    override suspend fun submitLogout(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getPatient(patientId: String): User {
-        return uziApiService.getPatient(patientId)
-    }
-
-    override suspend fun regPatient(request: RegPatientRequest): RegPatientResponse {
-        return authApiService.regPatient(request).body()!!
     }
 
     override suspend fun getUziDevices(): List<UziDevice> {
