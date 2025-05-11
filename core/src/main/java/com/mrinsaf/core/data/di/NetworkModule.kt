@@ -107,6 +107,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    @Named("ApiServiceRetrofit")
     fun provideRetrofit(
         okHttpClient: OkHttpClient
     ): Retrofit = Retrofit.Builder()
@@ -117,7 +118,10 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideUziApiService(retrofit: Retrofit): UziApiService = retrofit.create(UziApiService::class.java)
+    fun provideUziApiService(
+        @Named("ApiServiceRetrofit")
+        retrofit: Retrofit
+    ): UziApiService = retrofit.create(UziApiService::class.java)
 
     @Provides
     @Singleton

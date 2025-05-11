@@ -36,7 +36,6 @@ class NetworkUziServiceRepository(
         return uziApiService.getPatient(patientId)
     }
 
-
     override suspend fun createUzi(
         uziUris: Uri,
         projection: String,
