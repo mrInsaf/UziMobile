@@ -13,7 +13,7 @@ import com.mrinsaf.core.domain.model.basic.Uzi
 import com.mrinsaf.core.domain.model.basic.UziDevice
 import com.mrinsaf.core.domain.model.basic.UziImage
 import com.mrinsaf.core.data.model.network_responses.NodesSegmentsResponse
-import com.mrinsaf.core.data.network.UziApiService
+import com.mrinsaf.core.data.data_source.network.UziApiService
 import com.mrinsaf.core.domain.repository.UziServiceRepository
 import kotlinx.coroutines.delay
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

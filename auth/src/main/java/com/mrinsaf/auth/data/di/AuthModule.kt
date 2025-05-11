@@ -1,21 +1,15 @@
 package com.mrinsaf.auth.data.di
 
 import android.content.Context
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.mrinsaf.auth.data.repository.AuthRepositoryImpl
 import com.mrinsaf.auth.domain.AuthRepository
-import com.mrinsaf.core.data.network.AuthApiService
+import com.mrinsaf.core.data.data_source.network.AuthApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module

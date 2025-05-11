@@ -1,4 +1,4 @@
-package com.mrinsaf.core.data.repository.local
+package com.mrinsaf.core.data.utils.local
 import com.auth0.jwt.JWT
 import com.auth0.jwt.exceptions.JWTDecodeException
 import com.auth0.jwt.interfaces.Claim

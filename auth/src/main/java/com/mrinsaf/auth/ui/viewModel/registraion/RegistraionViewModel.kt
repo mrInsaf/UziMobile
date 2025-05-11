@@ -6,7 +6,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrinsaf.core.data.model.network_request.RegPatientRequest
-import com.mrinsaf.core.data.repository.local.UserInfoStorage
+import com.mrinsaf.core.data.data_source.local.UserInfoStorage
 import com.mrinsaf.auth.domain.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
