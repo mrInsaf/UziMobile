@@ -1,5 +1,6 @@
-package com.mrinsaf.core.data.network.auth_utils
+package com.mrinsaf.core.data.utils.auth_utils
 
+import com.mrinsaf.core.presentation.ui.event.AuthEventBus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator

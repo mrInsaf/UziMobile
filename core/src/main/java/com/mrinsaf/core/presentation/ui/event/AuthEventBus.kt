@@ -1,4 +1,4 @@
-package com.mrinsaf.core.data.network.auth_utils
+package com.mrinsaf.core.presentation.ui.event
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

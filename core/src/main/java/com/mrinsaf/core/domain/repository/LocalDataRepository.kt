@@ -1,4 +1,4 @@
-package com.mrinsaf.core.data.repository.local
+package com.mrinsaf.core.domain.repository
 
 interface LocalDataRepository {
     suspend fun saveUziId(uziId: String)

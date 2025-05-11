@@ -1,4 +1,4 @@
-package com.mrinsaf.core.data.repository.local
+package com.mrinsaf.core.data.data_source.local
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
-
 
 object TokenStorage {
     private val Context.tokenDataStore by preferencesDataStore(name = "token_data_store").also {

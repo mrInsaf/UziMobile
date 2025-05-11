@@ -2,11 +2,11 @@ package com.mrinsaf.core.data.di
 
 import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.mrinsaf.core.data.network.AuthApiService
-import com.mrinsaf.core.data.network.UziApiService
-import com.mrinsaf.core.data.network.auth_utils.AuthInterceptor
-import com.mrinsaf.core.data.network.auth_utils.TokenAuthenticator
-import com.mrinsaf.core.data.network.auth_utils.TokenRefresher
+import com.mrinsaf.core.data.data_source.network.AuthApiService
+import com.mrinsaf.core.data.data_source.network.UziApiService
+import com.mrinsaf.core.data.utils.auth_utils.AuthInterceptor
+import com.mrinsaf.core.data.utils.auth_utils.TokenAuthenticator
+import com.mrinsaf.core.data.utils.auth_utils.TokenRefresher
 import com.mrinsaf.core.data.repository.network.NetworkUziServiceRepository
 import com.mrinsaf.core.domain.repository.UziServiceRepository
 import dagger.Module
@@ -107,6 +107,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    @Named("ApiServiceRetrofit")
     fun provideRetrofit(
         okHttpClient: OkHttpClient
     ): Retrofit = Retrofit.Builder()
@@ -117,7 +118,10 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideUziApiService(retrofit: Retrofit): UziApiService = retrofit.create(UziApiService::class.java)
+    fun provideUziApiService(
+        @Named("ApiServiceRetrofit")
+        retrofit: Retrofit
+    ): UziApiService = retrofit.create(UziApiService::class.java)
 
     @Provides
     @Singleton
