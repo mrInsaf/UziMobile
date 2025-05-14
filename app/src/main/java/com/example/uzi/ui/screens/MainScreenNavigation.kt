@@ -139,7 +139,8 @@ fun NavigationGraph(
             DiagnosticScreen(
                 diagnosticDate = diagnosticDetailsUiState.selectedUziDate,
                 clinicName = diagnosticDetailsUiState.selectedClinicName ?: "Неизвестная клиника",
-                diagnosticViewModel = diagnosticViewModel
+                diagnosticViewModel = diagnosticViewModel,
+                onBackButtonClick = { navController.popBackStack() }
             )
         }
     }

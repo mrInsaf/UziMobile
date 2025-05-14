@@ -53,6 +53,7 @@ fun DiagnosticScreen(
     diagnosticDate: String,
     clinicName: String,
     diagnosticViewModel: DiagnosticViewModel,
+    onBackButtonClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -64,12 +65,8 @@ fun DiagnosticScreen(
 
         TextButton(
             onClick = {
-//                onAndroidBackClick(
-//                    navController = navController,
-//                    viewModel = newDiagnosticViewModel
-//                )
-            },
-//            enabled = newDiagnosticUiState.currentScreenIndex > 0
+                onBackButtonClick()
+            }
         ) {
             Text(
                 text = "Назад",
@@ -203,16 +200,4 @@ fun DiagnosticScreen(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun DiagnosticScreenPreview() {
-    DiagnosticScreen(
-        diagnosticDate = "24.11.2024",
-        clinicName = "Клиника",
-        diagnosticViewModel = DiagnosticViewModel(
-            MockUziServiceRepository()
-        )
-    )
 }
