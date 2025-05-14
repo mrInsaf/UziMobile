@@ -4,9 +4,11 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.mrinsaf.core.domain.repository.LocalDataRepository
 import kotlinx.coroutines.flow.first
 
-class LocalDataStoreRepository(private val dataStore: DataStore<Preferences>) : LocalDataRepository {
+class LocalDataStoreRepository(private val dataStore: DataStore<Preferences>) :
+    LocalDataRepository {
     private object PreferencesKeys {
         val UZI_IDS = stringPreferencesKey("uzi_ids")
     }

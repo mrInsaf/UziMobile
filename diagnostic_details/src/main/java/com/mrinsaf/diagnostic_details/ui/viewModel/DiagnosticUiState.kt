@@ -2,9 +2,8 @@ package com.mrinsaf.diagnostic_details.ui.viewModel
 
 import android.graphics.Bitmap
 import android.net.Uri
-import com.mrinsaf.core.data.models.networkResponses.NodesSegmentsResponse
-import com.mrinsaf.core.data.models.basic.UziImage
-import okhttp3.ResponseBody
+import com.mrinsaf.core.data.model.network_responses.NodesSegmentsResponse
+import com.mrinsaf.core.domain.model.basic.UziImage
 
 
 data class DiagnosticUiState(

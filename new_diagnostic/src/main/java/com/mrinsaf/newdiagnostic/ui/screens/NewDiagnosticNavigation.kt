@@ -18,7 +18,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mrinsaf.core.ui.components.canvas.NewDiagnosticProgressBar
+import com.mrinsaf.core.presentation.ui.components.canvas.NewDiagnosticProgressBar
 import com.mrinsaf.newdiagnostic.ui.viewModel.DiagnosticProcessState
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 
@@ -26,6 +26,7 @@ import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 fun NewDiagnosticNavigation(
     newDiagnosticViewModel: NewDiagnosticViewModel,
     onDiagnosticCompleted: () -> Unit,
+    patientId: String,
 ) {
     val newDiagnosticUiState = newDiagnosticViewModel.uiState.collectAsState().value
     val navController = rememberNavController()
@@ -109,7 +110,7 @@ fun NewDiagnosticNavigation(
                                     popUpTo(navController.graph.startDestinationId) { inclusive = true }
                                 }
                                 try {
-                                    newDiagnosticViewModel.onDiagnosticStart()
+                                    newDiagnosticViewModel.onDiagnosticStart(patientId)
                                 } catch (e: Exception) {
                                     println(e)
                                 }

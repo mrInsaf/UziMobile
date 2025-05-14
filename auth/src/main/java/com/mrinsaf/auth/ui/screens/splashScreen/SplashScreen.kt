@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import com.mrinsaf.core.ui.components.LoadingAnimation
+import com.mrinsaf.core.presentation.ui.components.LoadingAnimation
 
 @Composable
 fun SplashScreen() {

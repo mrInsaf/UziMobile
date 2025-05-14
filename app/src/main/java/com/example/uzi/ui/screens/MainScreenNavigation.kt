@@ -13,6 +13,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -22,9 +23,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.mrinsaf.core.data.models.User
-import com.mrinsaf.core.ui.screens.ProfileScreen
-import com.mrinsaf.core.ui.theme.Paddings
+import com.mrinsaf.core.presentation.ui.theme.Paddings
 import com.mrinsaf.diagnostic_details.ui.screens.DiagnosticScreen
 import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
 import com.mrinsaf.diagnostic_list.ui.screens.DiagnosticsListScreen
@@ -32,6 +31,8 @@ import com.mrinsaf.diagnostic_list.ui.viewModel.DiagnosticListViewModel
 import com.mrinsaf.newdiagnostic.ui.screens.NewDiagnosticNavigation
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.isSuccess
+import com.mrinsaf.profile.ui.screens.ProfileScreen
+import com.mrinsaf.profile.ui.viewModel.ProfileViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,7 +43,7 @@ fun MainScreen(
     newDiagnosticViewModel: NewDiagnosticViewModel,
     diagnosticViewModel: DiagnosticViewModel,
     diagnosticListViewModel: DiagnosticListViewModel,
-    userData: User,
+    profileViewModel: ProfileViewModel,
     patientId: String,
 ) {
     val navController = rememberNavController()
@@ -59,7 +60,7 @@ fun MainScreen(
             newDiagnosticViewModel = newDiagnosticViewModel,
             diagnosticViewModel = diagnosticViewModel,
             diagnosticListViewModel = diagnosticListViewModel,
-            userData = userData,
+            profileViewModel = profileViewModel,
             patientId = patientId
         )
     }
@@ -72,7 +73,7 @@ fun NavigationGraph(
     newDiagnosticViewModel: NewDiagnosticViewModel,
     diagnosticViewModel: DiagnosticViewModel,
     diagnosticListViewModel: DiagnosticListViewModel,
-    userData: User,
+    profileViewModel: ProfileViewModel,
     patientId: String
 ) {
     NavHost(
@@ -88,7 +89,7 @@ fun NavigationGraph(
                 onDiagnosticCompleted = {
                     if (uiState.diagnosticProcessState.isSuccess) {
                         val downloadedImagesUri = uiState.downloadedImagesUri
-                        if (downloadedImagesUri != null){
+                        if (downloadedImagesUri != null) {
                             diagnosticViewModel.onDiagnosticCompleted(
                                 uziId = uiState.completedDiagnosticId,
                                 imagesUris = downloadedImagesUri,
@@ -101,14 +102,19 @@ fun NavigationGraph(
                         }
                         navController.navigate(Screen.Diagnostic.route)
                     }
-                }
+                },
+                patientId = patientId
             )
         }
         composable(Screen.Uploaded.route) {
             val uiState by diagnosticListViewModel.uiState.collectAsState()
-            diagnosticListViewModel.getPatientUzis(
-                patientId = patientId
-            )
+
+            LaunchedEffect(Unit){
+                diagnosticListViewModel.getPatientUzis(
+                    patientId = patientId
+                )
+            }
+
             DiagnosticsListScreen(
                 uziList = uiState.uziList,
                 onDiagnosticListItemClick = { uziId, uziDate ->
@@ -124,8 +130,7 @@ fun NavigationGraph(
 
         composable(Screen.Account.route) {
             ProfileScreen(
-                userName = userData.userName,
-                userEmail = userData.userEmail,
+                profileViewModel = profileViewModel,
             )
         }
 

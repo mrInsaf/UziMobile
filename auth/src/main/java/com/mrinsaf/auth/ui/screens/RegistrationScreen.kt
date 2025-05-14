@@ -34,12 +34,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mrinsaf.core.ui.components.MainButton
-import com.mrinsaf.core.ui.components.fields.RequiredFormField
+import com.mrinsaf.core.presentation.ui.components.MainButton
+import com.mrinsaf.core.presentation.ui.components.fields.RequiredFormField
 import com.mrinsaf.auth.ui.viewModel.registraion.RegistraionViewModel
-import com.mrinsaf.core.ui.components.fields.dateFormFields.DateFormField
-import com.mrinsaf.core.ui.components.fields.dateFormFields.RequiredDateFormField
-import com.mrinsaf.core.ui.components.imeState.rememberImeState
+import com.mrinsaf.core.presentation.ui.components.fields.dateFormFields.DateFormField
+import com.mrinsaf.core.presentation.ui.components.fields.dateFormFields.RequiredDateFormField
+import com.mrinsaf.core.presentation.ui.components.imeState.rememberImeState
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
@@ -49,16 +49,6 @@ fun RegistrationScreen(
     registrationViewModel: RegistraionViewModel
 ) {
     val registrationUiState = registrationViewModel.uiState.collectAsState().value
-
-//    val imeState = rememberImeState()
-//    val scrollState = rememberScrollState()
-//
-//    LaunchedEffect(key1 = imeState.value) {
-//        if (imeState.value){
-//            scrollState.animateScrollTo(scrollState.maxValue, tween(300))
-//        }
-//    }
-
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

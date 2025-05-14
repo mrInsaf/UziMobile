@@ -1,8 +1,6 @@
 package com.mrinsaf.newdiagnostic.ui.screens
 
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,9 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.mrinsaf.core.data.repository.MockUziServiceRepository
-import com.mrinsaf.core.ui.components.MainButton
-import com.mrinsaf.core.ui.components.UploadImageComponent
+import com.mrinsaf.core.data.repository.mock.MockUziServiceRepository
+import com.mrinsaf.core.presentation.ui.components.MainButton
+import com.mrinsaf.core.presentation.ui.components.UploadImageComponent
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 
 @Composable

@@ -49,8 +49,7 @@ dependencies {
     implementation(project(":new_diagnostic"))
     implementation(project(":diagnostic_details"))
     implementation(project(":diagnostic_list"))
-
-    implementation ("androidx.core:core-splashscreen:1.0.1")
+    implementation(project(":profile"))
 
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.android)

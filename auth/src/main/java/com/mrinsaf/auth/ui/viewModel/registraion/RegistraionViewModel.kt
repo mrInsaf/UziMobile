@@ -3,11 +3,11 @@ package com.mrinsaf.auth.ui.viewModel.registraion
 import android.content.Context
 import android.util.Patterns
 import android.widget.Toast
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrinsaf.core.data.models.networkRequests.RegPatientRequest
-import com.mrinsaf.core.data.repository.UziServiceRepository
+import com.mrinsaf.core.data.model.network_request.RegPatientRequest
+import com.mrinsaf.core.data.data_source.local.UserInfoStorage
+import com.mrinsaf.auth.domain.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,11 +19,10 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import javax.inject.Inject
-import kotlin.io.path.Path
 
 @HiltViewModel
 class RegistraionViewModel @Inject constructor(
-    val repository: UziServiceRepository,
+    val authRepository: AuthRepository,
     @ApplicationContext val context: Context,
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(RegistrationUiState())
@@ -97,12 +96,14 @@ class RegistraionViewModel @Inject constructor(
             password = uiState.value.password
         )
         try {
-            val patientId = repository.regPatient(patientData)
+            val patientId = authRepository.registerPatient(patientData)
             println("patientId: $patientId")
+
+            UserInfoStorage.saveUserId(context, patientId.id)
             _registrationSuccess.emit(Unit)
 
         } catch (e: Exception) {
-            println(e)
+            println(e.printStackTrace())
             Toast.makeText(
                 context,
                 "Что-то пошло не так",

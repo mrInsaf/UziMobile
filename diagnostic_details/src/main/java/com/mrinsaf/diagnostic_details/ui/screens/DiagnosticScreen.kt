@@ -1,11 +1,6 @@
 package com.mrinsaf.diagnostic_details.ui.screens
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
-import android.os.Build
-import android.provider.MediaStore
-import android.webkit.MimeTypeMap
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,7 +29,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,16 +37,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.mrinsaf.core.R
-import com.mrinsaf.core.data.models.basic.SectorPoint
-import com.mrinsaf.core.data.repository.MockUziServiceRepository
-import com.mrinsaf.core.ui.components.LoadingAnimation
-import com.mrinsaf.core.ui.components.bottomSheet.RecommendationBottomSheet
-import com.mrinsaf.core.ui.components.canvas.ZoomableCanvasSectorWithConstraints
-import com.mrinsaf.core.ui.components.containers.FormationInfoContainer
-import com.mrinsaf.core.ui.theme.Paddings
+import com.mrinsaf.core.domain.model.basic.SectorPoint
+import com.mrinsaf.core.data.repository.mock.MockUziServiceRepository
+import com.mrinsaf.core.presentation.ui.components.LoadingAnimation
+import com.mrinsaf.core.presentation.ui.components.bottomSheet.RecommendationBottomSheet
+import com.mrinsaf.core.presentation.ui.components.canvas.ZoomableCanvasSectorWithConstraints
+import com.mrinsaf.core.presentation.ui.components.containers.FormationInfoContainer
+import com.mrinsaf.core.presentation.ui.theme.Paddings
 import com.mrinsaf.diagnostic_details.ui.viewModel.DiagnosticViewModel
-import org.beyka.tiffbitmapfactory.TiffBitmapFactory
-import java.io.File
 
 
 @SuppressLint("NewApi")
