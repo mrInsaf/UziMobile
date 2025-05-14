@@ -13,6 +13,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -107,9 +108,13 @@ fun NavigationGraph(
         }
         composable(Screen.Uploaded.route) {
             val uiState by diagnosticListViewModel.uiState.collectAsState()
-            diagnosticListViewModel.getPatientUzis(
-                patientId = patientId
-            )
+
+            LaunchedEffect(Unit){
+                diagnosticListViewModel.getPatientUzis(
+                    patientId = patientId
+                )
+            }
+
             DiagnosticsListScreen(
                 uziList = uiState.uziList,
                 onDiagnosticListItemClick = { uziId, uziDate ->

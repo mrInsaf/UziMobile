@@ -7,8 +7,10 @@ import com.mrinsaf.core.domain.repository.UziServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -23,14 +25,21 @@ class DiagnosticListViewModel @Inject constructor(
     val uiState: StateFlow<DiagnosticListUiState>
         get() = _uiState
 
+    private var loadJob: Job? = null
+
     fun getPatientUzis(patientId: String) {
-        viewModelScope.launch {
+        println("Запущена функция getPatientUzis")
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             try {
                 val uziList = repository.getPatientUzis(patientId)
+                val uziIds = uziList.map { it.id }
+                println("uziids: $uziIds")
                 val nodesWithUziIdsDeferred = mutableListOf<Deferred<NodesWithUziId?>>()
 
                 // Создаем отдельную корутину для каждой диагностики
                 uziList.forEach { uzi ->
+                    println("Запрашиваю ноды для ${uzi.id}")
                     val deferred = async(Dispatchers.IO) {
                         try {
                             val id = uzi.id
@@ -45,6 +54,7 @@ class DiagnosticListViewModel @Inject constructor(
                         }
                     }
                     nodesWithUziIdsDeferred.add(deferred)
+                    delay(1000L)
                 }
 
                 val nodesWithUziIds = nodesWithUziIdsDeferred.awaitAll().filterNotNull()
