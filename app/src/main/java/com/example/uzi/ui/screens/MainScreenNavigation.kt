@@ -139,7 +139,8 @@ fun NavigationGraph(
             DiagnosticScreen(
                 diagnosticDate = diagnosticDetailsUiState.selectedUziDate,
                 clinicName = diagnosticDetailsUiState.selectedClinicName ?: "Неизвестная клиника",
-                diagnosticViewModel = diagnosticViewModel
+                diagnosticViewModel = diagnosticViewModel,
+                onBackButtonClick = { navController.popBackStack() }
             )
         }
     }
@@ -162,9 +163,9 @@ fun BottomNavigationBar(navController: NavHostController) {
             NavigationBarItem(
                 selected = currentRoute == screen.route,
                 onClick = {
+                    println("currentRoute: $currentRoute, to screen: ${screen.route}")
                     if (currentRoute != screen.route) {
                         navController.navigate(screen.route) {
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
                             launchSingleTop = true
                             restoreState = true
                         }

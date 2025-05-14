@@ -54,7 +54,6 @@ class DiagnosticListViewModel @Inject constructor(
                         }
                     }
                     nodesWithUziIdsDeferred.add(deferred)
-                    delay(1000L)
                 }
 
                 val nodesWithUziIds = nodesWithUziIdsDeferred.awaitAll().filterNotNull()
