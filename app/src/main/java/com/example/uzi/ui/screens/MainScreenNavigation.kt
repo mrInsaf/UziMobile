@@ -166,7 +166,6 @@ fun BottomNavigationBar(navController: NavHostController) {
                     println("currentRoute: $currentRoute, to screen: ${screen.route}")
                     if (currentRoute != screen.route) {
                         navController.navigate(screen.route) {
-//                            popUpTo(navController.graph.startDestinationId) { saveState = true }
                             launchSingleTop = true
                             restoreState = true
                         }
