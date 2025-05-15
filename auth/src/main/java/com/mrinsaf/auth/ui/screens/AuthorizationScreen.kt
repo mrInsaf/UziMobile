@@ -2,10 +2,13 @@ package com.mrinsaf.auth.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -27,70 +30,73 @@ fun AuthorizationScreen(
     onRegistrationButtonClick: () -> Unit,
 ) {
     val authorisationUiState = authorisationViewModel.uiState.collectAsState().value
-    Column(
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
+    Scaffold { paddingValues ->
         Column(
+            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-//                .fillMaxSize()
-                .background(color = Color.White)
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(paddingValues)
         ) {
-            Spacer(Modifier.size(80.dp))
-            Text(
-                text = "Виртуальный ассистент",
-                color = Color.LightGray,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.size(40.dp))
-            Text(
-                text = "Авторизация",
-                fontSize = 36.sp,
-                fontWeight = FontWeight.Bold
-            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    //                .fillMaxSize()
+                    .background(color = Color.White)
+            ) {
+                Spacer(Modifier.size(80.dp))
+                Text(
+                    text = "Виртуальный ассистент",
+                    color = Color.LightGray,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.size(40.dp))
+                Text(
+                    text = "Авторизация",
+                    fontSize = 36.sp,
+                    fontWeight = FontWeight.Bold
+                )
 
-            Spacer(modifier = Modifier.size(40.dp))
+                Spacer(modifier = Modifier.size(40.dp))
 
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    RequiredFormField(
+                        value = authorisationUiState.authorizationEmail,
+                        label = "Электронная почта",
+                    ) {
+                        authorisationViewModel.onAuthorizationEmailChange(it)
+                    }
+
+                    RequiredFormField(
+                        value = authorisationUiState.authorizationPassword,
+                        label = "Пароль",
+                    ) {
+                        authorisationViewModel.onAuthorizationPasswordChange(it)
+                    }
+
+                    MainButton(text = "Войти") {
+                        onSubmitLoginButtonClick()
+                    }
+
+                }
+            }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                RequiredFormField(
-                    value = authorisationUiState.authorizationEmail,
-                    label = "Электронная почта",
+                Text(
+                    text = "У вас нет аккаунта?"
+                )
+                TextButton(
+                    onClick = {
+                        onRegistrationButtonClick()
+                    }
                 ) {
-                    authorisationViewModel.onAuthorizationEmailChange(it)
+                    Text(text = "Зарегистрироваться")
                 }
-
-                RequiredFormField(
-                    value = authorisationUiState.authorizationPassword,
-                    label = "Пароль",
-                ) {
-                    authorisationViewModel.onAuthorizationPasswordChange(it)
-                }
-
-                MainButton(text = "Войти") {
-                    onSubmitLoginButtonClick()
-                }
-
-            }
-        }
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text(
-                text = "У вас нет аккаунта?"
-            )
-            TextButton(
-                onClick = {
-                    onRegistrationButtonClick()
-                }
-            ) {
-                Text(text = "Зарегистрироваться")
             }
         }
     }
