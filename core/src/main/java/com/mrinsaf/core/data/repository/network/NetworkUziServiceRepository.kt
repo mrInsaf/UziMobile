@@ -15,6 +15,8 @@ import com.mrinsaf.core.domain.model.basic.UziImage
 import com.mrinsaf.core.data.model.network_responses.NodesSegmentsResponse
 import com.mrinsaf.core.data.data_source.network.UziApiService
 import com.mrinsaf.core.domain.repository.UziServiceRepository
+import com.mrinsaf.core.presentation.ui.event.NewDiagnosticStateChangeEvent
+import com.mrinsaf.core.presentation.ui.ui_state.DiagnosticProgressStateDetail
 import kotlinx.coroutines.delay
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -26,11 +28,13 @@ import java.io.File
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 
-class NetworkUziServiceRepository(
+class NetworkUziServiceRepository @Inject constructor(
     private val uziApiService: UziApiService,
-    private val context: Context
+    private val context: Context,
+    private val newDiagnosticStateChangeEvent: NewDiagnosticStateChangeEvent,
 ): UziServiceRepository {
     override suspend fun getPatient(patientId: String): User {
         return uziApiService.getPatient(patientId)
@@ -140,7 +144,16 @@ class NetworkUziServiceRepository(
         repeat(50) {
             val uziInfo = safeApiCall {
                 val uzi = uziApiService.getUzi(uziId)
-                uzi.copy(createAt = formatDate(uzi.createAt)) // Преобразуем дату перед возвратом
+                uzi.copy(createAt = formatDate(uzi.createAt))
+            }
+
+            when(uziInfo.status) {
+                "new" -> newDiagnosticStateChangeEvent.updateDiagnosticProgressState(
+                    DiagnosticProgressStateDetail.DiagnosticWaiting.New
+                )
+                "pending" -> newDiagnosticStateChangeEvent.updateDiagnosticProgressState(
+                    DiagnosticProgressStateDetail.DiagnosticWaiting.Pending
+                )
             }
 
             println("Статус узи: ${uziInfo.status}")

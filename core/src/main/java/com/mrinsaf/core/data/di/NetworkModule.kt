@@ -9,6 +9,7 @@ import com.mrinsaf.core.data.utils.auth_utils.TokenAuthenticator
 import com.mrinsaf.core.data.utils.auth_utils.TokenRefresher
 import com.mrinsaf.core.data.repository.network.NetworkUziServiceRepository
 import com.mrinsaf.core.domain.repository.UziServiceRepository
+import com.mrinsaf.core.presentation.ui.event.NewDiagnosticStateChangeEvent
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -127,10 +128,12 @@ object NetworkModule {
     @Singleton
     fun provideUziServiceRepository(
         uziApiService: UziApiService,
+        newDiagnosticStateChangeEvent: NewDiagnosticStateChangeEvent,
         @ApplicationContext context: Context
     ): UziServiceRepository =
         NetworkUziServiceRepository(
-            uziApiService,
-            context
-        )
+            uziApiService = uziApiService,
+            newDiagnosticStateChangeEvent = newDiagnosticStateChangeEvent,
+            context = context
+    )
 }

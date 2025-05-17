@@ -13,11 +13,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import com.mrinsaf.core.data.repository.mock.MockUziServiceRepository
+import com.mrinsaf.core.presentation.ui.components.MainButton
 import com.mrinsaf.core.presentation.ui.components.fields.BasicFormField
 import com.mrinsaf.core.presentation.ui.components.fields.dateFormFields.DateFormField
-import com.mrinsaf.core.presentation.ui.components.MainButton
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 
 @Composable
@@ -66,19 +64,5 @@ fun AdditionalInformation(
                 println(e)
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun AdditionalInformationPreview() {
-    AdditionalInformation(
-        NewDiagnosticViewModel(
-            repository = MockUziServiceRepository(),
-            context = TODO()
-        ),
-        onAndroidBackClick = {}
-    ) {
-
     }
 }
