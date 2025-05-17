@@ -14,12 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mrinsaf.core.R
-import com.mrinsaf.core.data.repository.mock.MockUziServiceRepository
 import com.mrinsaf.core.presentation.ui.components.LoadingAnimation
 import com.mrinsaf.core.presentation.ui.components.MainButton
+import com.mrinsaf.newdiagnostic.ui.components.UploadUziProgressComponent
 import com.mrinsaf.newdiagnostic.ui.viewModel.DiagnosticProcessState
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.isSuccess
@@ -56,6 +55,11 @@ fun DiagnosticLoading(
                     text = "Анализ снимка занимает некоторое время",
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.tertiary
+                )
+
+                UploadUziProgressComponent(
+                    currentProgress = uiState.diagnosticProgressValue,
+                    progressStateMessage = uiState.diagnosticProgressStateDetail.message
                 )
             }
             is DiagnosticProcessState.Success -> {
@@ -110,19 +114,5 @@ fun DiagnosticLoading(
             onUploadNewDiagnostic()
         }
     }
-}
-
-@Preview
-@Composable
-fun DiagnosticLoadingPreview() {
-    DiagnosticLoading(
-        viewModel = NewDiagnosticViewModel(
-            MockUziServiceRepository(),
-            context = TODO()
-        ),
-        modifier = Modifier,
-        onDiagnosticCompleted = {},
-        onUploadNewDiagnostic = {  }
-    )
 }
 
