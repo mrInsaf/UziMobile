@@ -6,10 +6,12 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mrinsaf.core.data.model.network_responses.NodesSegmentsResponse
 import com.mrinsaf.core.domain.model.basic.Uzi
 import com.mrinsaf.core.domain.model.basic.UziImage
-import com.mrinsaf.core.data.model.network_responses.NodesSegmentsResponse
 import com.mrinsaf.core.domain.repository.UziServiceRepository
+import com.mrinsaf.core.presentation.ui.event.NewDiagnosticStateChangeEvent
+import com.mrinsaf.core.presentation.ui.ui_state.DiagnosticProgressStateDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
@@ -26,6 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NewDiagnosticViewModel @Inject constructor(
     val repository: UziServiceRepository,
+    val newDiagnosticStateChangeEvent: NewDiagnosticStateChangeEvent,
     @ApplicationContext val context: Context
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(NewDiagnosticUiState())
@@ -81,15 +84,20 @@ class NewDiagnosticViewModel @Inject constructor(
                 println("Создание диагностической записи...")
                 val diagnosticId = createDiagnostic(patientId).also {
                     println("Diagnostic ID получен: $it")
-                    _uiState.update { state ->
-                        state.copy(isUziPosted = true)
-                    }
                 }
-
-//                 val diagnosticId = "d5b076a2-2881-43ee-b308-86f686ff9471"
+                _uiState.update { state ->
+                    state.copy(isUziPosted = true)
+                }
+                updateUploadUziProgressState(DiagnosticProgressStateDetail.DiagnosticWaiting.New)
                 println("Используется Diagnostic ID: $diagnosticId")
 
                 println("Получение информации о УЗИ...")
+                launch {
+                    newDiagnosticStateChangeEvent.diagnosticProgressState.collect { progressStateDetail ->
+                        updateUploadUziProgressState(progressStateDetail)
+                    }
+                }
+
                 val uziInformation = repository.getUzi(diagnosticId)
 
                 if (uziInformation == null) {
@@ -125,6 +133,11 @@ class NewDiagnosticViewModel @Inject constructor(
                     }
                     println("Битмап создан: ${bitmap.width}x${bitmap.height} пикселей")
 
+                    updateImageDownloadState(
+                        currentImage = i,
+                        totalImages = uziImages.size
+                    )
+
                     _uiState.update { currentState ->
                         currentState.copy(
                             uziImagesBmp = currentState.uziImagesBmp + (image.id to bitmap)
@@ -159,6 +172,35 @@ class NewDiagnosticViewModel @Inject constructor(
         }
     }
 
+    private fun updateImageDownloadState(currentImage: Int, totalImages: Int) {
+        val downloadingProgress = currentImage.toFloat() / totalImages
+        updateUploadUziProgressState(DiagnosticProgressStateDetail.DownloadingImages(downloadingProgress))
+    }
+
+    private fun updateUploadUziProgressState(progressState: DiagnosticProgressStateDetail) {
+        _uiState.update { it.copy(diagnosticProgressStateDetail = progressState) }
+        calculateUploadDiagnosticProgress()
+    }
+
+    private fun calculateUploadDiagnosticProgress() {
+        val diagnosticProgressStateDetail = uiState.value.diagnosticProgressStateDetail
+        var progressValue = 0f
+        when(diagnosticProgressStateDetail) {
+            is DiagnosticProgressStateDetail.UploadingUzi -> progressValue = 0.3f
+            is DiagnosticProgressStateDetail.DiagnosticWaiting.New -> progressValue = 0.45f
+            is DiagnosticProgressStateDetail.DiagnosticWaiting.Pending -> progressValue = 0.6f
+            is DiagnosticProgressStateDetail.DownloadingImages -> {
+                progressValue = 0.6f + 0.4f * diagnosticProgressStateDetail.downloadingProgress
+            }
+        }
+
+        _uiState.update {
+            it.copy(
+                diagnosticProgressValue = progressValue
+            )
+        }
+    }
+
     fun returnToUploadScreen() {
         try {
             uploadDiagnosticJob?.cancel()
@@ -173,6 +215,7 @@ class NewDiagnosticViewModel @Inject constructor(
     }
 
     private fun updateUiBeforeDiagnosticStart() {
+        updateUploadUziProgressState(DiagnosticProgressStateDetail.UploadingUzi)
         _uiState.update {
             it.copy(
                 diagnosticProcessState = DiagnosticProcessState.Sending,
