@@ -1,6 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+
+    id ("kotlin-kapt")
+
+    id("com.google.dagger.hilt.android") version "2.55" apply true
 }
 
 android {
@@ -33,6 +37,17 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+
+    implementation(libs.retrofit)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.logging.interceptor)
+
+    testImplementation("io.mockk:mockk:1.14.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.12.2")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
