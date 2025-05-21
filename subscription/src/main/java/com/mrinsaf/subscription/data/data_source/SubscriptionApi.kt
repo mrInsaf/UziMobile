@@ -14,21 +14,21 @@ import retrofit2.http.Path
 
 
 interface SubscriptionApi {
-    @POST("/subscriptions/purchase")
+    @POST("subscriptions/purchase")
     suspend fun purchaseSubscription(@Body request: PurchaseRequest): Response<PurchaseResponse>
 
-    @GET("/subscriptions/check-active")
+    @GET("subscriptions/check-active")
     suspend fun checkActiveSubscription(): Response<CheckActiveSubscriptionResponse>
 
-    @GET("/subscriptions/get-active")
+    @GET("subscriptions/get-active")
     suspend fun getActiveSubscription(): Response<GetActiveSubscriptionResponse>
 
-    @GET("/tariff_plans/{id}")
+    @GET("tariff_plans/{id}")
     suspend fun getTariffPlanById(@Path("id") id: String): Response<TariffPlanResponse>
 
-    @GET("/tariff_plans")
+    @GET("tariff_plans")
     suspend fun getAllTariffPlans(): Response<List<TariffPlanResponse>>
 
-    @GET("/payment_providers")
+    @GET("payment_providers")
     suspend fun getAllPaymentProviders(): Response<List<PaymentProviderResponse>>
 }

@@ -22,9 +22,13 @@ import com.mrinsaf.profile.ui.components.SubscriptionInfoComponent
 fun ProfileScreen(
     fullName: String?,
     email: String?,
+    subscriptionDaysRemaining: Int,
+    activeSubscriptionName: String?,
     loadUserInfo: suspend () -> Unit,
+    fetchSubscriptionInfo: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
+        fetchSubscriptionInfo()
         loadUserInfo()
     }
 
@@ -51,10 +55,10 @@ fun ProfileScreen(
         )
 
         SubscriptionInfoComponent(
-            subscriptionDaysRemaining = 2,
+            subscriptionDaysRemaining = subscriptionDaysRemaining,
             onShowTariffPlans = { },
             onSubscribeClick = { }
-        ) // TODO реализовать настоящие состояния и методы
+        )
 
         Column(
             verticalArrangement = Arrangement.Bottom,
@@ -80,7 +84,10 @@ fun ProfileScreenPreview() {
         ProfileScreen(
             fullName = "Алексей Бананов",
             email = "ab@mail.ru",
-            loadUserInfo = {}
+            subscriptionDaysRemaining = 2,
+            loadUserInfo = {},
+            activeSubscriptionName = "premium",
+            fetchSubscriptionInfo = { }
         )
     }
 }
