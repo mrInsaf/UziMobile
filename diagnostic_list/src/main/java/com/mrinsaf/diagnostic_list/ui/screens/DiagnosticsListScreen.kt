@@ -21,6 +21,7 @@ import com.mrinsaf.core.domain.model.basic.NodesWithUziId
 import com.mrinsaf.core.domain.model.basic.Uzi
 import com.mrinsaf.core.presentation.ui.components.containers.DiagnosticListItem
 import com.mrinsaf.core.presentation.ui.theme.Paddings
+import com.mrinsaf.core.presentation.ui.theme.UziTheme
 
 @Composable
 fun DiagnosticsListScreen(
@@ -69,10 +70,11 @@ fun DiagnosticsListScreen(
 @Preview
 @Composable
 fun DiagnosticsListScreenPreview() {
-    DiagnosticsListScreen(
-        uziList = emptyList(),
-        onDiagnosticListItemClick = { _, _ -> },
-        nodesWithUziIds = emptyList(),
-        fetchPatientUzis = {  },
-    )
-}
+    UziTheme(dynamicColor = false) {
+        DiagnosticsListScreen(
+            uziList = emptyList(),
+            onDiagnosticListItemClick = { _, _ -> },
+            nodesWithUziIds = emptyList(),
+            fetchPatientUzis = {}
+        )
+    }}
