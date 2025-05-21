@@ -18,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -129,8 +130,11 @@ fun NavigationGraph(
         }
 
         composable(Screen.Account.route) {
+            val uiState = profileViewModel.uiState.collectAsStateWithLifecycle()
             ProfileScreen(
-                profileViewModel = profileViewModel,
+                fullName = uiState.value.user?.fullName,
+                email = uiState.value.user?.email,
+                loadUserInfo = { profileViewModel.loadUserInfo() },
             )
         }
 

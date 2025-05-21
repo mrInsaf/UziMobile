@@ -1,9 +1,11 @@
 package com.mrinsaf.core.presentation.ui.components.fields
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,10 +16,12 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ProfileField(
     title: String,
-    content: String,
+    textValue: String? = null,
+    content: @Composable () -> Unit = {},
 ) {
     Column(
         modifier = Modifier
+            .background(color = MaterialTheme.colorScheme.background)
             .fillMaxWidth()
             .padding(vertical = 12.dp)
     ) {
@@ -25,10 +29,13 @@ fun ProfileField(
             text = title,
             fontWeight = FontWeight.Bold
         )
-        Text(
-            text = content,
-            fontWeight = FontWeight.Normal
-        )
+        textValue?.let {
+            Text(
+                text = textValue,
+                fontWeight = FontWeight.Normal
+            )
+        }
+        content()
     }
 }
 

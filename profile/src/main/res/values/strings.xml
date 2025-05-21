@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="subscription_title">Подписка</string>
+    <string name="subscription_not_active">Не активна</string>
+    <string name="subscription_is_active">Активна</string>
+    <string name="show_tariff_plans">Посмотреть доступные тарифные планы →</string>
+    <string name="subscribe">Оформить подписку</string>
+</resources>
