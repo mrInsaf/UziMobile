@@ -1,5 +1,6 @@
 package com.mrinsaf.profile.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,24 +12,27 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.tooling.preview.Preview
 import com.mrinsaf.core.presentation.ui.components.MainButton
 import com.mrinsaf.core.presentation.ui.components.fields.ProfileField
-import com.mrinsaf.profile.ui.viewModel.ProfileViewModel
+import com.mrinsaf.core.presentation.ui.theme.UziTheme
+import com.mrinsaf.profile.ui.components.SubscriptionInfoComponent
 
 @Composable
 fun ProfileScreen(
-    profileViewModel: ProfileViewModel,
+    fullName: String?,
+    email: String?,
+    loadUserInfo: suspend () -> Unit,
 ) {
     LaunchedEffect(Unit) {
-        profileViewModel.loadUserInfo()
+        loadUserInfo()
     }
 
-    val uiState = profileViewModel.uiState.collectAsStateWithLifecycle()
     Column(
         horizontalAlignment = Alignment.Start,
         modifier = Modifier
             .fillMaxWidth()
+            .background(color = MaterialTheme.colorScheme.background)
     ) {
         Text(
             text = "Профиль",
@@ -38,13 +42,19 @@ fun ProfileScreen(
 
         ProfileField(
             title = "ФИО",
-            content = uiState.value.user?.fullName ?: "Ошибка",
+            textValue = fullName ?: "Ошибка",
         )
 
         ProfileField(
             title = "Электронная почта",
-            content = uiState.value.user?.email ?: "Ошибка",
+            textValue = email ?: "Ошибка",
         )
+
+        SubscriptionInfoComponent(
+            subscriptionDaysRemaining = 2,
+            onShowTariffPlans = { },
+            onSubscribeClick = { }
+        ) // TODO реализовать настоящие состояния и методы
 
         Column(
             verticalArrangement = Arrangement.Bottom,
@@ -60,5 +70,17 @@ fun ProfileScreen(
             }
         }
 
+    }
+}
+
+@Preview
+@Composable
+fun ProfileScreenPreview() {
+    UziTheme {
+        ProfileScreen(
+            fullName = "Алексей Бананов",
+            email = "ab@mail.ru",
+            loadUserInfo = {}
+        )
     }
 }

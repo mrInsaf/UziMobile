@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mrinsaf.core.presentation.ui.components.containers.BasicStatusContainer
 import com.mrinsaf.core.presentation.ui.theme.Paddings
 
 @Composable
@@ -22,11 +23,10 @@ fun BasicTiradsContainer(
     textStyle: TextStyle = MaterialTheme.typography.titleMedium,
     modifier: Modifier = Modifier
 ) {
-    Box(
+    BasicStatusContainer(
+        textColor = textColor,
+        backgroundColor = backgroundColor,
         modifier = modifier
-            .background(color = backgroundColor)
-            .border(width = 1.dp, color = textColor)
-            .padding(Paddings.ExtraSmall)
     ) {
         Text(
             text = text,
