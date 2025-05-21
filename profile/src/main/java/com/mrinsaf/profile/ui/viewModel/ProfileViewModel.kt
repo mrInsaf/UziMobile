@@ -2,7 +2,7 @@ package com.mrinsaf.profile.ui.viewModel
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.mrinsaf.core.data.data_source.local.UserInfoStorage
+import com.mrinsaf.core.data.local.data_source.UserInfoStorage
 import com.mrinsaf.core.domain.repository.UziServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext

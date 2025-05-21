@@ -3,7 +3,7 @@ package com.mrinsaf.auth.data.di
 import android.content.Context
 import com.mrinsaf.auth.data.repository.AuthRepositoryImpl
 import com.mrinsaf.auth.domain.AuthRepository
-import com.mrinsaf.core.data.data_source.network.AuthApiService
+import com.mrinsaf.core.data.network.data_source.AuthApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

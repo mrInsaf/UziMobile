@@ -1,10 +1,10 @@
 package com.mrinsaf.core.data.utils.auth_utils
 
 import android.content.Context
-import com.mrinsaf.core.data.model.network_request.RefreshRequest
-import com.mrinsaf.core.data.model.network_responses.RefreshResponse
-import com.mrinsaf.core.data.data_source.network.AuthApiService
-import com.mrinsaf.core.data.data_source.local.TokenStorage
+import com.mrinsaf.core.data.network.dto.network_request.RefreshRequest
+import com.mrinsaf.core.data.network.dto.network_responses.RefreshResponse
+import com.mrinsaf.core.data.network.data_source.AuthApiService
+import com.mrinsaf.core.data.local.data_source.TokenStorage
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 

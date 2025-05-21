@@ -5,7 +5,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrinsaf.core.domain.repository.UziServiceRepository
-import com.mrinsaf.core.data.data_source.local.UserInfoStorage
+import com.mrinsaf.core.data.local.data_source.UserInfoStorage
 import com.mrinsaf.auth.domain.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
