@@ -30,6 +30,7 @@ material = "1.12.0"
 firebaseCrashlytics = "19.4.3"
 googleGmsGoogleServices = "4.4.2"
 googleFirebaseCrashlytics = "3.0.3"
+uiTooling = "1.8.2"
 
 [libraries]
 android-tiffbitmapfactory = { module = "com.github.beyka:android-tiffbitmapfactory", version.ref = "androidTiffbitmapfactory" }
@@ -67,6 +68,7 @@ retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "firebaseCrashlytics" }
+ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiTooling" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
