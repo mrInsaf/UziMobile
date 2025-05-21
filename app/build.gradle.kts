@@ -52,6 +52,7 @@ dependencies {
     implementation(project(":diagnostic_details"))
     implementation(project(":diagnostic_list"))
     implementation(project(":profile"))
+    implementation(project(":subscription"))
     implementation(libs.firebase.crashlytics)
 
     kapt(libs.hilt.compiler)

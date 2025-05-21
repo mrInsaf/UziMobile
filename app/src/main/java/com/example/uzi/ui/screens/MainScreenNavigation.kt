@@ -1,5 +1,7 @@
 package com.example.uzi.ui.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -39,6 +41,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(
     newDiagnosticViewModel: NewDiagnosticViewModel,
@@ -67,6 +70,7 @@ fun MainScreen(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavigationGraph(
     navController: NavHostController,
@@ -134,7 +138,10 @@ fun NavigationGraph(
             ProfileScreen(
                 fullName = uiState.value.user?.fullName,
                 email = uiState.value.user?.email,
+                subscriptionDaysRemaining = uiState.value.subscriptionDaysRemaining,
+                activeSubscriptionName = uiState.value.activeSubscriptionName,
                 loadUserInfo = { profileViewModel.loadUserInfo() },
+                fetchSubscriptionInfo = { profileViewModel.fetchSubscriptionInfo() },
             )
         }
 
