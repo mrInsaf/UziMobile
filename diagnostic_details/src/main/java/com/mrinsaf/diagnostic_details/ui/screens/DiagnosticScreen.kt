@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.mrinsaf.core.R
 import com.mrinsaf.core.domain.model.basic.SectorPoint
-import com.mrinsaf.core.data.repository.mock.MockUziServiceRepository
+import com.mrinsaf.core.data.network.repository.MockUziServiceRepository
 import com.mrinsaf.core.presentation.ui.components.LoadingAnimation
 import com.mrinsaf.core.presentation.ui.components.bottomSheet.RecommendationBottomSheet
 import com.mrinsaf.core.presentation.ui.components.canvas.ZoomableCanvasSectorWithConstraints

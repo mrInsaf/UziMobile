@@ -6,7 +6,7 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrinsaf.core.data.model.network_responses.NodesSegmentsResponse
+import com.mrinsaf.core.data.network.dto.network_responses.NodesSegmentsResponse
 import com.mrinsaf.core.domain.model.basic.Uzi
 import com.mrinsaf.core.domain.model.basic.UziImage
 import com.mrinsaf.core.domain.repository.UziServiceRepository

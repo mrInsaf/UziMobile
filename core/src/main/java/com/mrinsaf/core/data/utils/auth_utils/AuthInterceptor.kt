@@ -1,7 +1,7 @@
 package com.mrinsaf.core.data.utils.auth_utils
 
 import android.content.Context
-import com.mrinsaf.core.data.data_source.local.TokenStorage
+import com.mrinsaf.core.data.local.data_source.TokenStorage
 import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.Interceptor
 import okhttp3.Response

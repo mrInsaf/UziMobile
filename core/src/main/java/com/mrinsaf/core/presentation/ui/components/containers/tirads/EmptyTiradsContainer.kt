@@ -2,7 +2,6 @@ package com.mrinsaf.core.presentation.ui.components.containers.tirads
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import com.mrinsaf.core.presentation.ui.theme.notActiveBackgroundColor
 import com.mrinsaf.core.presentation.ui.theme.notActiveTextColor

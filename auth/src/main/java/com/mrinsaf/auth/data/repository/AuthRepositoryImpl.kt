@@ -2,14 +2,14 @@ package com.mrinsaf.auth.data.repository
 
 import android.content.Context
 import com.mrinsaf.auth.domain.AuthRepository
-import com.mrinsaf.core.data.model.network_request.LoginRequest
-import com.mrinsaf.core.data.model.network_request.RefreshRequest
-import com.mrinsaf.core.data.model.network_request.RegPatientRequest
-import com.mrinsaf.core.data.model.network_responses.LoginResponse
-import com.mrinsaf.core.data.model.network_responses.RegPatientResponse
-import com.mrinsaf.core.data.data_source.network.AuthApiService
-import com.mrinsaf.core.data.data_source.local.TokenStorage
-import com.mrinsaf.core.data.repository.network.NetworkUziServiceRepository.TokenNotFoundException
+import com.mrinsaf.core.data.network.dto.network_request.LoginRequest
+import com.mrinsaf.core.data.network.dto.network_request.RefreshRequest
+import com.mrinsaf.core.data.network.dto.network_request.RegPatientRequest
+import com.mrinsaf.core.data.network.dto.network_responses.LoginResponse
+import com.mrinsaf.core.data.network.dto.network_responses.RegPatientResponse
+import com.mrinsaf.core.data.network.data_source.AuthApiService
+import com.mrinsaf.core.data.local.data_source.TokenStorage
+import com.mrinsaf.core.data.network.repository.NetworkUziServiceRepository.TokenNotFoundException
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 

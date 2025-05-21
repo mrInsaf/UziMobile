@@ -1,7 +1,7 @@
 package com.mrinsaf.core.domain.repository
 
 import android.net.Uri
-import com.mrinsaf.core.data.model.network_responses.NodesSegmentsResponse
+import com.mrinsaf.core.data.network.dto.network_responses.NodesSegmentsResponse
 import com.mrinsaf.core.domain.model.User
 import com.mrinsaf.core.domain.model.basic.Node
 import com.mrinsaf.core.domain.model.basic.Uzi
