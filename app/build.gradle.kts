@@ -6,6 +6,8 @@ plugins {
     id ("kotlin-kapt")
 
     id("com.google.dagger.hilt.android") version "2.55" apply true
+    alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.google.firebase.crashlytics)
 }
 
 android {
@@ -50,6 +52,7 @@ dependencies {
     implementation(project(":diagnostic_details"))
     implementation(project(":diagnostic_list"))
     implementation(project(":profile"))
+    implementation(libs.firebase.crashlytics)
 
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.android)
