@@ -138,8 +138,7 @@ fun NavigationGraph(
             ProfileScreen(
                 fullName = uiState.value.user?.fullName,
                 email = uiState.value.user?.email,
-                subscriptionDaysRemaining = uiState.value.subscriptionDaysRemaining,
-                activeSubscriptionName = uiState.value.activeSubscriptionName,
+                activeSubscription = uiState.value.activeSubscription,
                 loadUserInfo = { profileViewModel.loadUserInfo() },
                 fetchSubscriptionInfo = { profileViewModel.fetchSubscriptionInfo() },
             )

@@ -9,6 +9,7 @@ import com.mrinsaf.core.data.local.data_source.UserInfoStorage
 import com.mrinsaf.core.domain.model.api_result.ApiResult
 import com.mrinsaf.core.domain.repository.SubscriptionRepository
 import com.mrinsaf.core.domain.repository.UziServiceRepository
+import com.mrinsaf.profile.domain.model.ActiveSubscription
 import com.mrinsaf.profile.domain.use_case.GetActiveSubscriptionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -48,15 +49,15 @@ class ProfileViewModel @Inject constructor(
     fun fetchSubscriptionInfo() = viewModelScope.launch {
         when (val result = getActiveSubscription()) {
             is ApiResult.Success -> {
-                updateSubscriptionDaysRemainingState(result.data.daysUntilExpiration)
+                updateActiveSubscriptionState(result.data)
             }
             is ApiResult.Error -> {
-                updateSubscriptionDaysRemainingState(0)
+                updateActiveSubscriptionState(null)
             }
         }
     }
 
-    private fun updateSubscriptionDaysRemainingState(newValue: Int) {
-        _uiState.update { it.copy(subscriptionDaysRemaining = newValue) }
+    private fun updateActiveSubscriptionState(newValue: ActiveSubscription?) {
+        _uiState.update { it.copy(activeSubscription = newValue) }
     }
 }
