@@ -15,7 +15,6 @@ class GetActiveSubscriptionUseCase(
 ) {
     @RequiresApi(Build.VERSION_CODES.O)
     suspend operator fun invoke(): ApiResult<ActiveSubscription> {
-        // Получаем активную подписку
         val subscriptionResult = subscriptionRepository.getActiveSubscription()
         when (subscriptionResult ) {
             is ApiResult.Error -> return subscriptionResult
