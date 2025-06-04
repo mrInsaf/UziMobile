@@ -16,14 +16,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.mrinsaf.core.presentation.ui.components.MainButton
 import com.mrinsaf.core.presentation.ui.components.fields.ProfileField
 import com.mrinsaf.core.presentation.ui.theme.UziTheme
+import com.mrinsaf.profile.domain.model.ActiveSubscription
 import com.mrinsaf.profile.ui.components.SubscriptionInfoComponent
 
 @Composable
 fun ProfileScreen(
     fullName: String?,
     email: String?,
-    subscriptionDaysRemaining: Int,
-    activeSubscriptionName: String?,
+    activeSubscription: ActiveSubscription?,
     loadUserInfo: suspend () -> Unit,
     fetchSubscriptionInfo: () -> Unit,
 ) {
@@ -55,7 +55,7 @@ fun ProfileScreen(
         )
 
         SubscriptionInfoComponent(
-            subscriptionDaysRemaining = subscriptionDaysRemaining,
+            activeSubscription = activeSubscription,
             onShowTariffPlans = { },
             onSubscribeClick = { }
         )
@@ -84,10 +84,9 @@ fun ProfileScreenPreview() {
         ProfileScreen(
             fullName = "Алексей Бананов",
             email = "ab@mail.ru",
-            subscriptionDaysRemaining = 2,
             loadUserInfo = {},
-            activeSubscriptionName = "premium",
-            fetchSubscriptionInfo = { }
+            fetchSubscriptionInfo = { },
+            activeSubscription = ActiveSubscription(tariffName = "premium", daysUntilExpiration = 2)
         )
     }
 }

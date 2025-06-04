@@ -18,10 +18,11 @@ import com.mrinsaf.core.presentation.ui.components.fields.ProfileField
 import com.mrinsaf.core.presentation.ui.theme.Paddings
 import com.mrinsaf.core.presentation.ui.theme.UziTheme
 import com.mrinsaf.profile.R
+import com.mrinsaf.profile.domain.model.ActiveSubscription
 
 @Composable
 fun SubscriptionInfoComponent(
-    subscriptionDaysRemaining: Int?,
+    activeSubscription: ActiveSubscription?,
     onShowTariffPlans: () -> Unit,
     onSubscribeClick: () -> Unit,
 ) {
@@ -29,7 +30,7 @@ fun SubscriptionInfoComponent(
         title = stringResource(R.string.subscription_title),
         content = {
             SubscriptionComponentContent(
-                subscriptionDaysRemaining = subscriptionDaysRemaining,
+                activeSubscription = activeSubscription,
                 onShowTariffPlans = onShowTariffPlans,
                 onSubscribeClick = onSubscribeClick,
             )
@@ -39,7 +40,7 @@ fun SubscriptionInfoComponent(
 
 @Composable
 fun SubscriptionComponentContent(
-    subscriptionDaysRemaining: Int?,
+    activeSubscription: ActiveSubscription?,
     onShowTariffPlans: () -> Unit,
     onSubscribeClick: () -> Unit,
 ) {
@@ -48,12 +49,13 @@ fun SubscriptionComponentContent(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.background)
     ) {
-        val isSubscriptionActive = subscriptionDaysRemaining?.let {
-            it > 0
+        val isSubscriptionActive = activeSubscription?.let {
+            it.daysUntilExpiration > 0
         } ?: false
         SubscriptionStatusComponent(isSubscriptionActive)
-        subscriptionDaysRemaining?.let {
-            Text(text = "Осталось дней: $subscriptionDaysRemaining")
+        activeSubscription?.let {
+            Text(text = "Название: ${it.tariffName}")
+            Text(text = "Осталось дней: ${it.daysUntilExpiration}")
         }
 
         TextButton(onClick = {
@@ -82,9 +84,9 @@ fun SubscriptionComponentContent(
 fun SubscriptionInfoComponentPreview() {
     UziTheme {
         SubscriptionInfoComponent(
-            subscriptionDaysRemaining = 0,
             onShowTariffPlans = { },
             onSubscribeClick = { },
+            activeSubscription = ActiveSubscription("premium", 2),
         )
     }
 }
