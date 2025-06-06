@@ -71,7 +71,7 @@ fun NewDiagnosticNavigation(
                 NewDiagnosticProgressBar(currentScreenIndex = newDiagnosticUiState.currentScreenIndex)
                 NavHost(
                     navController = navController,
-                    startDestination = NewDiagnosticScreen.ImageLoadRoute.route
+                    startDestination = NewDiagnosticScreen.getByIndex(newDiagnosticUiState.currentScreenIndex).route
                 ) {
                     composable(NewDiagnosticScreen.ImageLoadRoute.route) {
                         UploadImage(
@@ -151,19 +151,17 @@ private fun onAndroidBackClick(
     println(viewModel.uiState.value.currentScreenIndex)
 }
 
-sealed class NewDiagnosticScreen(val route: String) {
-    object ImageLoadRoute : NewDiagnosticScreen("image_load")
-    object AdditionalInformationRoute : NewDiagnosticScreen("additional_information")
-    object DiagnosticLoadingRoute : NewDiagnosticScreen("diagnostic_loading")
-}
+sealed class NewDiagnosticScreen(val route: String, val screenIndex: Int) {
+    object ImageLoadRoute : NewDiagnosticScreen("image_load", 0)
+    object AdditionalInformationRoute : NewDiagnosticScreen("additional_information", 1)
+    object DiagnosticLoadingRoute : NewDiagnosticScreen("diagnostic_loading", 2)
 
-//@Preview
-//@Composable
-//fun NewDiagnosticNavigationPreview() {
-//    NewDiagnosticNavigation(
-//        newDiagnosticViewModel = NewDiagnosticViewModel(
-//            repository = MockUziServiceRepository()
-//        ),
-//        onDiagnosticCompleted = {  }
-//    )
-//}
+    companion object {
+        fun getByIndex(index: Int): NewDiagnosticScreen = when (index) {
+            0 -> ImageLoadRoute
+            1 -> AdditionalInformationRoute
+            2 -> DiagnosticLoadingRoute
+            else -> ImageLoadRoute
+        }
+    }
+}
