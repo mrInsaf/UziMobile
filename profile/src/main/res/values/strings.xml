@@ -5,4 +5,5 @@
     <string name="subscription_is_active">Активна</string>
     <string name="show_tariff_plans">Посмотреть доступные тарифные планы →</string>
     <string name="subscribe">Оформить подписку</string>
+    <string name="subscriptions">Подписки</string>
 </resources>

@@ -45,18 +45,14 @@ class NetworkUziServiceRepository @Inject constructor(
         patientId: String,
         deviceId: String
     ): String {
-        println("я в репозитории")
         return safeApiCall {
-            println("получаю юри")
             val uziFile = File(getRealPathFromURI(context, uziUris))
-            println("получил юри")
             val requestFile = uziFile.asRequestBody("image/tiff".toMediaTypeOrNull())
             val uziFilePart = MultipartBody.Part.createFormData("file", uziFile.name, requestFile)
 
             val projectionRequestBody = projection.toRequestBody(MultipartBody.Companion.FORM)
             val patientIdRequestBody = patientId.toRequestBody(MultipartBody.Companion.FORM)
             val deviceIdRequestBody = deviceId.toRequestBody(MultipartBody.Companion.FORM)
-            println("отправляю узи через апи ")
             val response = uziApiService.createUzi(
                 uziFile = uziFilePart,
                 projection = projectionRequestBody,

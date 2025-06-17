@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mrinsaf.core.presentation.ui.theme.UziTheme
 
 @Composable
 fun NewDiagnosticProgressBar(
@@ -67,7 +68,9 @@ fun NewDiagnosticProgressBar(
 @Preview
 @Composable
 fun NewDiagnosticProgressBarPreview() {
-    NewDiagnosticProgressBar(
-        currentScreenIndex = 0
-    )
+    UziTheme {
+        NewDiagnosticProgressBar(
+            currentScreenIndex = 2
+        )
+    }
 }

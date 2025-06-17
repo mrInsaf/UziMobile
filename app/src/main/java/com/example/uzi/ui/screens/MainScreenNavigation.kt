@@ -35,6 +35,7 @@ import com.mrinsaf.newdiagnostic.ui.screens.NewDiagnosticNavigation
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.isSuccess
 import com.mrinsaf.profile.ui.screens.ProfileScreen
+import com.mrinsaf.profile.ui.screens.TariffPlanListScreen
 import com.mrinsaf.profile.ui.viewModel.ProfileViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -145,12 +146,20 @@ fun NavigationGraph(
         }
 
         composable(Screen.Diagnostic.route) {
-            val diagnosticDetailsUiState by diagnosticViewModel.uiState.collectAsState()
+            val diagnosticDetailsUiState by diagnosticViewModel.uiState.collectAsStateWithLifecycle()
             DiagnosticScreen(
                 diagnosticDate = diagnosticDetailsUiState.selectedUziDate,
                 clinicName = diagnosticDetailsUiState.selectedClinicName ?: "Неизвестная клиника",
                 diagnosticViewModel = diagnosticViewModel,
                 onBackButtonClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.Subscription.route) {
+            val uiState = profileViewModel.uiState.collectAsStateWithLifecycle()
+            TariffPlanListScreen(
+                tariffPlanList = uiState.value.tariffPlansList,
+                onFetchTariffList = { profileViewModel.fetchTariffPlans() }
             )
         }
     }
@@ -192,4 +201,5 @@ sealed class Screen(val route: String, val label: String, val icon: ImageVector)
     object Uploaded : Screen("uploaded", "Загруженные", Icons.Default.List)
     object Diagnostic : Screen("diagnostic", "Диагностика", Icons.Default.List)
     object Account : Screen("account", "Аккаунт", Icons.Default.Person)
+    object Subscription : Screen("subscription", "Подписка", Icons.Default.Person)
 }
