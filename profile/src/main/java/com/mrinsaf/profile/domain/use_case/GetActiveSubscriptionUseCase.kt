@@ -9,8 +9,9 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import javax.inject.Inject
 
-class GetActiveSubscriptionUseCase(
+class GetActiveSubscriptionUseCase @Inject constructor(
     private val subscriptionRepository: SubscriptionRepository
 ) {
     @RequiresApi(Build.VERSION_CODES.O)

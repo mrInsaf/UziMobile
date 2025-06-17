@@ -9,6 +9,7 @@ import com.mrinsaf.core.data.local.data_source.UserInfoStorage
 import com.mrinsaf.core.domain.model.api_result.ApiResult
 import com.mrinsaf.core.domain.repository.SubscriptionRepository
 import com.mrinsaf.core.domain.repository.UziServiceRepository
+import com.mrinsaf.profile.data.mapper.toTariffPlan
 import com.mrinsaf.profile.domain.model.ActiveSubscription
 import com.mrinsaf.profile.domain.use_case.GetActiveSubscriptionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,6 +55,18 @@ class ProfileViewModel @Inject constructor(
             is ApiResult.Error -> {
                 updateActiveSubscriptionState(null)
             }
+        }
+    }
+
+    fun fetchTariffPlans() = viewModelScope.launch {
+        val tariffResponse = subscriptionRepository.getAllTariffPlans()
+
+        when(tariffResponse) {
+            is ApiResult.Success -> {
+                val tariffPlansList = tariffResponse.data.map { it.toTariffPlan() }
+                _uiState.update { it.copy(tariffPlansList = tariffPlansList) }
+            }
+            is ApiResult.Error -> { println("Ошибка при получении списка тарифов") }
         }
     }
 

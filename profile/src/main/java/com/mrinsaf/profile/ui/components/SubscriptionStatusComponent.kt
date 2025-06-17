@@ -53,7 +53,7 @@ fun SubscriptionStatusComponent(
 fun SubscriptionStatusComponentPreview() {
     UziTheme {
         SubscriptionStatusComponent(
-            isSubscriptionActive = false,
+            isSubscriptionActive = true,
         )
     }
 }

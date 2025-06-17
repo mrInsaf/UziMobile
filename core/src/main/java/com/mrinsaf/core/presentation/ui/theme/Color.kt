@@ -20,5 +20,3 @@ val notActiveBackgroundColor = Color(0xFFF5F5F5)
 
 val fallbackTextColor = Color.Yellow
 val fallbackBackgroundColor = Color.Red
-
-
