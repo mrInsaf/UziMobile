@@ -135,5 +135,5 @@ object NetworkModule {
             uziApiService = uziApiService,
             newDiagnosticStateChangeEvent = newDiagnosticStateChangeEvent,
             context = context
-    )
+        )
 }
