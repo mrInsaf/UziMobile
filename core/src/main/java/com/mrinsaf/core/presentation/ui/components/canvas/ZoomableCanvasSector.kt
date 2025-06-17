@@ -1,5 +1,6 @@
 package com.mrinsaf.core.presentation.ui.components.canvas
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.IntSize
 import com.mrinsaf.core.domain.model.basic.SectorPoint
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun ZoomableCanvasSector(
     imageBitmap: ImageBitmap,
