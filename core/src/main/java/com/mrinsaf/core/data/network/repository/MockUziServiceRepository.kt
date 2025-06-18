@@ -1,6 +1,7 @@
 package com.mrinsaf.core.data.network.repository
 
 import android.net.Uri
+import com.mrinsaf.core.data.mock.MockDataSource
 import com.mrinsaf.core.data.network.dto.network_responses.NodesSegmentsResponse
 import com.mrinsaf.core.domain.model.User
 import com.mrinsaf.core.domain.model.basic.Node
@@ -57,6 +58,6 @@ class MockUziServiceRepository(
     }
 
     override suspend fun getUziDevices(): List<UziDevice> {
-        TODO("Not yet implemented")
+        return MockDataSource.getUziDevices()
     }
 }

@@ -1,7 +1,9 @@
 package com.mrinsaf.auth.data.di
 
 import android.content.Context
-import com.mrinsaf.auth.data.repository.AuthRepository
+import com.mrinsaf.auth.data.repository.AuthRepositoryImpl
+import com.mrinsaf.auth.data.repository.MockAuthRepository
+import com.mrinsaf.auth.domain.AuthRepository
 import com.mrinsaf.core.data.network.data_source.AuthApiService
 import dagger.Module
 import dagger.Provides
@@ -18,5 +20,8 @@ object AuthModule {
     fun provideAuthRepository(
         authApiService: AuthApiService,
         @ApplicationContext context: Context
-    ): AuthRepository = AuthRepository(context, authApiService)
+    ): AuthRepository {
+//        return AuthRepositoryImpl(context, authApiService)
+        return MockAuthRepository()
+    }
 }

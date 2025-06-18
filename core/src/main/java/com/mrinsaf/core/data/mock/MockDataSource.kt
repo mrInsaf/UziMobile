@@ -1,6 +1,7 @@
 package com.mrinsaf.core.data.mock
 
 import com.mrinsaf.core.data.network.dto.network_responses.LoginResponse
+import com.mrinsaf.core.domain.model.basic.UziDevice
 
 object MockDataSource {
     private val registeredUsers = mutableListOf(
@@ -10,6 +11,13 @@ object MockDataSource {
             email = "sm@mail.ru",
             password = "1234"
         )
+    )
+
+    private val uziDevices: List<UziDevice> = listOf(
+//        UziDevice(
+//            id = 123,
+//            name = "siemens"
+//        )
     )
 
     fun login(email: String, password: String): LoginResponse {
@@ -26,4 +34,6 @@ object MockDataSource {
     fun registerUser(user: MockUser) {
         registeredUsers.add(user)
     }
+
+    fun getUziDevices(): List<UziDevice> = uziDevices
 }

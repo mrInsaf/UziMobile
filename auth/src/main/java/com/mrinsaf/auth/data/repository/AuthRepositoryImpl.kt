@@ -11,7 +11,7 @@ import com.mrinsaf.core.data.local.data_source.TokenStorage
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class AuthRepository @Inject constructor(
+class AuthRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val authApiService: AuthApiService,
 ): AuthRepository {
