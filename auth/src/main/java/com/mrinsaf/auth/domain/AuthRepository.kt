@@ -10,7 +10,5 @@ interface AuthRepository {
         password: String,
     ): LoginResponse
 
-    suspend fun refreshToken(): Unit
-
     suspend fun registerPatient(request: RegPatientRequest): RegPatientResponse
 }

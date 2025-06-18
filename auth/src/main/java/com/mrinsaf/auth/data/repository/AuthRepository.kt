@@ -3,17 +3,15 @@ package com.mrinsaf.auth.data.repository
 import android.content.Context
 import com.mrinsaf.auth.domain.AuthRepository
 import com.mrinsaf.core.data.network.dto.network_request.LoginRequest
-import com.mrinsaf.core.data.network.dto.network_request.RefreshRequest
 import com.mrinsaf.core.data.network.dto.network_request.RegPatientRequest
 import com.mrinsaf.core.data.network.dto.network_responses.LoginResponse
 import com.mrinsaf.core.data.network.dto.network_responses.RegPatientResponse
 import com.mrinsaf.core.data.network.data_source.AuthApiService
 import com.mrinsaf.core.data.local.data_source.TokenStorage
-import com.mrinsaf.core.data.network.repository.NetworkUziServiceRepository.TokenNotFoundException
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class AuthRepositoryImpl @Inject constructor(
+class AuthRepository @Inject constructor(
     @ApplicationContext private val context: Context,
     private val authApiService: AuthApiService,
 ): AuthRepository {
@@ -31,25 +29,6 @@ class AuthRepositoryImpl @Inject constructor(
             TokenStorage.saveRefreshToken(context, it)
         }
         return loginResponse
-    }
-
-    override suspend fun refreshToken() {
-        println("Рефрешу токен")
-        val refreshToken = TokenStorage.refreshToken.value
-
-        if (refreshToken != null) {
-            val response = authApiService.refreshToken(RefreshRequest(refreshToken))
-
-            response.accessToken.let {
-                TokenStorage.saveAccessToken(context, it)
-            }
-
-            response.refreshToken.let {
-                TokenStorage.saveRefreshToken(context, it)
-            }
-        } else {
-            throw TokenNotFoundException("Refresh token not found")
-        }
     }
 
 
