@@ -31,15 +31,15 @@ class MockUziServiceRepository(
 
 
     override suspend fun getUziImages(uziId: String): List<UziImage> {
-        TODO("Not yet implemented")
+        return MockUziServiceDataSource.getUziImages(uziId)
     }
 
     override suspend fun getImageNodesAndSegments(imageId: String, diagnosticCompleted: Boolean): NodesSegmentsResponse {
-        TODO("Not yet implemented")
+        return MockUziServiceDataSource.getImageNodesAndSegments(imageId, diagnosticCompleted)
     }
 
     override suspend fun downloadUziImage(uziId: String, imageId: String): ResponseBody {
-        TODO("Not yet implemented")
+        return MockUziServiceDataSource.downloadUziImage(uziId, imageId)
     }
 
     override suspend fun getPatientUzis(patientId: String): List<Uzi> {
