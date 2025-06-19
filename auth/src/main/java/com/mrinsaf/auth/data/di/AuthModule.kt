@@ -22,6 +22,8 @@ object AuthModule {
         @ApplicationContext context: Context
     ): AuthRepository {
 //        return AuthRepositoryImpl(context, authApiService)
-        return MockAuthRepository()
+        return MockAuthRepository(
+            context = context
+        )
     }
 }

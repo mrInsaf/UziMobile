@@ -1,7 +1,8 @@
 package com.mrinsaf.core.data.network.repository
 
 import android.net.Uri
-import com.mrinsaf.core.data.mock.MockDataSource
+import com.mrinsaf.core.data.mock.MockAuthDataSource
+import com.mrinsaf.core.data.mock.MockUziServiceDataSource
 import com.mrinsaf.core.data.network.dto.network_responses.NodesSegmentsResponse
 import com.mrinsaf.core.domain.model.User
 import com.mrinsaf.core.domain.model.basic.Node
@@ -41,16 +42,12 @@ class MockUziServiceRepository(
         TODO("Not yet implemented")
     }
 
-//    override suspend fun saveUziImageAndGetCacheUri(uziId: String, imageId: String): Uri {
-//        TODO("Not yet implemented")
-//    }
-
     override suspend fun getPatientUzis(patientId: String): List<Uzi> {
-        TODO("Not yet implemented")
+        return MockUziServiceDataSource.getPatientUzis(patientId)
     }
 
     override suspend fun getUziNodes(uziId: String): List<Node> {
-        TODO("Not yet implemented")
+        return MockUziServiceDataSource.getUziNodes(uziId)
     }
 
     override suspend fun getUzi(uziId: String): Uzi {
@@ -58,6 +55,6 @@ class MockUziServiceRepository(
     }
 
     override suspend fun getUziDevices(): List<UziDevice> {
-        return MockDataSource.getUziDevices()
+        return MockAuthDataSource.getUziDevices()
     }
 }

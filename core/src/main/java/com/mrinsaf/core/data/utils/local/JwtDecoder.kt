@@ -6,7 +6,7 @@ import com.auth0.jwt.interfaces.Claim
 object JwtDecoder {
 
     fun getTokenId(token: String): String {
-        return try {
+        try {
             val jwt = JWT.decode(token)
 
             val idClaim: Claim = jwt.getClaim("id")

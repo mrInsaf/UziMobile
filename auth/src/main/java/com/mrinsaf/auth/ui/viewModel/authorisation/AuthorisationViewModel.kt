@@ -60,8 +60,6 @@ class AuthorisationViewModel @Inject constructor(
 
     suspend fun onSubmitLogin() {
         try {
-            println("email: ${uiState.value.authorizationEmail}")
-            println("pwd: ${uiState.value.authorizationPassword}")
             authRepository.submitLogin(
                 email = uiState.value.authorizationEmail,
                 password = uiState.value.authorizationPassword
