@@ -2,6 +2,7 @@ package com.mrinsaf.core.data.mock
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
 import com.mrinsaf.core.domain.model.basic.Node
 import com.mrinsaf.core.domain.model.basic.Uzi
 import com.mrinsaf.core.domain.model.basic.UziImage
@@ -28,12 +29,29 @@ object MockUziServiceDataSource {
         return uziImages[uziId] ?: emptyList()
     }
 
-    fun addUserImage(imageId: String, bitmap: Bitmap) {
-        userImages[imageId] = bitmap
+    fun createUzi(
+        uziUris: Uri,
+        projection: String,
+        patientId: String,
+        deviceId: String
+    ) {
+        val uziId = "uzi_${patientUzis.size + 1}"
+        patientUzis.add(
+            Uzi(
+                id = uziId,
+                externalId = patientId,
+                authorId = patientId,
+                projection = projection,
+                createAt = "${System.currentTimeMillis()}",
+                deviceId = 1,
+                status = "new",
+            )
+        )
+
     }
 
     fun downloadUziImage(uziId: String, imageId: String): ResponseBody {
-        val bitmap = userImages[imageId] ?: defaultBitmap
+        val bitmap = userBitmaps[imageId] ?: defaultBitmap
         val byteArray = ByteArrayOutputStream().apply {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, this)
         }
@@ -57,7 +75,7 @@ object MockUziServiceDataSource {
         }?.key
     }
 
-    private val patientUzis: List<Uzi> = mutableListOf(
+    private val patientUzis: MutableList<Uzi> = mutableListOf(
         Uzi(
             id = "uzi_1",
             externalId = "stepanMorkow",
@@ -75,11 +93,11 @@ object MockUziServiceDataSource {
         eraseColor(Color.WHITE)
     }
 
-    private val userImages = mutableMapOf<String, Bitmap>()
+    private val userBitmaps = mutableMapOf<String, Bitmap>()
 
     private val mockNodes: Map<String, List<Node>> = generateMockNodes(patientUzis.map { it.id })
 
-    private val uziImages: Map<String, List<UziImage>> =
+    private val uziImages: Map<String, MutableList<UziImage>> =
         generateMockImages(patientUzis.map { it.id }, imagesPerUzi = 3)
 
     private fun generateMockNodes(
@@ -126,14 +144,14 @@ object MockUziServiceDataSource {
         }.toList()
     }
 
-    private fun generateMockImages(uziIds: List<String>, imagesPerUzi: Int = 3): Map<String, List<UziImage>> {
+    private fun generateMockImages(uziIds: List<String>, imagesPerUzi: Int = 3): Map<String, MutableList<UziImage>> {
         return uziIds.associateWith { uziId ->
             (1..imagesPerUzi).map { index ->
                 UziImage(
                     id = "img_${uziId}_$index",
                     page = index
                 )
-            }
+            } as MutableList<UziImage>
         }
     }
 

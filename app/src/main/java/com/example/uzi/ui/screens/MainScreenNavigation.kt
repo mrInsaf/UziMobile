@@ -142,6 +142,7 @@ fun NavigationGraph(
                 activeSubscription = uiState.value.activeSubscription,
                 loadUserInfo = { profileViewModel.loadUserInfo() },
                 fetchSubscriptionInfo = { profileViewModel.fetchSubscriptionInfo() },
+                onShowTariffPlans = { navController.navigate(Screen.Subscription.route) },
             )
         }
 

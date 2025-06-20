@@ -13,10 +13,10 @@ interface UziServiceRepository {
     suspend fun getPatient(patientId: String): User
 
     suspend fun createUzi(
-        uziUris: Uri, // URI УЗИ файла
-        projection: String, // Проекция УЗИ
-        patientId: String, // ID пациента
-        deviceId: String // ID устройства
+        uziUris: Uri,
+        projection: String,
+        patientId: String,
+        deviceId: String
     ): String
 
     suspend fun getUziImages(

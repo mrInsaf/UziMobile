@@ -26,6 +26,7 @@ fun ProfileScreen(
     activeSubscription: ActiveSubscription?,
     loadUserInfo: suspend () -> Unit,
     fetchSubscriptionInfo: () -> Unit,
+    onShowTariffPlans: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         fetchSubscriptionInfo()
@@ -56,8 +57,8 @@ fun ProfileScreen(
 
         SubscriptionInfoComponent(
             activeSubscription = activeSubscription,
-            onShowTariffPlans = { },
-            onSubscribeClick = { }
+            onShowTariffPlans = { onShowTariffPlans() },
+            onSubscribeClick = { onShowTariffPlans() }
         )
 
         Column(
@@ -86,7 +87,11 @@ fun ProfileScreenPreview() {
             email = "ab@mail.ru",
             loadUserInfo = {},
             fetchSubscriptionInfo = { },
-            activeSubscription = ActiveSubscription(tariffName = "premium", daysUntilExpiration = 2)
+            activeSubscription = ActiveSubscription(
+                tariffName = "premium",
+                daysUntilExpiration = 2
+            ),
+            onShowTariffPlans = {  }
         )
     }
 }

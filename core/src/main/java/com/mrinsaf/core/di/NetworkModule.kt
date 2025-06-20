@@ -132,11 +132,11 @@ object NetworkModule {
         newDiagnosticStateChangeEvent: NewDiagnosticStateChangeEvent,
         @ApplicationContext context: Context
     ): UziServiceRepository =
-//        NetworkUziServiceRepository(
-//            uziApiService = uziApiService,
-//            newDiagnosticStateChangeEvent = newDiagnosticStateChangeEvent,
-//            context = context
-//        )
+        NetworkUziServiceRepository(
+            uziApiService = uziApiService,
+            newDiagnosticStateChangeEvent = newDiagnosticStateChangeEvent,
+            context = context
+        )
 
-        MockUziServiceRepository()
+//        MockUziServiceRepository()
 }

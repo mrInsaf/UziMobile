@@ -1,7 +1,9 @@
 package com.mrinsaf.profile.ui.screens
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -11,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.mrinsaf.core.presentation.ui.components.LoadingAnimation
 import com.mrinsaf.core.presentation.ui.components.MainButton
 import com.mrinsaf.core.presentation.ui.screen.BasicScreen
 import com.mrinsaf.core.presentation.ui.theme.Paddings
@@ -37,33 +40,46 @@ fun TariffPlanListScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val pagerState = rememberPagerState(pageCount = {
-                tariffPlanList.size
-            })
+            if (tariffPlanList.isNotEmpty()) {
+                val pagerState = rememberPagerState(pageCount = {
+                    tariffPlanList.size
+                })
 
-            HorizontalPager(state = pagerState) { page ->
-                TariffPlanListItem(
-                    tariffName = tariffPlanList[page].name,
-                    description = tariffPlanList[page].description,
+                HorizontalPager(
+                    state = pagerState,
+                    pageSpacing = Paddings.Medium
+                ) { page ->
+                    TariffPlanListItem(
+                        tariffName = tariffPlanList[page].name,
+                        description = tariffPlanList[page].description,
+                    )
+                }
+
+                Spacer(Modifier.size(Paddings.Medium))
+
+                HorizontalPagerIndicator(
+                    pageCount = tariffPlanList.size,
+                    currentPage = pagerState.currentPage
+                )
+
+                Spacer(Modifier.size(Paddings.Medium))
+
+                MainButton(
+                    text = "Оформить подписку\nза ${tariffPlanList[pagerState.currentPage].price}/мес",
+                    containerColor = successTextColor,
+                    onClick = {
+
+                    }
                 )
             }
-
-            Spacer(Modifier.size(Paddings.Medium))
-
-            HorizontalPagerIndicator(
-                pageCount = tariffPlanList.size,
-                currentPage = pagerState.currentPage
-            )
-
-            Spacer(Modifier.size(Paddings.Medium))
-
-            MainButton(
-                text = "Оформить подписку\nза ${tariffPlanList[pagerState.currentPage].price}/мес",
-                containerColor = successTextColor,
-                onClick = {
-
+            else {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    LoadingAnimation()
                 }
-            )
+            }
         }
     }
 }
