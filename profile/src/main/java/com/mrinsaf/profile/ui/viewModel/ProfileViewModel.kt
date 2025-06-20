@@ -6,9 +6,11 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrinsaf.core.data.local.data_source.UserInfoStorage
+import com.mrinsaf.core.data.network.dto.network_request.PurchaseRequest
 import com.mrinsaf.core.domain.model.api_result.ApiResult
 import com.mrinsaf.core.domain.repository.SubscriptionRepository
 import com.mrinsaf.core.domain.repository.UziServiceRepository
+import com.mrinsaf.profile.data.mapper.toPaymentProvider
 import com.mrinsaf.profile.data.mapper.toTariffPlan
 import com.mrinsaf.profile.domain.model.ActiveSubscription
 import com.mrinsaf.profile.domain.use_case.GetActiveSubscriptionUseCase
@@ -68,6 +70,40 @@ class ProfileViewModel @Inject constructor(
             }
             is ApiResult.Error -> { println("Ошибка при получении списка тарифов") }
         }
+    }
+
+    fun fetchPaymentProviders() = viewModelScope.launch {
+        val paymentProvidersResponse = subscriptionRepository.getPaymentProviders()
+
+        when(paymentProvidersResponse) {
+            is ApiResult.Success -> {
+                val paymentProviderList = paymentProvidersResponse.data.map { it.toPaymentProvider() }
+                _uiState.update { it.copy(paymentProviderList = paymentProviderList) }
+            }
+            is ApiResult.Error -> { println("Ошибка при получении списка провайдеров") }
+        }
+    }
+
+    fun onPurchaseClick() = viewModelScope.launch {
+        val tariffPlan = requireNotNull(uiState.value.selectedTariffPlanId) { "tariffPlan must be not null" }
+        val paymentProvider = requireNotNull(uiState.value.selectedProviderId) { "paymentProvider must be not null" }
+
+        val purchaseResponse = subscriptionRepository.purchaseSubscription(
+            request = PurchaseRequest(
+                tariffPlanId = tariffPlan,
+                paymentProviderId = paymentProvider
+            )
+        )
+
+        println("purchaseResponse: $purchaseResponse")
+    }
+
+    fun onSelectTariffClick(tariffId: String) {
+        _uiState.update { it.copy(selectedTariffPlanId = tariffId) }
+    }
+
+    fun onProviderSelect(providerId: String) {
+        _uiState.update { it.copy(selectedProviderId = providerId) }
     }
 
     private fun updateActiveSubscriptionState(newValue: ActiveSubscription?) {

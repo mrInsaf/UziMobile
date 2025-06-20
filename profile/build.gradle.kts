@@ -55,6 +55,8 @@ dependencies {
     implementation(libs.androidx.espresso.core)
     implementation(libs.androidx.appcompat)
 
+    implementation(libs.coil.compose)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

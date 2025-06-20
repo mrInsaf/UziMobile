@@ -28,6 +28,7 @@ import com.mrinsaf.profile.ui.components.TariffPlanListItem
 fun TariffPlanListScreen(
     tariffPlanList: List<TariffPlan> = emptyList(),
     onFetchTariffList: () -> Unit,
+    onSelectTariffClick: (String) -> Unit,
 ) {
 
     LaunchedEffect(Unit) {
@@ -68,7 +69,7 @@ fun TariffPlanListScreen(
                     text = "Оформить подписку\nза ${tariffPlanList[pagerState.currentPage].price}/мес",
                     containerColor = successTextColor,
                     onClick = {
-
+                        onSelectTariffClick(tariffPlanList[pagerState.currentPage].id)
                     }
                 )
             }
@@ -93,25 +94,30 @@ fun TariffPlanListScreenPreview() {
                 TariffPlan(
                     name = "Базовый",
                     description = "Неограниченные звонки по России;SMS — 100 штук в месяц;Интернет — до 10 Гб/мес",
-                    price = "399 ₽"
+                    price = "399 ₽",
+                    id = "1"
                 ),
                 TariffPlan(
                     name = "Стандартный",
                     description = "Неограниченные звонки по России и СНГ;SMS — 300 штук в месяц;Интернет — до 25 Гб/мес",
-                    price = "599 ₽"
+                    price = "599 ₽",
+                    id = "2"
                 ),
                 TariffPlan(
                     name = "Премиум",
                     description = "Неограниченные звонки по всему миру;SMS — безлимит;Интернет — до 50 Гб/мес;Подписка на стриминговый сервис в подарок",
-                    price = "999 ₽"
+                    price = "999 ₽",
+                    id = "3"
                 ),
                 TariffPlan(
                     name = "Максимальный",
                     description = "Неограниченные звонки и SMS по всему миру;Интернет — безлимит;VIP-поддержка;Доступ к эксклюзивному контенту",
-                    price = "1499 ₽"
+                    price = "1499 ₽",
+                    id = "4"
                 )
             ),
-            onFetchTariffList = {  },
+            onFetchTariffList = { },
+            onSelectTariffClick = {  },
         )
     }
 }

@@ -45,6 +45,13 @@ val Typography = Typography(
         lineHeight = 44.sp
     ),
 
+    titleSmall = TextStyle(
+        fontFamily = RobotoFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        lineHeight = 44.sp
+    ),
+
     /* Other default text styles to override
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,

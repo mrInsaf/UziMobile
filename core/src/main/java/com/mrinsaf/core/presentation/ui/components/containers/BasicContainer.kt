@@ -11,14 +11,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mrinsaf.core.presentation.ui.theme.Paddings
+import com.mrinsaf.core.presentation.ui.theme.UziShapes
 
 @Composable
 fun BasicContainer(
     modifier: Modifier = Modifier,
+    borderColor: Color = Color.LightGray,
     content: @Composable () -> Unit,
 ) {
     Box(modifier = modifier
-        .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp))
+        .border(width = 1.dp, color = borderColor, shape = RoundedCornerShape(UziShapes.ContainerCornerRadius))
         .padding(Paddings.Medium)
     ) {
         content()

@@ -35,6 +35,7 @@ import com.mrinsaf.newdiagnostic.ui.screens.NewDiagnosticNavigation
 import com.mrinsaf.newdiagnostic.ui.viewModel.NewDiagnosticViewModel
 import com.mrinsaf.newdiagnostic.ui.viewModel.isSuccess
 import com.mrinsaf.profile.ui.screens.ProfileScreen
+import com.mrinsaf.profile.ui.screens.ProvidersListScreen
 import com.mrinsaf.profile.ui.screens.TariffPlanListScreen
 import com.mrinsaf.profile.ui.viewModel.ProfileViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -142,7 +143,7 @@ fun NavigationGraph(
                 activeSubscription = uiState.value.activeSubscription,
                 loadUserInfo = { profileViewModel.loadUserInfo() },
                 fetchSubscriptionInfo = { profileViewModel.fetchSubscriptionInfo() },
-                onShowTariffPlans = { navController.navigate(Screen.Subscription.route) },
+                onShowTariffPlans = { navController.navigate(Screen.SelectTariff.route) },
             )
         }
 
@@ -156,12 +157,27 @@ fun NavigationGraph(
             )
         }
 
-        composable(Screen.Subscription.route) {
+        composable(Screen.SelectTariff.route) {
             val uiState = profileViewModel.uiState.collectAsStateWithLifecycle()
             TariffPlanListScreen(
                 tariffPlanList = uiState.value.tariffPlansList,
-                onFetchTariffList = { profileViewModel.fetchTariffPlans() }
+                onFetchTariffList = { profileViewModel.fetchTariffPlans() },
+                onSelectTariffClick = { 
+                    profileViewModel.onSelectTariffClick(it)
+                    navController.navigate(Screen.SelectPaymentProvider.route)
+                }
             )
+        }
+
+        composable(Screen.SelectPaymentProvider.route) {
+            val uiState = profileViewModel.uiState.collectAsStateWithLifecycle()
+            ProvidersListScreen(
+                paymentProviders = uiState.value.paymentProviderList,
+                selectedProviderId = uiState.value.selectedProviderId,
+                onFetchProviders = { profileViewModel.fetchPaymentProviders() },
+                onProviderClick = { profileViewModel.onProviderSelect(it) },
+                onContinueClick = { profileViewModel.onPurchaseClick() },
+            ) 
         }
     }
 }
@@ -202,5 +218,6 @@ sealed class Screen(val route: String, val label: String, val icon: ImageVector)
     object Uploaded : Screen("uploaded", "Загруженные", Icons.Default.List)
     object Diagnostic : Screen("diagnostic", "Диагностика", Icons.Default.List)
     object Account : Screen("account", "Аккаунт", Icons.Default.Person)
-    object Subscription : Screen("subscription", "Подписка", Icons.Default.Person)
+    object SelectTariff : Screen("select_tariff", "Выбор тарифа", Icons.Default.Person)
+    object SelectPaymentProvider : Screen("select_payment_provider", "Выбор провайдера", Icons.Default.Person)
 }
