@@ -1,4 +1,4 @@
-package com.mrinsaf.core.presentation.ui.event
+package com.mrinsaf.core.presentation.event
 
 import com.mrinsaf.core.presentation.ui.ui_state.DiagnosticProgressStateDetail
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -4,13 +4,12 @@ import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.mrinsaf.core.data.network.data_source.AuthApiService
 import com.mrinsaf.core.data.network.data_source.UziApiService
-import com.mrinsaf.core.data.network.repository.MockUziServiceRepository
 import com.mrinsaf.core.data.utils.auth_utils.AuthInterceptor
 import com.mrinsaf.core.data.utils.auth_utils.TokenAuthenticator
 import com.mrinsaf.core.data.utils.auth_utils.TokenRefresher
 import com.mrinsaf.core.data.network.repository.NetworkUziServiceRepository
 import com.mrinsaf.core.domain.repository.UziServiceRepository
-import com.mrinsaf.core.presentation.ui.event.NewDiagnosticStateChangeEvent
+import com.mrinsaf.core.presentation.event.NewDiagnosticStateChangeEvent
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

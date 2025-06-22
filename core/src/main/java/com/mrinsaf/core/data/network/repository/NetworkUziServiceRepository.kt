@@ -15,7 +15,7 @@ import com.mrinsaf.core.domain.model.basic.Uzi
 import com.mrinsaf.core.domain.model.basic.UziDevice
 import com.mrinsaf.core.domain.model.basic.UziImage
 import com.mrinsaf.core.domain.repository.UziServiceRepository
-import com.mrinsaf.core.presentation.ui.event.NewDiagnosticStateChangeEvent
+import com.mrinsaf.core.presentation.event.NewDiagnosticStateChangeEvent
 import com.mrinsaf.core.presentation.ui.ui_state.DiagnosticProgressStateDetail
 import kotlinx.coroutines.delay
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
