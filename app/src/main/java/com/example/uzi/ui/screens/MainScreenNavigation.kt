@@ -177,6 +177,7 @@ fun NavigationGraph(
                 onFetchProviders = { profileViewModel.fetchPaymentProviders() },
                 onProviderClick = { profileViewModel.onProviderSelect(it) },
                 onContinueClick = { profileViewModel.onPurchaseClick() },
+                uiEvent = profileViewModel.uiEvent,
             ) 
         }
     }

@@ -1,5 +1,6 @@
 package com.mrinsaf.profile.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,10 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mrinsaf.core.R
+import com.mrinsaf.core.presentation.event.model.UiEvent
 import com.mrinsaf.core.presentation.ui.components.MainButton
 import com.mrinsaf.core.presentation.ui.components.containers.BasicContainer
 import com.mrinsaf.core.presentation.ui.screen.BasicScreen
@@ -31,18 +34,30 @@ import com.mrinsaf.core.presentation.ui.theme.UziShapes
 import com.mrinsaf.core.presentation.ui.theme.UziTheme
 import com.mrinsaf.core.presentation.ui.theme.successTextColor
 import com.mrinsaf.profile.domain.model.PaymentProvider
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 
 @Composable
 fun ProvidersListScreen(
     paymentProviders: List<PaymentProvider>,
     selectedProviderId: String?,
+    uiEvent: SharedFlow<UiEvent>,
     onFetchProviders: () -> Unit,
     onProviderClick: (String) -> Unit,
     onContinueClick: () -> Unit,
 ) {
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         onFetchProviders()
+
+        uiEvent.collect { uiEvent ->
+            when (uiEvent) {
+                is UiEvent.ShowToast -> {
+                    Toast.makeText(context, uiEvent.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     BasicScreen(
@@ -129,7 +144,8 @@ fun ProvidersListScreenPreview() {
             selectedProviderId = null,
             onProviderClick = {},
             onFetchProviders = {},
-            onContinueClick = {}
+            onContinueClick = {},
+            uiEvent = MutableSharedFlow<UiEvent>()
         )
     }
 }

@@ -1,8 +1,10 @@
 package com.mrinsaf.profile.ui.viewModel
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrinsaf.core.data.local.data_source.UserInfoStorage
@@ -10,6 +12,8 @@ import com.mrinsaf.core.data.network.dto.network_request.PurchaseRequest
 import com.mrinsaf.core.domain.model.api_result.ApiResult
 import com.mrinsaf.core.domain.repository.SubscriptionRepository
 import com.mrinsaf.core.domain.repository.UziServiceRepository
+import com.mrinsaf.core.presentation.event.event_bus.UiEventBus
+import com.mrinsaf.core.presentation.payment_navigator.PaymentNavigator
 import com.mrinsaf.profile.data.mapper.toPaymentProvider
 import com.mrinsaf.profile.data.mapper.toTariffPlan
 import com.mrinsaf.profile.domain.model.ActiveSubscription
@@ -28,11 +32,15 @@ class ProfileViewModel @Inject constructor(
     private val uziServiceRepository: UziServiceRepository,
     private val subscriptionRepository: SubscriptionRepository,
     private val getActiveSubscription: GetActiveSubscriptionUseCase,
+    private val paymentNavigator: PaymentNavigator,
+    private val uiEventBus: UiEventBus,
     @ApplicationContext val context: Context
 ): ViewModel() {
     private var _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState>
         get() = _uiState
+
+    val uiEvent = uiEventBus.uiEvent
 
     suspend fun loadUserInfo() {
         println("Достаю информацию о пользователе")
@@ -52,9 +60,11 @@ class ProfileViewModel @Inject constructor(
     fun fetchSubscriptionInfo() = viewModelScope.launch {
         when (val result = getActiveSubscription()) {
             is ApiResult.Success -> {
+                println("get subscription info success")
                 updateActiveSubscriptionState(result.data)
             }
             is ApiResult.Error -> {
+                println("get subscription info failure")
                 updateActiveSubscriptionState(null)
             }
         }
@@ -85,7 +95,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun onPurchaseClick() = viewModelScope.launch {
-        val tariffPlan = requireNotNull(uiState.value.selectedTariffPlanId) { "tariffPlan must be not null" }
+        val tariffPlan = requireNotNull(uiState.value.selectedTariffPlanId) { "tariffPlan must not be null" }
         val paymentProvider = requireNotNull(uiState.value.selectedProviderId) { "paymentProvider must be not null" }
 
         val purchaseResponse = subscriptionRepository.purchaseSubscription(
@@ -95,7 +105,16 @@ class ProfileViewModel @Inject constructor(
             )
         )
 
-        println("purchaseResponse: $purchaseResponse")
+        when (purchaseResponse) {
+            is ApiResult.Success -> {
+                val paymentConfirmationUrl = purchaseResponse.data.confirmationUrl
+                paymentNavigator.openPaymentUrl(paymentConfirmationUrl)
+            }
+            is ApiResult.Error -> {
+                uiEventBus.emitToastEvent("Ошибка при получении ссылки для оплаты")
+                println("Произошла ошибка при получении ссылки для оплаты")
+            }
+        }
     }
 
     fun onSelectTariffClick(tariffId: String) {

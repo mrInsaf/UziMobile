@@ -1,4 +1,4 @@
-package com.mrinsaf.core.presentation.ui.event
+package com.mrinsaf.core.presentation.event.event_bus
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

@@ -10,7 +10,7 @@ import com.mrinsaf.core.data.network.dto.network_responses.NodesSegmentsResponse
 import com.mrinsaf.core.domain.model.basic.Uzi
 import com.mrinsaf.core.domain.model.basic.UziImage
 import com.mrinsaf.core.domain.repository.UziServiceRepository
-import com.mrinsaf.core.presentation.ui.event.NewDiagnosticStateChangeEvent
+import com.mrinsaf.core.presentation.event.NewDiagnosticStateChangeEvent
 import com.mrinsaf.core.presentation.ui.ui_state.DiagnosticProgressStateDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
