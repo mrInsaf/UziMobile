@@ -15,7 +15,7 @@ import coil.size.Size
 import com.mrinsaf.core.R
 
 @Composable
-fun LoadingAnimation() {
+fun LoadingAnimation(size: Size = Size.ORIGINAL) {
 
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
@@ -30,7 +30,7 @@ fun LoadingAnimation() {
     Image(
         painter = rememberAsyncImagePainter(
             ImageRequest.Builder(context).data(data = R.drawable.loading_blue).apply(block = {
-                size(Size.ORIGINAL)
+                size(size)
             }).build(), imageLoader = imageLoader
         ),
         contentDescription = null,

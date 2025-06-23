@@ -3,8 +3,11 @@ package com.mrinsaf.profile.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -13,6 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import coil.size.Size
+import com.mrinsaf.core.presentation.ui.components.LoadingAnimation
 import com.mrinsaf.core.presentation.ui.components.MainButton
 import com.mrinsaf.core.presentation.ui.components.fields.ProfileField
 import com.mrinsaf.core.presentation.ui.theme.Paddings
@@ -26,6 +31,7 @@ fun SubscriptionInfoComponent(
     onShowTariffPlans: () -> Unit,
     onSubscribeClick: () -> Unit,
     hasUserSubscription: Boolean,
+    isCheckingSubscriptionAfterPurchase: Boolean
 ) {
     ProfileField(
         title = stringResource(R.string.subscription_title),
@@ -34,7 +40,8 @@ fun SubscriptionInfoComponent(
                 activeSubscription = activeSubscription,
                 onShowTariffPlans = onShowTariffPlans,
                 onSubscribeClick = onSubscribeClick,
-                hasUserSubscription = hasUserSubscription
+                hasUserSubscription = hasUserSubscription,
+                isCheckingSubscriptionAfterPurchase = isCheckingSubscriptionAfterPurchase
             )
         }
     )
@@ -44,6 +51,7 @@ fun SubscriptionInfoComponent(
 fun SubscriptionComponentContent(
     hasUserSubscription: Boolean,
     activeSubscription: ActiveSubscription?,
+    isCheckingSubscriptionAfterPurchase: Boolean,
     onShowTariffPlans: () -> Unit,
     onSubscribeClick: () -> Unit,
 ) {
@@ -52,7 +60,15 @@ fun SubscriptionComponentContent(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.background)
     ) {
-        SubscriptionStatusComponent(hasUserSubscription)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            SubscriptionStatusComponent(hasUserSubscription)
+            Spacer(Modifier.size(Paddings.Medium))
+            if (isCheckingSubscriptionAfterPurchase) {
+                LoadingAnimation(
+                    size = Size(120, 120)
+                )
+            }
+        }
         activeSubscription?.let {
             Text(text = "Название: ${it.tariffName}")
             Text(text = "Осталось дней: ${it.daysUntilExpiration}")
@@ -88,6 +104,7 @@ fun SubscriptionInfoComponentPreview() {
             onSubscribeClick = { },
             activeSubscription = ActiveSubscription("premium", 2),
             hasUserSubscription = true,
+            isCheckingSubscriptionAfterPurchase = false,
         )
     }
 }

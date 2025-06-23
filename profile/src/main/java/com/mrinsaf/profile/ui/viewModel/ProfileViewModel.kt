@@ -17,6 +17,7 @@ import com.mrinsaf.profile.data.mapper.toTariffPlan
 import com.mrinsaf.profile.domain.use_case.GetActiveSubscriptionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -106,7 +107,10 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun onPurchaseClick(context: Context) = viewModelScope.launch {
+    fun onPurchaseClick(
+        context: Context,
+        navigateToProfileScreen: () -> Unit,
+    ) = viewModelScope.launch {
         val tariffPlan = requireNotNull(uiState.value.selectedTariffPlanId) { "tariffPlan must not be null" }
         val paymentProvider = requireNotNull(uiState.value.selectedProviderId) { "paymentProvider must be not null" }
 
@@ -120,12 +124,36 @@ class ProfileViewModel @Inject constructor(
         when (purchaseResponse) {
             is ApiResult.Success -> {
                 val paymentConfirmationUrl = purchaseResponse.data.confirmationUrl
+                _uiState.update { it.copy(isNavigatedToPaymentProvider = true) }
                 paymentNavigator.openPaymentUrl(context, paymentConfirmationUrl)
+                navigateToProfileScreen()
             }
             is ApiResult.Error -> {
                 uiEventBus.emitToastEvent("Ошибка при получении ссылки для оплаты")
                 println("Произошла ошибка при получении ссылки для оплаты")
             }
+        }
+    }
+
+    fun checkSubscriptionAfterPurchase() = viewModelScope.launch {
+        if (uiState.value.isNavigatedToPaymentProvider) {
+            _uiState.update {
+                it.copy(
+                    isNavigatedToPaymentProvider = false,
+                    isCheckingSubscriptionAfterPurchase = true
+                )
+            }
+
+            repeat(10) {
+                delay(2000)
+                fetchSubscriptionInfo().join()
+
+                if (uiState.value.hasUserSubscription){
+                    _uiState.update { it.copy(isCheckingSubscriptionAfterPurchase = false) }
+                    return@repeat
+                }
+            }
+            _uiState.update { it.copy(isCheckingSubscriptionAfterPurchase = false) }
         }
     }
 

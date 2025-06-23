@@ -15,4 +15,7 @@ data class ProfileUiState(
 
     val paymentProviderList: List<PaymentProvider> = emptyList(),
     val selectedProviderId: String? = null,
+
+    val isNavigatedToPaymentProvider: Boolean = false,
+    val isCheckingSubscriptionAfterPurchase: Boolean = false,
 )

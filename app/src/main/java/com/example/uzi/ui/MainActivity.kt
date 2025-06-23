@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         println("fetching subscription info")
-        profileViewModel.fetchSubscriptionInfo()
+        profileViewModel.checkSubscriptionAfterPurchase()
     }
 }
 
