@@ -145,6 +145,7 @@ fun NavigationGraph(
                 email = uiState.value.user?.email,
                 activeSubscription = uiState.value.activeSubscription,
                 hasUserSubscription = uiState.value.hasUserSubscription,
+                isCheckingSubscriptionAfterPurchase = uiState.value.isCheckingSubscriptionAfterPurchase,
                 loadUserInfo = { profileViewModel.loadUserInfo() },
                 fetchSubscriptionInfo = { profileViewModel.fetchSubscriptionInfo() },
                 onShowTariffPlans = { navController.navigate(Screen.SelectTariff.route) },
@@ -183,7 +184,12 @@ fun NavigationGraph(
                 selectedProviderId = uiState.value.selectedProviderId,
                 onFetchProviders = { profileViewModel.fetchPaymentProviders() },
                 onProviderClick = { profileViewModel.onProviderSelect(it) },
-                onContinueClick = { profileViewModel.onPurchaseClick(context) },
+                onContinueClick = {
+                    profileViewModel.onPurchaseClick(
+                        context = context,
+                        navigateToProfileScreen = { navController.navigate(Screen.Account.route) }
+                    )
+                },
                 uiEvent = profileViewModel.uiEvent,
             ) 
         }
