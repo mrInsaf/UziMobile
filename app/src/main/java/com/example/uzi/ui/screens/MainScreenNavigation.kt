@@ -44,7 +44,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(
     newDiagnosticViewModel: NewDiagnosticViewModel,
@@ -75,7 +74,6 @@ fun MainScreen(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavigationGraph(
     navController: NavHostController,
@@ -146,6 +144,7 @@ fun NavigationGraph(
                 fullName = uiState.value.user?.fullName,
                 email = uiState.value.user?.email,
                 activeSubscription = uiState.value.activeSubscription,
+                hasUserSubscription = uiState.value.hasUserSubscription,
                 loadUserInfo = { profileViewModel.loadUserInfo() },
                 fetchSubscriptionInfo = { profileViewModel.fetchSubscriptionInfo() },
                 onShowTariffPlans = { navController.navigate(Screen.SelectTariff.route) },
