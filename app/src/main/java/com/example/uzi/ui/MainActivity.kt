@@ -1,12 +1,10 @@
 package com.example.uzi.ui
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
@@ -22,7 +20,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.O)
+
+    val profileViewModel: ProfileViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -35,7 +35,6 @@ class MainActivity : ComponentActivity() {
         val newDiagnosticViewModel: NewDiagnosticViewModel by viewModels()
         val diagnosticViewModel: DiagnosticViewModel by viewModels()
         val diagnosticListViewModel: DiagnosticListViewModel by viewModels()
-        val profileViewModel: ProfileViewModel by viewModels()
 
         setContent {
             UziTheme(dynamicColor = false) {
@@ -55,6 +54,12 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        println("fetching subscription info")
+        profileViewModel.fetchSubscriptionInfo()
     }
 }
 

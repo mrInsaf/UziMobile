@@ -1,13 +1,10 @@
 package com.mrinsaf.profile.ui.viewModel
 
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mrinsaf.core.data.local.data_source.TokenStorage
 import com.mrinsaf.core.data.local.data_source.UserInfoStorage
 import com.mrinsaf.core.data.network.dto.network_request.PurchaseRequest
 import com.mrinsaf.core.domain.model.api_result.ApiResult
@@ -17,7 +14,6 @@ import com.mrinsaf.core.presentation.event.event_bus.UiEventBus
 import com.mrinsaf.core.presentation.payment_navigator.PaymentNavigator
 import com.mrinsaf.profile.data.mapper.toPaymentProvider
 import com.mrinsaf.profile.data.mapper.toTariffPlan
-import com.mrinsaf.profile.domain.model.ActiveSubscription
 import com.mrinsaf.profile.domain.use_case.GetActiveSubscriptionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -57,17 +53,32 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun fetchSubscriptionInfo() = viewModelScope.launch {
-        when (val result = getActiveSubscription()) {
-            is ApiResult.Success -> {
-                println("get subscription info success")
-                updateActiveSubscriptionState(result.data)
+        val checkSubscription = subscriptionRepository.checkActiveSubscription()
+        if (checkSubscription is ApiResult.Success) {
+            _uiState.update { it.copy(hasUserSubscription = checkSubscription.data.hasActiveSubscription) }
+            println("hasActiveSubscription: ${checkSubscription.data.hasActiveSubscription}")
+
+            if (checkSubscription.data.hasActiveSubscription) {
+                when (val result = getActiveSubscription()) {
+                    is ApiResult.Success -> {
+                        println("get subscription info success")
+                        _uiState.update { it.copy(activeSubscription = result.data) }
+                    }
+                    is ApiResult.Error -> {
+                        println("get subscription info failure")
+                        _uiState.update { it.copy(activeSubscription = null) }
+                    }
+                }
             }
-            is ApiResult.Error -> {
-                println("get subscription info failure")
-                updateActiveSubscriptionState(null)
-            }
+            else _uiState.update { it.copy(hasUserSubscription = false, activeSubscription = null) }
+
+        }
+        else {
+            _uiState.update { it.copy(
+                hasUserSubscription = false,
+                activeSubscription = null
+            ) }
         }
     }
 
@@ -126,7 +137,4 @@ class ProfileViewModel @Inject constructor(
         _uiState.update { it.copy(selectedProviderId = providerId) }
     }
 
-    private fun updateActiveSubscriptionState(newValue: ActiveSubscription?) {
-        _uiState.update { it.copy(activeSubscription = newValue) }
-    }
 }

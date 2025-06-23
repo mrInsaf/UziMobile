@@ -25,6 +25,7 @@ fun SubscriptionInfoComponent(
     activeSubscription: ActiveSubscription?,
     onShowTariffPlans: () -> Unit,
     onSubscribeClick: () -> Unit,
+    hasUserSubscription: Boolean,
 ) {
     ProfileField(
         title = stringResource(R.string.subscription_title),
@@ -33,6 +34,7 @@ fun SubscriptionInfoComponent(
                 activeSubscription = activeSubscription,
                 onShowTariffPlans = onShowTariffPlans,
                 onSubscribeClick = onSubscribeClick,
+                hasUserSubscription = hasUserSubscription
             )
         }
     )
@@ -40,6 +42,7 @@ fun SubscriptionInfoComponent(
 
 @Composable
 fun SubscriptionComponentContent(
+    hasUserSubscription: Boolean,
     activeSubscription: ActiveSubscription?,
     onShowTariffPlans: () -> Unit,
     onSubscribeClick: () -> Unit,
@@ -49,10 +52,7 @@ fun SubscriptionComponentContent(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.background)
     ) {
-        val isSubscriptionActive = activeSubscription?.let {
-            it.daysUntilExpiration > 0
-        } ?: false
-        SubscriptionStatusComponent(isSubscriptionActive)
+        SubscriptionStatusComponent(hasUserSubscription)
         activeSubscription?.let {
             Text(text = "Название: ${it.tariffName}")
             Text(text = "Осталось дней: ${it.daysUntilExpiration}")
@@ -71,7 +71,7 @@ fun SubscriptionComponentContent(
         ) {
             MainButton(
                 text = stringResource(R.string.subscribe),
-                enabled = !isSubscriptionActive
+                enabled = !hasUserSubscription
             ) {
                 onSubscribeClick()
             }
@@ -87,6 +87,7 @@ fun SubscriptionInfoComponentPreview() {
             onShowTariffPlans = { },
             onSubscribeClick = { },
             activeSubscription = ActiveSubscription("premium", 2),
+            hasUserSubscription = true,
         )
     }
 }

@@ -25,6 +25,7 @@ fun ProfileScreen(
     fullName: String?,
     email: String?,
     activeSubscription: ActiveSubscription?,
+    hasUserSubscription: Boolean,
     loadUserInfo: suspend () -> Unit,
     fetchSubscriptionInfo: () -> Unit,
     onShowTariffPlans: () -> Unit,
@@ -59,8 +60,9 @@ fun ProfileScreen(
 
         SubscriptionInfoComponent(
             activeSubscription = activeSubscription,
+            hasUserSubscription = hasUserSubscription,
             onShowTariffPlans = { onShowTariffPlans() },
-            onSubscribeClick = { onShowTariffPlans() }
+            onSubscribeClick = { onShowTariffPlans() },
         )
 
         Column(
@@ -94,7 +96,8 @@ fun ProfileScreenPreview() {
                 daysUntilExpiration = 2
             ),
             onShowTariffPlans = { },
-            onLogoutClick = {}
+            onLogoutClick = {},
+            hasUserSubscription = true
         )
     }
 }

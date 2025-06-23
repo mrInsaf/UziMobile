@@ -7,6 +7,7 @@ import com.mrinsaf.profile.domain.model.TariffPlan
 
 data class ProfileUiState(
     val user: User? = null,
+    val hasUserSubscription: Boolean = false,
     val activeSubscription: ActiveSubscription? = null,
 
     val tariffPlansList: List<TariffPlan> = emptyList(),

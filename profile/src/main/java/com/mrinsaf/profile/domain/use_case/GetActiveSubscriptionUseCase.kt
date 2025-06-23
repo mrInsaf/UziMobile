@@ -17,32 +17,24 @@ import kotlin.time.Duration
 class GetActiveSubscriptionUseCase @Inject constructor(
     private val subscriptionRepository: SubscriptionRepository
 ) {
-    @RequiresApi(Build.VERSION_CODES.O)
     suspend operator fun invoke(): ApiResult<ActiveSubscription> {
         val subscriptionResult = subscriptionRepository.getActiveSubscription()
-        when (subscriptionResult ) {
-            is ApiResult.Error -> return subscriptionResult
-            is ApiResult.Success -> {
-                val subscription = subscriptionResult.data
-                val tariffResult = subscriptionRepository.getTariffPlanById(subscription.tariffPlanId)
-                when (tariffResult) {
-                    is ApiResult.Error -> return tariffResult
-                    is ApiResult.Success -> {
-                        val tariff = tariffResult.data
-                        val daysLeft = calculateDaysUntilExpiration(subscription.endDate)
-                        return ApiResult.Success(
-                            ActiveSubscription(
-                                tariffName = tariff.name,
-                                daysUntilExpiration = daysLeft
-                            )
-                        )
-                    }
-                }
-            }
-        }
+        if (subscriptionResult is ApiResult.Error) return subscriptionResult
+        val subscription = (subscriptionResult as ApiResult.Success).data
 
+        val tariffResult = subscriptionRepository.getTariffPlanById(subscription.tariffPlanId)
+        if (tariffResult is ApiResult.Error) return tariffResult
+        val tariff = (tariffResult as ApiResult.Success).data
+
+        val daysLeft = calculateDaysUntilExpiration(subscription.endDate)
+
+        return ApiResult.Success(
+            ActiveSubscription(
+                tariffName = tariff.name,
+                daysUntilExpiration = daysLeft
+            )
+        )
     }
-
     private fun calculateDaysUntilExpiration(endDateString: String): Int {
         val parsedDate = Instant.parse(endDateString)
         val now = Clock.System.now()
