@@ -5,11 +5,14 @@ import androidx.annotation.RequiresApi
 import com.mrinsaf.core.domain.model.api_result.ApiResult
 import com.mrinsaf.core.domain.repository.SubscriptionRepository
 import com.mrinsaf.profile.domain.model.ActiveSubscription
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
+import kotlin.time.Duration
 
 class GetActiveSubscriptionUseCase @Inject constructor(
     private val subscriptionRepository: SubscriptionRepository
@@ -40,15 +43,14 @@ class GetActiveSubscriptionUseCase @Inject constructor(
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun calculateDaysUntilExpiration(endDateString: String): Int {
-        // Парсим дату с учётом времени и часового пояса
-        val endDate = ZonedDateTime.parse(endDateString, DateTimeFormatter.ISO_INSTANT)
+        val parsedDate = Instant.parse(endDateString)
+        val now = Clock.System.now()
 
-        // Получаем текущее время в том же часовом поясе (UTC)
-        val now = ZonedDateTime.now(ZoneOffset.UTC)
+        val difference: Duration = now - parsedDate
 
-        // Вычисляем разницу в днях
-        return ChronoUnit.DAYS.between(now.toLocalDate(), endDate.toLocalDate()).toInt()
+        val daysDifference = difference.inWholeDays
+        println("Разница в днях: $daysDifference")
+        return daysDifference.toInt()
     }
 }

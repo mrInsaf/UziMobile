@@ -20,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -51,6 +52,7 @@ fun MainScreen(
     diagnosticListViewModel: DiagnosticListViewModel,
     profileViewModel: ProfileViewModel,
     patientId: String,
+    onLogout: () -> Unit,
 ) {
     val navController = rememberNavController()
 
@@ -67,7 +69,8 @@ fun MainScreen(
             diagnosticViewModel = diagnosticViewModel,
             diagnosticListViewModel = diagnosticListViewModel,
             profileViewModel = profileViewModel,
-            patientId = patientId
+            patientId = patientId,
+            onLogout = onLogout
         )
     }
 }
@@ -81,8 +84,10 @@ fun NavigationGraph(
     diagnosticViewModel: DiagnosticViewModel,
     diagnosticListViewModel: DiagnosticListViewModel,
     profileViewModel: ProfileViewModel,
-    patientId: String
+    patientId: String,
+    onLogout: () -> Unit,
 ) {
+    val context = LocalContext.current
     NavHost(
         navController = navController,
         startDestination = Screen.Load.route,
@@ -144,6 +149,9 @@ fun NavigationGraph(
                 loadUserInfo = { profileViewModel.loadUserInfo() },
                 fetchSubscriptionInfo = { profileViewModel.fetchSubscriptionInfo() },
                 onShowTariffPlans = { navController.navigate(Screen.SelectTariff.route) },
+                onLogoutClick = {
+                    onLogout()
+                },
             )
         }
 
@@ -176,7 +184,7 @@ fun NavigationGraph(
                 selectedProviderId = uiState.value.selectedProviderId,
                 onFetchProviders = { profileViewModel.fetchPaymentProviders() },
                 onProviderClick = { profileViewModel.onProviderSelect(it) },
-                onContinueClick = { profileViewModel.onPurchaseClick() },
+                onContinueClick = { profileViewModel.onPurchaseClick(context) },
                 uiEvent = profileViewModel.uiEvent,
             ) 
         }

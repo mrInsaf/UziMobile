@@ -12,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.mrinsaf.core.presentation.ui.components.MainButton
 import com.mrinsaf.core.presentation.ui.components.fields.ProfileField
@@ -27,6 +28,7 @@ fun ProfileScreen(
     loadUserInfo: suspend () -> Unit,
     fetchSubscriptionInfo: () -> Unit,
     onShowTariffPlans: () -> Unit,
+    onLogoutClick: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         fetchSubscriptionInfo()
@@ -71,7 +73,7 @@ fun ProfileScreen(
                 text = "Выйти из аккаунта",
                 containerColor = Color(0xFFf5222d)
             ) {
-                println("logout")
+                onLogoutClick()
             }
         }
 
@@ -91,7 +93,8 @@ fun ProfileScreenPreview() {
                 tariffName = "premium",
                 daysUntilExpiration = 2
             ),
-            onShowTariffPlans = {  }
+            onShowTariffPlans = { },
+            onLogoutClick = {}
         )
     }
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.mrinsaf.core.domain.repository.UziServiceRepository
 import com.mrinsaf.core.data.local.data_source.UserInfoStorage
 import com.mrinsaf.auth.domain.AuthRepository
+import com.mrinsaf.core.data.local.data_source.TokenStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -86,6 +87,11 @@ class AuthorisationViewModel @Inject constructor(
         }
     }
 
+    fun unauthorize(context: Context) = viewModelScope.launch{
+        TokenStorage.clearTokens(context)
+        authState.value = AuthState.LoggedOut
+    }
+
     private fun updatePatientIdFromStorage() {
         viewModelScope.launch {
             println("updating patient id")
@@ -102,6 +108,7 @@ class AuthorisationViewModel @Inject constructor(
     sealed class AuthState {
         object Loading: AuthState()
         object Authorized: AuthState()
+        object LoggedOut: AuthState()
         sealed class Error: AuthState() {
             object Unauthorized: Error()
             object ApiIsDown: Error()

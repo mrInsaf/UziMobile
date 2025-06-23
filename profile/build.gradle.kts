@@ -57,6 +57,8 @@ dependencies {
 
     implementation(libs.coil.compose)
 
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

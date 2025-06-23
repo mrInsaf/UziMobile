@@ -74,7 +74,10 @@ fun AppNavigation(
                 diagnosticViewModel = diagnosticViewModel,
                 diagnosticListViewModel = diagnosticListViewModel,
                 patientId = patientId,
-                profileViewModel = profileViewModel
+                profileViewModel = profileViewModel,
+                onLogout = {
+                    authorisationViewModel.unauthorize(context)
+                }
             )
         }
         composable(route = AuthScreens.SplashScreen.route) {
@@ -92,6 +95,10 @@ fun AppNavigation(
             is AuthorisationViewModel.AuthState.Authorized ->
                 navController.navigate(AuthScreens.MainScreen.route)
 
+            is AuthorisationViewModel.AuthState.LoggedOut -> {
+                navController.navigate(AuthScreens.AuthorisationScreen.route)
+            }
+
             is AuthorisationViewModel.AuthState.Error -> {
                 when (state) {
                     is AuthorisationViewModel.AuthState.Error.Unauthorized -> {
@@ -100,7 +107,6 @@ fun AppNavigation(
                             "Сессия истекла...",
                             Toast.LENGTH_SHORT
                         ).show()
-                        println("перехожу на экран авторизации")
                         navController.navigate(AuthScreens.AuthorisationScreen.route)
                     }
                     is AuthorisationViewModel.AuthState.Error.ApiIsDown -> {
@@ -109,7 +115,7 @@ fun AppNavigation(
                 }
             }
 
-            AuthorisationViewModel.AuthState.Loading -> Unit
+            AuthorisationViewModel.AuthState.Loading -> { println("Loading...") }
         }
     }
 

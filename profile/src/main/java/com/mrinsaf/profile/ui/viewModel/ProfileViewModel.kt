@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mrinsaf.core.data.local.data_source.TokenStorage
 import com.mrinsaf.core.data.local.data_source.UserInfoStorage
 import com.mrinsaf.core.data.network.dto.network_request.PurchaseRequest
 import com.mrinsaf.core.domain.model.api_result.ApiResult
@@ -94,7 +95,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun onPurchaseClick() = viewModelScope.launch {
+    fun onPurchaseClick(context: Context) = viewModelScope.launch {
         val tariffPlan = requireNotNull(uiState.value.selectedTariffPlanId) { "tariffPlan must not be null" }
         val paymentProvider = requireNotNull(uiState.value.selectedProviderId) { "paymentProvider must be not null" }
 
@@ -108,7 +109,7 @@ class ProfileViewModel @Inject constructor(
         when (purchaseResponse) {
             is ApiResult.Success -> {
                 val paymentConfirmationUrl = purchaseResponse.data.confirmationUrl
-                paymentNavigator.openPaymentUrl(paymentConfirmationUrl)
+                paymentNavigator.openPaymentUrl(context, paymentConfirmationUrl)
             }
             is ApiResult.Error -> {
                 uiEventBus.emitToastEvent("Ошибка при получении ссылки для оплаты")

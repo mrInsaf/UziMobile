@@ -25,7 +25,5 @@ object CoreUiModule {
 
     @Provides
     @Singleton
-    fun providePaymentNavigator(
-        @ApplicationContext context: Context
-    ): PaymentNavigator = PaymentNavigatorImpl(context)
+    fun providePaymentNavigator(): PaymentNavigator = PaymentNavigatorImpl()
 }
