@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.logging.interceptor)
     implementation (libs.java.jwt)
+    implementation("com.github.mwiede:jsch:2.27.3")
 
     implementation (libs.androidx.datastore.preferences)
 

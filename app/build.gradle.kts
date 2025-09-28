@@ -24,6 +24,12 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    packaging {
+        resources {
+            pickFirsts.add("META-INF/versions/9/OSGI-INF/MANIFEST.MF")
+        }
+    }
+
     buildTypes {
 //        create("mock") {
 ////            buildConfigField("Boolean", "MOCK_BUILD", "true")

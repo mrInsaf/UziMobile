@@ -9,13 +9,13 @@ datastorePreferencesVersion = "1.0.0"
 foundationLayout = "1.8.0-rc03"
 hiltCompiler = "2.55"
 hiltNavigationCompose = "1.2.0"
+hilt = "2.55"
 javaJwt = "4.5.0"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-hilt = "2.55"
 kotlinxCoroutinesTest = "1.10.2"
 kotlinxSerializationJson = "1.6.3"
 kotlinxSerializationJsonVersion = "1.5.1"
@@ -41,10 +41,10 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-datastore-preferences-v100 = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferencesVersion" }
 androidx-datastore-preferences-v112 = { module = "androidx.datastore:datastore-preferences", version.ref = "androidxDatastorePreferences" }
 androidx-foundation-layout = { module = "androidx.compose.foundation:foundation-layout", version.ref = "foundationLayout" }
-androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 beyka-android-tiffbitmapfactory = { module = "io.github.beyka:Android-TiffBitmapFactory", version.ref = "androidTiffbitmapfactoryVersion" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coilCompose" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltCompiler" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
 java-jwt = { module = "com.auth0:java-jwt", version.ref = "javaJwt" }

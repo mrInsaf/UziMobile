@@ -1,5 +1,5 @@
 package com.mrinsaf.core.data.config
 
-object Config {
+object AppConfig {
     var useMocks = false
 }
