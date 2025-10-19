@@ -27,7 +27,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "http://194.226.121.145:8080/api/v1/"
+    private const val BASE_URL = "http://10.164.2.11:8080/api/v1/"
     private val json = Json { ignoreUnknownKeys = true }
 
     @Provides
@@ -36,6 +36,7 @@ object NetworkModule {
     fun provideAuthRetrofit(
         loggingInterceptor: HttpLoggingInterceptor
     ): Retrofit = Retrofit.Builder()
+        .also { println("building retrofit") }
         .baseUrl(BASE_URL)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .client(OkHttpClient.Builder().addInterceptor(loggingInterceptor).build())

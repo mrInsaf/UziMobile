@@ -30,25 +30,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycleScope.launch {
-            val result = SshTunnelManager().startTunnel(
-                sshHost = SshConfig.sshHost,
-                sshPort = SshConfig.sshPort,
-                sshUser = SshConfig.sshUser,
-                sshPassword = SshConfig.sshPassword,
-                privateKey = null,
-                remoteHost = SshConfig.remoteHost,
-                remotePort = SshConfig.remotePort,
-                localPort = SshConfig.localPort,
-            )
-
-            result.onSuccess {
-                println("yoooooo")
-            }.onFailure { e ->
-                println("SSH tunnel failed: ${e.message}")
-            }
-        }
-
         val authorisationViewModel: AuthorisationViewModel by viewModels()
         println(authorisationViewModel)
 
