@@ -13,27 +13,6 @@ import kotlinx.coroutines.runBlocking
 class UziApp : Application() {
     override fun onCreate() {
         super.onCreate()
-
-        runBlocking {
-            val result = SshTunnelManager().startTunnel(
-                sshHost = SshConfig.sshHost,
-                sshPort = SshConfig.sshPort,
-                sshUser = SshConfig.sshUser,
-                sshPassword = SshConfig.sshPassword,
-                privateKey = null,
-                remoteHost = SshConfig.remoteHost,
-                remotePort = SshConfig.remotePort,
-                localPort = SshConfig.localPort,
-            )
-
-            result.onSuccess {
-                println("yoooooo")
-            }.onFailure { e ->
-                println("SSH tunnel failed: ${e.message}")
-            }
-        }
-
         TokenStorage.initialize(this)
     }
-
 }
