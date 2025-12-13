@@ -69,8 +69,10 @@ class RegistraionViewModel @Inject constructor(
         val currentState = _uiState.value
         val emailError = validateEmail(currentState.email)
         val passwordError = validatePassword(currentState.password)
-        val repeatPassError = validateRepeatPassword(currentState.password, currentState.repeatPassword)
+        val repeatPassError =
+            validateRepeatPassword(currentState.password, currentState.repeatPassword)
         val blankFieldsError = validateBlankFields()
+        val policyError = validatePolicy(currentState.policy)
 
         _uiState.update {
             it.copy(
@@ -78,13 +80,15 @@ class RegistraionViewModel @Inject constructor(
                 passwordError = passwordError,
                 repeatPasswordError = repeatPassError,
                 blankFieldsError = blankFieldsError,
+                policyError = policyError
             )
         }
 
         return emailError == null &&
                 passwordError == null &&
                 repeatPassError == null &&
-                blankFieldsError == null
+                blankFieldsError == null &&
+                policyError == null
     }
 
     fun registerPatient() = viewModelScope.launch {
@@ -103,7 +107,7 @@ class RegistraionViewModel @Inject constructor(
             _registrationSuccess.emit(Unit)
 
         } catch (e: Exception) {
-            println(e.printStackTrace())
+            e.printStackTrace()
             Toast.makeText(
                 context,
                 "Что-то пошло не так",
@@ -156,4 +160,11 @@ class RegistraionViewModel @Inject constructor(
         return if (repeatPassword != password) "Пароли не совпадают" else null
     }
 
+    private fun validatePolicy(policy: String): String? {
+        return if (policy.length != POLICY_LENGTH) "Полис должен состоять из 16 цифр" else null
+    }
+
+    private companion object {
+        const val POLICY_LENGTH = 16
+    }
 }

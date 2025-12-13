@@ -103,7 +103,15 @@ fun RegistrationScreen(
                 RequiredFormField(
                     value = registrationUiState.policy,
                     label = "Номер полиса",
-                    onValueChange = { registrationViewModel.onPolicyChange(it) }
+                    onValueChange = { registrationViewModel.onPolicyChange(it) },
+                    isError = registrationUiState.policyError != null,
+                    AdditionalContent = {
+                        Text(
+                            text = "16 цифр",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.Gray
+                        )
+                    }
                 )
 
                 RequiredFormField(
@@ -131,7 +139,8 @@ fun RegistrationScreen(
                     registrationUiState.blankFieldsError,
                     registrationUiState.emailError,
                     registrationUiState.passwordError,
-                    registrationUiState.repeatPasswordError
+                    registrationUiState.repeatPasswordError,
+                    registrationUiState.policyError,
                 ).filter { it.isNotBlank() }
 
                 Column(

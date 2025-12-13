@@ -12,5 +12,6 @@ data class RegistrationUiState(
     val emailError: String? = null,
     val passwordError: String? = null,
     val repeatPasswordError: String? = null,
-    val blankFieldsError: String? = null
+    val blankFieldsError: String? = null,
+    val policyError: String? = null,
 )
