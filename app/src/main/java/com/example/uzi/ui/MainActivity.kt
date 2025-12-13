@@ -1,5 +1,6 @@
 package com.example.uzi.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,9 +23,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     val profileViewModel: ProfileViewModel by viewModels()
+    val newDiagnosticViewModel: NewDiagnosticViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val initialIntent = intent
+        handleIntent(initialIntent)
 
         val authorisationViewModel: AuthorisationViewModel by viewModels()
         println(authorisationViewModel)
@@ -32,7 +37,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val registrationViewModel: RegistraionViewModel by viewModels()
-        val newDiagnosticViewModel: NewDiagnosticViewModel by viewModels()
         val diagnosticViewModel: DiagnosticViewModel by viewModels()
         val diagnosticListViewModel: DiagnosticListViewModel by viewModels()
 
@@ -60,6 +64,16 @@ class MainActivity : ComponentActivity() {
         super.onResume()
         println("fetching subscription info")
         profileViewModel.checkSubscriptionAfterPurchase()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        val uri = intent?.data ?: return
+        newDiagnosticViewModel.setNewImageUriFromIntent(uri)
     }
 }
 

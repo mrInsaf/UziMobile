@@ -214,6 +214,13 @@ class NewDiagnosticViewModel @Inject constructor(
         }
     }
 
+    fun setNewImageUriFromIntent(uri: Uri) {
+        _uiState.update { it.copy(
+            selectedImageUri = uri,
+            selectedImageName = getFileName(uri) ?: "Без названия"
+        ) }
+    }
+
     private fun updateUiBeforeDiagnosticStart() {
         updateUploadUziProgressState(DiagnosticProgressStateDetail.UploadingUzi)
         _uiState.update {

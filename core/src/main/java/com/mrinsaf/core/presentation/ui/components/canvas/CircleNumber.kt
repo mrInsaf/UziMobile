@@ -59,16 +59,8 @@ fun CircleNumber(
                 style = style,
                 radius = size.toPx() / 2,
             )
-//            if (!focused && !completed) {
-//                drawCircle(
-//                    color = Color.White,
-//                    style = Fill,
-//                    radius = size.toPx() / 2 - 1,
-//                )
-//            }
         }
 
-        // Отображаем число
         Text(
             text = number.toString(),
             color = if(focused) onFocusedColor else onBackgroundColor,

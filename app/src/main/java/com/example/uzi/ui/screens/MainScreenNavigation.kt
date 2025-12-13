@@ -3,6 +3,7 @@ package com.example.uzi.ui.screens
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -19,8 +20,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -205,7 +208,8 @@ fun BottomNavigationBar(navController: NavHostController) {
         Screen.Account
     )
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = MaterialTheme.colorScheme.background,
+//        modifier = Modifier.border(1.dp, Color.Black)
     ) {
         val currentDestination by navController.currentBackStackEntryAsState()
         val currentRoute = currentDestination?.destination?.route
@@ -222,6 +226,7 @@ fun BottomNavigationBar(navController: NavHostController) {
                     }
                 },
                 icon = { Icon(imageVector = screen.icon, contentDescription = screen.label) },
+//                modifier = Modifier.border(1.dp, Color.Red)
             )
         }
     }

@@ -99,15 +99,19 @@ fun NewDiagnosticNavigation(
                         AdditionalInformation(
                             newDiagnosticViewModel,
                             modifier = Modifier.padding(padding),
-                            onAndroidBackClick = { onAndroidBackClick(
-                                navController, newDiagnosticViewModel
-                            ) },
+                            onAndroidBackClick = {
+                                onAndroidBackClick(
+                                    navController, newDiagnosticViewModel
+                                )
+                            },
                             onNextButtonClick = {
                                 newDiagnosticViewModel.onNextScreenButtonClick()
                                 navController.navigate(
                                     NewDiagnosticScreen.DiagnosticLoadingRoute.route
                                 ) {
-                                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        inclusive = true
+                                    }
                                 }
                                 try {
                                     newDiagnosticViewModel.onDiagnosticStart(patientId)
